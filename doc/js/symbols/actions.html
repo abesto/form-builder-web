@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="JsDoc Toolkit" />
+		
+		<title>JsDoc Reference - actions</title>
+
+    <script type="text/javascript" src="../jproton.js"></script>
+    <script type="text/javascript" src="../ui.js"></script>
+    <script type="text/javascript" src="../sh.js"></script>
+		<link rel=stylesheet href="../sh.css" type="text/css">
+		<link rel=stylesheet href="../default.css" type="text/css">
+	</head>
+
+	<body>
+		<div id="main-wrapper">
+			<div id="main">
+<!-- ============================== classes index ============================ -->
+				<div id="index" class="fixed">
+					<div id="index-wrapper">
+	<div class="header">
+	  <div id="index-close" title="Esconde o outline.">&nbsp;</div>
+	  <div id="index-title">Project Outline</div>
+	</div>
+	<div id="index-menu"><a href="../index.html">Class Index</a>
+	| <a href="../files.html">File Index</a></div>
+	
+	<div id="index-content">
+		
+		<div class="classList">
+			
+			<div class="section">
+				<div title='Global namespace.' class='itemName namespace'>
+				<div class='method-toggler'>&nbsp;</div><span class='icon'><i><a href="../symbols/_global_.html">_global_</a></i></span></div><div class='sectionItems'><div class='sectionItem classProperty'><b class='icon' title='Az aktuális nyelv'><a href="../symbols/_global_.html#trans">trans</a></b></div><div class='sectionItem classProperty'><b class='icon' title='I18n sztringeket tároló tömb'><a href="../symbols/_global_.html#TRANS">TRANS</a></b></div><div class='sectionItem classMethod'><b class='icon' title='A műveleteket tartalmazó form frissítése'><a href="../symbols/_global_.html#update_actions">update_actions</a></b><span class='signature'>(<span>type</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='A tulajdonságokat tartalmazó form frissítése'><a href="../symbols/_global_.html#update_props">update_props</a></b><span class='signature'>(<span>type</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Az eseményt indító elemet jelöli meg hoveredként'><a href="../symbols/_global_.html#hover">hover</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Az eseményt indító elem hovered-ségét megszűnteti Ha van kijelölhető szülője az elemnek, akkor azt jelöli meg hoveredként'><a href="../symbols/_global_.html#unhover">unhover</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='A hover és unhover eseménykezelők csak az éppen aktuálisan hovered elem click eseménykezelőjeként állítják be ezt, tehát 'this' a kattintást kapott elem Az ezzel megoldott probléma: ha table-nek és td-nek is van regisztrált click eseménykezelője, akkor table kezelője indul el, nem td-é.'><a href="../symbols/_global_.html#select_hovered">select_hovered</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Az UI nyelvének megváltoztatása'><a href="../symbols/_global_.html#set_lang">set_lang</a></b><span class='signature'>(<span title="A nyelv indexe a TRANS tömbben">id</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title=''><a href="../symbols/_global_.html#make_html">make_html</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='A parser'><a href="../symbols/_global_.html#htmlize">htmlize</a></b><span class='signature'>(<span>el</span>, <span>level</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Ellenőrzi a kiválasztott elem típusát'><a href="../symbols/_global_.html#check_selected_type">check_selected_type</a></b><span class='signature'>(<span title="A kívánt típus nodename-ja (pl.">type</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Létrehoz egy szöveget tartalmazó elemet'><a href="../symbols/_global_.html#node_with_text">node_with_text</a></b><span class='signature'>(<span title="Az elem neve">name</span>, <span title="Az elem szövege">text</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Létrehoz egy input elemet'><a href="../symbols/_global_.html#make_input">make_input</a></b><span class='signature'>(<span title="Az elem name tulajdonsága">name</span>, <span title="Az input típusa">type</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title=''><a href="../symbols/_global_.html#get_td_type">get_td_type</a></b><span class='signature'>(<span title="A td elem">td</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Beállítja a kapott cellában levő input mező name és id tulajdonságát.'><a href="../symbols/_global_.html#set_name">set_name</a></b><span class='signature'>(<span title="A td elem">td</span>, <span title="A name tulajdonság értéke">name</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title=''><a href="../symbols/_global_.html#get_input_type">get_input_type</a></b><span class='signature'>(<span title="Egy td elem">td</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Megadja egy elem adott tulajdonságát int típusú változóként'><a href="../symbols/_global_.html#get_int_attrib">get_int_attrib</a></b><span class='signature'>(<span title="Egy elem">el</span>, <span title="A tulajdonság neve">attrib</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title=''><a href="../symbols/_global_.html#get_td_text">get_td_text</a></b><span class='signature'>(<span>td</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Az adott cella szöveges tartalmát állítja ba'><a href="../symbols/_global_.html#set_td_text">set_td_text</a></b><span class='signature'>(<span title="A cella">td</span>, <span title="A szöveg">text</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='A kiválasztott cella input elemének típusát állítja be'><a href="../symbols/_global_.html#set_input_type">set_input_type</a></b><span class='signature'>(<span title="Az elem type tulajsonsága">type</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='A kiválasztott td elem tartalmának típusát állítja be'><a href="../symbols/_global_.html#set_td_type">set_td_type</a></b><span class='signature'>(<span title="Az elem tartalmának típusa">type</span>)</span></div></div></div>
+			
+			<div class="section">
+				<div title='' class='itemName namespace'>
+				<div class='method-toggler'>&nbsp;</div><span class='icon'><a href="../symbols/actions.html">actions</a></span></div><div class='sectionItems'><div class='sectionItem classMethod'><b class='icon' title='td elemen végrehajtható műveletek Mindig: cella létrehozása (jobbra, balra), új sor létrehozása (fel, le) Ha van azonos magasságú szomszédos cella: cellák egyesítése (balra és/vagy jobbra) Ha a cella több oszlopos: cella felosztása (balra, jobbra)'><a href="../symbols/actions.html#.td">td</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Táblázatot csak törölni lehet.'><a href="../symbols/actions.html#.table">table</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='A formhoz lehet hozzáadni táblázatot vagy fieldsetet'><a href="../symbols/actions.html#.form">form</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='A fieldsethez lehet hozzáadni táblázatot, vagy lehet törölni a fieldsetet'><a href="../symbols/actions.html#.fieldset">fieldset</a></b><span class='signature'>()</span></div></div></div>
+			
+			<div class="section">
+				<div title='' class='itemName namespace'>
+				<div class='method-toggler'>&nbsp;</div><span class='icon'><a href="../symbols/ACTIONS.html">ACTIONS</a></span></div><div class='sectionItems'><div class='sectionItem classMethod'><b class='icon' title='Új fieldset táblázattal'><a href="../symbols/ACTIONS.html#.add_fieldset">add_fieldset</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Fieldset törlése'><a href="../symbols/ACTIONS.html#.remove_fieldset">remove_fieldset</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Új tábla'><a href="../symbols/ACTIONS.html#.add_table">add_table</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Tábla törlése'><a href="../symbols/ACTIONS.html#.remove_table">remove_table</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Létrehoz egy új cellát a kiválasztott cella mellett'><a href="../symbols/ACTIONS.html#.create_cell">create_cell</a></b><span class='signature'>(<span title="Az új cella helye a kiválasztott cellához képest">dir</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Létrehoz egy új sort a táblázatban'><a href="../symbols/ACTIONS.html#.create_row">create_row</a></b><span class='signature'>(<span title="Az új sor helye a kiválasztott cella sorához képest">dir</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Két vízszintesen egymás mellett elhelyezkedő, azonos magasságú cellát egyesít.'><a href="../symbols/ACTIONS.html#.merge_cells">merge_cells</a></b><span class='signature'>(<span title="A cella-egyesítés iránya">dir</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Egy több oszlopos cellát oszt fel A cella tartalma a kiválasztott cellában marad Az új cella a megadott irányban jön létre, tartalom nélkül'><a href="../symbols/ACTIONS.html#.split_cell">split_cell</a></b><span class='signature'>(<span title="A cella-osztás iránya">dir</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Cella törlése'><a href="../symbols/ACTIONS.html#.remove_cell">remove_cell</a></b><span class='signature'>()</span></div></div></div>
+			
+			<div class="section">
+				<div title='' class='itemName'>
+				<div class='method-toggler'>&nbsp;</div><span class='icon'><a href="../symbols/Prop.html">Prop</a></span></div><div class='sectionItems'><div class='sectionItem classProperty'><b class='icon' title='Az utolsó megjelenített Prop, aminél .focus == true megkapja a fókuszt'><a href="../symbols/Prop.html#focus">focus</a></b></div><div class='sectionItem classMethod'><b class='icon' title=''><a href="../symbols/Prop.html#render">render</a></b><span class='signature'>()</span></div></div></div>
+			
+			<div class="section">
+				<div title='' class='itemName namespace'>
+				<div class='method-toggler'>&nbsp;</div><span class='icon'><a href="../symbols/PROPS.html">PROPS</a></span></div><div class='sectionItems'><div class='sectionItem classMethod'><b class='icon' title='td elem típusa'><a href="../symbols/PROPS.html#.td_type">td_type</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Az input elem típusa'><a href="../symbols/PROPS.html#.input_type">input_type</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Beviteli elem name tulajdonságához kapcsolt mező'><a href="../symbols/PROPS.html#.name">name</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Fieldset elem legend gyermekének szövegéhez kapcsolt mező'><a href="../symbols/PROPS.html#.legend">legend</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='A form nevének beállítása; szerkesztéskor H1-ként jelenik meg.'><a href="../symbols/PROPS.html#.form_name">form_name</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='A select elem egy option-jéhez tartozó text mező és eltávolító gomb'><a href="../symbols/PROPS.html#.option">option</a></b><span class='signature'>(<span title="Az option 0-alapú sorszáma">num</span>, <span title="A kezdeti szövegtartalom">text</span>)</span></div></div></div>
+			
+			<div class="section">
+				<div title='' class='itemName namespace'>
+				<div class='method-toggler'>&nbsp;</div><span class='icon'><a href="../symbols/props.html">props</a></span></div><div class='sectionItems'><div class='sectionItem classMethod'><b class='icon' title=''><a href="../symbols/props.html#.td">td</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Fieldsetnél be lehet állítani a legend feliratát'><a href="../symbols/props.html#.fieldset">fieldset</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title='Formnak lehet neve; H1-ként jelenik meg szerkesztés közben'><a href="../symbols/props.html#.form">form</a></b><span class='signature'>()</span></div></div></div>
+			
+			<div class="section">
+				<div title='' class='itemName'>
+				<div class='method-toggler'>&nbsp;</div><span class='icon'><a href="../symbols/PropsCollection.html">PropsCollection</a></span></div><div class='sectionItems'><div class='sectionItem classProperty'><b class='icon' title='A tulajdonság-csoportok neveinek listája'><a href="../symbols/PropsCollection.html#groups">groups</a></b></div><div class='sectionItem classProperty'><b class='icon' title='A tulajdonság-csoportok [csoportnév: [Prop1, Prop2, .'><a href="../symbols/PropsCollection.html#props">props</a></b></div><div class='sectionItem classMethod'><b class='icon' title='Új tulajdonság-csoport létrehozása'><a href="../symbols/PropsCollection.html#add_group">add_group</a></b><span class='signature'>(<span title="A tulajdonság-csoport neve">name</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Tulajdonság hozzáadása egy csoporthoz'><a href="../symbols/PropsCollection.html#add_prop">add_prop</a></b><span class='signature'>(<span title="A tulajdonság-csoport, amihez hozzáadjuk a tulajdonságot">group</span>, <span title="Prop objektum">prop</span>, <span title="Nem kötelező, ld.">focus</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title=''><a href="../symbols/PropsCollection.html#get_groups">get_groups</a></b><span class='signature'>()</span></div><div class='sectionItem classMethod'><b class='icon' title=''><a href="../symbols/PropsCollection.html#get_props">get_props</a></b><span class='signature'>(<span title="Egy tulajdonság-csoport neve">group</span>)</span></div><div class='sectionItem classMethod'><b class='icon' title='Az adott tulajdonság-csoporthoz tartozó tualjdonságok listájának felülírása'><a href="../symbols/PropsCollection.html#set_group">set_group</a></b><span class='signature'>(<span title="A tulajdonság-csoport">name</span>, <span title="Az új {@link Prop}-lista">props</span>)</span></div></div></div>
+			
+		</div>
+	</div>
+</div>
+	
+
+				</div>
+				<div id="index-toggler" class="fixed">&laquo;</div>
+
+<!-- ============================== header ================================= -->	
+				<!-- begin static/header.html -->
+				<div class="header">
+  Form Builder
+</div>
+
+				<!-- end static/header.html -->
+		
+				<div id="content">
+<!-- ============================== class title ============================ -->
+					<h1 class="classTitle">
+						Namespace actions
+					</h1>
+		
+<!-- ============================== class summary ========================== -->			
+<!-- 
+					
+-->
+					<div class="full-description">
+						<p>Az egyes elemeken végezhető műveletek listáját visszaadó függvények a
+           kiválasztott elem helyzetét és környezetét figyelembevéve</p>
+					</div>
+					
+						<p class="fileName itemName"><i>Defined in: </i> <span class="icon"><a href="../symbols/src/_srv_http_form_js_builder_actions.js.html">actions.js</a>.</span></p>
+					
+		
+<!-- ============================== constructor summary ==================== -->			
+					
+		
+<!-- ============================== properties summary ===================== -->
+					
+		
+<!-- ============================== methods summary ======================== -->
+					
+						
+						
+						<div class="summary section">
+							<div class="sectionTitle">Method Summary</div>
+							<div class="sectionItems">
+							
+								<div class="sectionItem classMethod">
+								  <!--
+									<div class="module-filter">&nbsp;</div>
+									-->
+									<b class="icon" title="td elemen végrehajtható műveletek Mindig: cella létrehozása (jobbra, balra), új sor létrehozása (fel, le) Ha van azonos magasságú szomszédos cella: cellák egyesítése (balra és/vagy jobbra) Ha a cella több oszlopos: cella felosztása (balra, jobbra)"><a href="../symbols/actions.html#.td">td</a></b><span class='signature'>()</span>
+									<span class='description'>td elemen végrehajtható műveletek<br /> Mindig: cella létrehozása (jobbra, balra), új sor létrehozása (fel, le)<br /> Ha van azonos magasságú szomszédos cella: cellák egyesítése (balra és/vagy jobbra)<br /> Ha a cella több oszlopos: cella felosztása (balra, jobbra)</span>
+								</div>
+							
+								<div class="sectionItem classMethod">
+								  <!--
+									<div class="module-filter">&nbsp;</div>
+									-->
+									<b class="icon" title="Táblázatot csak törölni lehet."><a href="../symbols/actions.html#.table">table</a></b><span class='signature'>()</span>
+									<span class='description'>Táblázatot csak törölni lehet.</span>
+								</div>
+							
+								<div class="sectionItem classMethod">
+								  <!--
+									<div class="module-filter">&nbsp;</div>
+									-->
+									<b class="icon" title="A formhoz lehet hozzáadni táblázatot vagy fieldsetet"><a href="../symbols/actions.html#.form">form</a></b><span class='signature'>()</span>
+									<span class='description'>A formhoz lehet hozzáadni táblázatot vagy fieldsetet</span>
+								</div>
+							
+								<div class="sectionItem classMethod">
+								  <!--
+									<div class="module-filter">&nbsp;</div>
+									-->
+									<b class="icon" title="A fieldsethez lehet hozzáadni táblázatot, vagy lehet törölni a fieldsetet"><a href="../symbols/actions.html#.fieldset">fieldset</a></b><span class='signature'>()</span>
+									<span class='description'>A fieldsethez lehet hozzáadni táblázatot, vagy lehet törölni a fieldsetet</span>
+								</div>
+							
+							</div>
+						</div>
+						
+					
+		
+<!-- ============================== constructor details ==================== -->		
+					
+		
+<!-- ============================== field details ========================== -->		
+					
+		
+<!-- ============================== method details ========================= -->		
+					
+					<div class="details section">
+						<div class="sectionTitle">
+							Method Detail
+						</div>
+						<div class="sectionItems">
+							
+							
+								<div class='sectionItem classMethod '>
+									<a name=".td"> </a>
+									<div class="itemTitle icon">
+										actions.td<span class="signature">()</span>
+										
+									</div>
+									<div class="full-description">
+										td elemen végrehajtható műveletek<br />
+Mindig: cella létrehozása (jobbra, balra), új sor létrehozása (fel, le)<br />
+Ha van azonos magasságú szomszédos cella: cellák egyesítése (balra és/vagy jobbra)<br />
+Ha a cella több oszlopos: cella felosztása (balra, jobbra)
+										
+										
+									
+										
+										<pre class="prettyprint"></pre>
+										
+									</div>
+									
+									
+									
+									
+									
+									
+									
+									
+				
+								</div>
+							
+							
+								<div class='sectionItem classMethod '>
+									<a name=".table"> </a>
+									<div class="itemTitle icon">
+										actions.table<span class="signature">()</span>
+										
+									</div>
+									<div class="full-description">
+										Táblázatot csak törölni lehet. Szegény :(
+										
+										
+									
+										
+										<pre class="prettyprint"></pre>
+										
+									</div>
+									
+									
+									
+									
+									
+									
+									
+									
+				
+								</div>
+							
+							
+								<div class='sectionItem classMethod '>
+									<a name=".form"> </a>
+									<div class="itemTitle icon">
+										actions.form<span class="signature">()</span>
+										
+									</div>
+									<div class="full-description">
+										A formhoz lehet hozzáadni táblázatot vagy fieldsetet
+										
+										
+									
+										
+										<pre class="prettyprint"></pre>
+										
+									</div>
+									
+									
+									
+									
+									
+									
+									
+									
+				
+								</div>
+							
+							
+								<div class='sectionItem classMethod '>
+									<a name=".fieldset"> </a>
+									<div class="itemTitle icon">
+										actions.fieldset<span class="signature">()</span>
+										
+									</div>
+									<div class="full-description">
+										A fieldsethez lehet hozzáadni táblázatot, vagy lehet törölni a fieldsetet
+										
+										
+									
+										
+										<pre class="prettyprint"></pre>
+										
+									</div>
+									
+									
+									
+									
+									
+									
+									
+									
+				
+								</div>
+							
+						</div>
+					</div>
+					
+					
+				</div>
+				
+<!-- ============================== footer ================================= -->
+				<div class="fineprint" style="clear:both">
+					
+					Documentation generated by <a href="http://www.jsdoctoolkit.org/" target="_blank">JsDoc Toolkit</a> 2.1.1 on Fri Jun 19 2009 17:10:05 GMT+0200 (CEST)
+				</div>
+				
+			</div>
+		</div>
+		
+	</body>
+</html>
