@@ -43,7 +43,9 @@
 $route['default_controller'] = "home";
 $route['scaffolding_trigger'] = "";
 
-$route['home/(:any)'] = "home/index/$1";
+$langs = '(en|hu)';
+
+$route['(:any)/'.$langs] = '$1/index/$2';
 
 
 /* End of file routes.php */

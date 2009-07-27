@@ -11,6 +11,10 @@
  */
 
 
+/**
+ * Egy fejezet. Ezen belül lehetnek {@link Section} objektumok.
+ * Írhat tartalomjegyzéket.
+ */
 class Chapter
 {
     /**
@@ -73,6 +77,12 @@ class Chapter
         return $ret."</ol>\n";
     }
 }
+
+/**
+ * Egy cím, egy címke az anchorhoz* és tetszőleges számú bekezdés
+ *
+ * * <a id="címke"></a>
+ */
 
 class Section
 {

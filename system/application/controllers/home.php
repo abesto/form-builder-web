@@ -7,8 +7,8 @@
  * @brief  Az alapértelmezett controller; a projekt bemutatása
  */
 
+include('BaseController.php');
 class Home extends BaseController {
-
 	function __construct()
 	{
 		parent::__construct();

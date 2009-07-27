@@ -1,0 +1,43 @@
+#content form {
+    font-family: sans;
+    font-size: .9em;
+}
+
+#content form fieldset {
+    height: 100%;
+    border: 0;
+}
+
+#content > table {
+    border-collapse: collapse;
+    margin-top: 25px;
+}
+
+#content > table > tbody > tr > td {
+    border: 2px solid black;
+    vertical-align: top;
+    padding-top: 15px;
+    width: 50%;
+}
+
+#content form img {
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+#content form fieldset legend {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+#content form fieldset p {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    line-height: 120%;
+}
+
+#content form td div.error {
+    font-size: .8em;
+    color: red;
+    line-height: 120%;
+}
