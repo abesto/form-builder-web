@@ -27,49 +27,85 @@ class Login extends BaseController {
      */
 	function index($lang=null)
 	{
+        if (!isset($_SESSION['set']))
+            $_SESSION['set'] = array();
         foreach ($this->fields as $field)
-            if (!isset($_SESSION[$field])) $_SESSION[$field] = '';
+            if (!isset($_SESSION['set'][$field]))
+                $_SESSION['set'][$field] = '';
+        if (!isset($_SESSION['set']['login_failed']))
+            $_SESSION['set']['login_failed'] = false;
+        if (!isset($_SESSION['set']['reg_failed']))
+            $_SESSION['set']['reg_failed'] = false;
 
         $this->load_lang('login', $lang);
         $slots = $this->lang->line('login');
         $slots['redirect'] = '/profile';
 
-        foreach ($this->fields as $field)
-            $slots[$field.'_val'] = $_SESSION[$field];
+        foreach ($_SESSION['set'] as $key => $val)
+            $slots[$key.'_val'] = $val;
 
         $this->slots['content'] = $this->load->view('login', $slots, true);
         $this->render();
 	}
 
+
+    /**
+     * Elvégzi a bejelentkezési adatok ellenőrzését
+     * Ha helyesek, a redirect hidden input által megadott oldlra küldi a felhasználót
+     * Egyébként vissza a bejelentkezéshez
+     */
+    public function do_login($lang=null)
+    {
+        print_r($_SESSION);
+        $_SESSION['set']['reg_failed'] = false;
+
+        if (($_POST['user'] == '') && ($_POST['pass'] == '')) {
+            $_SESSION['set']['login_failed'] = false;
+            redirect('/login/'.$lang);
+        } elseif ($this->user->login($_POST['user'], $_POST['pass']) == false) {
+            $_SESSION['set']['login_failed'] = true;
+            redirect('/login/'.$lang);
+        } else {
+            $_SESSION['set']['login_failed'] = false;
+            redirect($_POST['redirect'].'/'.$lang);
+        }
+    }
+
+
+    public function logout($lang=null)
+    {
+        $this->user->logout();
+        redirect('/home/'.$lang);
+    }
+
+
     /**
      * Ellenőrzi a regisztráláshoz megadott adatokat
      * Ha volt hiba, visszaküldi a felhasználót az űrlaphoz
      *   A kapott adatokat visszaadja az űrlapnak
-     * Ha nem volt hiba, átküldi a felhasználót a "Regisztráció sikeres, email ment" lapra
+     * Ha nem volt hiba, átküldi a felhasználót a profil lapra
      */
-    function register()
+    function register($lang=null)
     {
-        foreach ($this->fields as $field)
-            $_SESSION[$field] = $_POST[$field];
+        $_SESSION['set']['login_failed'] = false;
 
         foreach ($this->fields as $field) {
             $fun = 'check_'.$field;
-            if (sizeof($this->$fun($_POST[$field])) > 0)
-                redirect('/login');
+            if (sizeof($this->$fun($_POST[$field])) > 0) {
+                // Van hiba, betöltjük a session cookie-ba a kapott adatokat
+                $_SESSION['set']['user']  = $_POST['user'];
+                $_SESSION['set']['email'] = $_POST['email'];
+                $_SESSION['set']['reg_failed']   = true;
+                // És vissza a reg formra
+                redirect('/login/'.$lang);
+            }
         }
-        /*
-        $_SESSION['set'] = array('user'    => $this->input->post('user'),
-                                 'url'     => $this->input->post('url'),
-                                 'message' => $this->input->post('message'),
-                                 'title'   => $this->input->post('post'));
 
+        // Ha idáig eljut, akkor az adatok helyesek
+        unset($_SESSION['set']);
 
-        if ($this->form_validation->run()) {
-            $this->blog_model->post_comment($_SESSION['set']);
-            $_SESSION['set']['message'] = '';
-        }
-        $_SESSION['errors'] = validation_errors();
-        redirect($this->input->post('post').'#post-comment');*/
+        $this->user->register($_POST['user'], $_POST['email'], $_POST['pass']);
+        redirect($_POST['redirect'].'/'.$lang);
     }
 
     /**
@@ -120,6 +156,7 @@ class Login extends BaseController {
             }
             echo '"'.implode('<br />', $msgs).'"';
             */
+
             // Csak az első hibát írjuk ki
             $error = $errors[0];
             $error[0] = $error_msgs[$error[0]];
@@ -140,6 +177,8 @@ class Login extends BaseController {
 
         $length = mb_strlen($user);
         $user = str_replace("'", "\\'", $user);
+
+        $_SESSION['set']['user'] = $user;
 
         return $this->check(
                             array(
@@ -212,11 +251,14 @@ class Login extends BaseController {
         $chars = '[a-zA-Z0-9!#$%&\'*]';
         $regex = "/^$chars+@($chars+.)+[a-zA-Z]{2,3}$/";
 
+        $_SESSION['set']['email'] = $email;
+
         return $this->check(
                             array(
                                   "'$email' == ''" => array('required'),
                                   "preg_match(\"$regex\", \"$email\") == 0" => array('email'),
-                                  "$length > $max_length" => array('long', 100)
+                                  "$length > $max_length" => array('long', 100),
+                                  "\$controller->user->not_available('$email')" => array('email_exists')
                                   )
                             );
     }

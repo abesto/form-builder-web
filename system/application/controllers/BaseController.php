@@ -15,8 +15,8 @@
  * Ennek az alosztályai lesznek azok a controllerek, amiknek meg kell
  * jeleníteniük a fő template-t.
  *
- * @example ../../../doc/php/BaseController_example.php
  * Hello world! kiiratása egy alosztályból:
+ * @example ../../../doc/php/BaseController_example.php
  */
 class BaseController extends Controller
 {
@@ -57,6 +57,19 @@ class BaseController extends Controller
         return $this->load->view('skeleton', $this->slots, $return);
     }
 
+
+    /**
+     * Ha nincs bejelentkezve a felhasználó, átküldi a login oldalra
+     */
+    protected function check_login($redirect)
+    {
+        if ($this->user->get_user() == false) {
+            $_SESSION['set']['redirect'] = $redirect;
+            redirect('/login');
+        }
+    }
+
+
     /**
      * Összeállítja a menü elemeit annak megfelelően, hogy a felhasználó be van-e jelentkezve
      *
@@ -77,9 +90,7 @@ class BaseController extends Controller
         if ($user == false)
             $items['login'] = $trans['login'];
         else {
-            $items['login']   = false;
-            $items['welcome'] = $trans['welcome'];
-            $items['user']    = $user->name;
+            $items['logout']  = $trans['logout'] . ' (' . $user->name . ')';
         }
         return $items;
     }

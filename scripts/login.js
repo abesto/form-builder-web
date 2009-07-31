@@ -21,9 +21,9 @@ function check_ajax(data, $input, initial)
            data,
            function (response) {
                if (response == true) {
-                   if (data['value'] != '')
-                       $input.after('<img src="/img/valid.jpg" alt="valid" />');
+                   $input.after('<img src="/img/valid.jpg" alt="valid" />');
                } else if ((data['value'].length > 0) || (initial == true)) {
+                   if ((data['value'] != '') || (errors == true))
                        $input.after('<div class="error">'+response+'</div>').
                               after('<img src="/img/error.jpg" alt="error" />');
                }
@@ -91,7 +91,8 @@ $(document).ready( function() {
 
     // Ez ideális esetben CSS lenne, de a böngészők még nem támogatják a
     // :first-child selectort
-    $('td:first-child').css('vertical-align', 'top');
+    $('#login td:first-child, #register td:first-child').css({'vertical-align': 'top',
+                                                              'text-align'    : 'right'});
 
     // Ha a szerver visszaküldött erre az oldalra, mert hibás formot küldtünk
     check('user', true);

@@ -46,6 +46,7 @@ $route['scaffolding_trigger'] = "";
 $langs = '(en|hu)';
 
 $route['(:any)/'.$langs] = '$1/index/$2';
+$route['logout'] = 'login/logout';
 
 
 /* End of file routes.php */
