@@ -1,0 +1,40 @@
+/* Force vertical scrollbar */
+html, body {
+  height: 100%;
+  margin: 0 0 1px;
+  padding: 0;
+}
+
+#content {
+    font-family: sans;
+}
+
+#forms {
+    width: 100%;
+    border: 5px ridge black;
+    border-collapse: collapse;
+}
+
+#forms tr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#forms tr.odd  { background-color: #eee; }
+#forms tr.even { background-color: #ddd; }
+#forms tr.hovered { background-color: #eea; }
+
+#forms th {
+     border-bottom: 1px solid black;
+     color: black;
+     padding-left: 8px;
+}
+
+#forms td {
+    font-size: .9em;
+    color: #333;
+    cursor: default;
+    padding: 0;
+    line-height: 100%;
+    padding: 8px;
+}

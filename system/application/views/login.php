@@ -24,7 +24,7 @@
             <tr>
               <td><?php echo $user; ?>:</td>
               <td>
-                <input type="text" name="user" />
+                <input type="text" name="user" value="<?php echo $login_user_val; ?>"/>
               </td>
             </tr>
             <tr>
@@ -44,6 +44,7 @@
     </td>
     <td>
       <form method="post" id="register" action="/login/register">
+        <input type="hidden" name="redirect" value="<?php echo $redirect; ?>" />
         <fieldset>
           <legend><?php echo $register; ?></legend>
           <p>

@@ -46,13 +46,18 @@ class BaseController extends Controller
     protected function render($return=false)
     {
         // A menü
-        $menu = $this->build_menu();
-        $this->slots['menu'] = $this->load->view('menu', array('items' => $menu), true);
+        $menu = array('items' => $this->build_menu());
+        $this->slots['menu'] = $this->load->view('menu', $menu, true);
 
         // Ha van az aktuális controllernek saját css fájlja, akkor azt átadjuk a skeletonnak
         $file = 'css/' . strtolower(get_class($this)) . '.css';
         if (file_exists($file))
             $this->slots['css'] = $file;
+
+        // Ha van az aktuális controllernek saját js fájlja, akkor azt átadjuk a skeletonnak
+        $file = 'scripts/' . strtolower(get_class($this)) . '.js';
+        if (file_exists($file))
+            $this->slots['js'] = $file;
 
         return $this->load->view('skeleton', $this->slots, $return);
     }
@@ -90,6 +95,7 @@ class BaseController extends Controller
         if ($user == false)
             $items['login'] = $trans['login'];
         else {
+            $items['my_forms'] = $trans['my_forms'];
             $items['logout']  = $trans['logout'] . ' (' . $user->name . ')';
         }
         return $items;

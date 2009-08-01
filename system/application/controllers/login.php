@@ -16,8 +16,7 @@ class Login extends BaseController {
 	function __construct()
 	{
 		parent::__construct();
-        $this->slots['js'] = 'scripts/login.js';
-        $this->fields = array('user', 'pass', 'pass_match', 'email');
+        $this->fields = array('user', 'login_user', 'pass', 'pass_match', 'email');
 	}
 
     /**
@@ -39,7 +38,8 @@ class Login extends BaseController {
 
         $this->load_lang('login', $lang);
         $slots = $this->lang->line('login');
-        $slots['redirect'] = '/profile';
+        //$slots['redirect'] = '/profile';
+        $slots['redirect'] = '/home';
 
         foreach ($_SESSION['set'] as $key => $val)
             $slots[$key.'_val'] = $val;
@@ -51,18 +51,23 @@ class Login extends BaseController {
 
     /**
      * Elvégzi a bejelentkezési adatok ellenőrzését
-     * Ha helyesek, a redirect hidden input által megadott oldlra küldi a felhasználót
+     * Ha helyesek, a redirect hidden input által megadott oldalra küldi a felhasználót
      * Egyébként vissza a bejelentkezéshez
      */
     public function do_login($lang=null)
     {
-        print_r($_SESSION);
+        $_SESSION['set'] = array();
         $_SESSION['set']['reg_failed'] = false;
+        $_SESSION['set']['login_user'] = $_POST['user'];
 
-        if (($_POST['user'] == '') && ($_POST['pass'] == '')) {
+        $user = str_replace("'", "\\'", $_POST['user']);
+        $pass = str_replace("'", "\\'", $_POST['pass']);
+
+
+        if (($user == '') && ($pass == '')) {
             $_SESSION['set']['login_failed'] = false;
             redirect('/login/'.$lang);
-        } elseif ($this->user->login($_POST['user'], $_POST['pass']) == false) {
+        } elseif ($this->user->login($user, $pass) == false) {
             $_SESSION['set']['login_failed'] = true;
             redirect('/login/'.$lang);
         } else {
@@ -72,6 +77,11 @@ class Login extends BaseController {
     }
 
 
+    /**
+     * Kijelentkezteti a felhasználót és átküldi a főoldalra
+     *
+     * @param lang Nyelv
+     */
     public function logout($lang=null)
     {
         $this->user->logout();
@@ -107,6 +117,51 @@ class Login extends BaseController {
         $this->user->register($_POST['user'], $_POST['email'], $_POST['pass']);
         redirect($_POST['redirect'].'/'.$lang);
     }
+
+
+    /////////
+    /// AJAJ kérések miatt hívott függvények
+    /// Paramétereket POST kérésből kapnak, visszatérési értéküket kiírják
+    /////////
+
+    /**
+     * Van bejelentkezett felhasználó?
+     *
+     * @return 'true' vagy 'false'
+     */
+    public function ajaj_is_logged_in()
+    {
+        return ($this->user->get_user() == false) ?
+            'false' : 'true';
+    }
+
+    /**
+     * Bejelentkezés
+     *
+     * @param user Felhasználónév
+     * @param pass Jelszó
+     *
+     * @return 'true' ha sikeres volt a bejelentkezés, különben a kiírandó hibaüzenet
+     */
+    public function ajaj_do_login()
+    {
+        $this->load_lang('login', $lang);
+        $msgs = $this->lang->line('login');
+
+        $user = str_replace("'", "\\'", $_POST['user']);
+        $pass = str_replace("'", "\\'", $_POST['pass']);
+
+        if ((($user == '') && ($pass == '')) /* Üres mezők */
+            || ($this->user->login($user, $pass) == false)) /* Hibás pár */
+            echo '"'.$msgs['login_failed'].'"';
+        else
+            echo 'true';
+    }
+
+
+    //////////////////////////////////////
+    /// Hibás adatok keresése-kezelése ///
+    //////////////////////////////////////
 
     /**
      * Lefuttatja a kapott ellenőrzéseket, és visszaadja a hibaüzeneteket
@@ -247,7 +302,6 @@ class Login extends BaseController {
         $length = mb_strlen($email);
         $email = str_replace("'", "\\'", $email);
 
-        $regex = "/^a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/";
         $chars = '[a-zA-Z0-9!#$%&\'*]';
         $regex = "/^$chars+@($chars+.)+[a-zA-Z]{2,3}$/";
 
@@ -262,4 +316,7 @@ class Login extends BaseController {
                                   )
                             );
     }
+
+    /* Bejelentkezési user mező változásánál nincs ellenőrzés */
+    function check_login_user() { return array(); }
 }
