@@ -47,6 +47,7 @@ $langs = '(en|hu)';
 
 $route['(:any)/'.$langs] = '$1/index/$2';
 $route['logout'] = 'login/logout';
+$route['builder/(:num)'] = 'builder/open/$1';
 
 
 /* End of file routes.php */

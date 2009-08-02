@@ -155,7 +155,7 @@ class Forms_model extends Model
         $where = array('id'      => $id,
                        'user_id' => $user->id);
 
-        $this->db->update('forms', $update)->where($where);
+        $this->db->where($where)->update('forms', $update);
 
         return ($this->db->affected_rows() == 1);
     }

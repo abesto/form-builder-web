@@ -20,9 +20,12 @@ html, body {
     margin-bottom: 5px;
 }
 
-#forms tr.odd  { background-color: #eee; }
-#forms tr.even { background-color: #ddd; }
-#forms tr.hovered { background-color: #eea; }
+#forms tr.odd      { background-color: #eee; }
+#forms tr.even     { background-color: #ddd; }
+#forms tr.hovered.odd  { background-color: #eea; }
+#forms tr.hovered.even { background-color: #dd9; }
+#forms tr.selected.odd  { background-color: #aae; }
+#forms tr.selected.even { background-color: #99d; }
 
 #forms th {
      border-bottom: 1px solid black;

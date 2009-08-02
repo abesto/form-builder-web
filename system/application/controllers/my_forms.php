@@ -89,7 +89,7 @@ class My_forms extends BaseController {
         $id   = $_POST['id'];
         $html = $_POST['html'];
 
-        echo $this->forms->save($id, $html) ?
+        echo $this->forms->save_form($id, $html) ?
             'true' : 'false';
     }
 
