@@ -12,39 +12,31 @@ class My_forms extends BaseController {
 	function __construct()
 	{
 		parent::__construct();
-        $this->load->model('Forms_model', 'forms');
         $this->slots['js'] = 'scripts/forms_table.js';
 	}
 
     /**
-     * Az űrlapok listázása
+     * Az űrlapok listáját megjelenítő lap
+     * A listát AJAJ-al mutatjuk meg
      *
      * @param lang Nyelv
      */
 	function index($lang=null)
 	{
-        $this->check_login('/my_forms/'.$lang);
+        $this->check_login();
 
-        $data = array();
-        $data['forms'] = $this->forms->get_form_list();
-        $data['owner'] = true;
+        $data = array('owner' => true,
+                      'labels' => array('edit' => 'Szerkesztés',
+                                        'rename' => 'Átnevezés',
+                                        'remove' => 'Törlés',
+                                        'new'    => 'Új űrlap',
+                                        'html' => 'HTML&nbsp;megtekintése'
+                                        )
+                      );
 
         $this->slots['content'] = $this->load->view('form_table', $data, true);
         $this->render();
 	}
-
-    /**
-     * Új formot ad az adatbázishoz és megnyitja szerkesztésre
-     *
-     * @param name Az űrlap neve
-     */
-    function create($name)
-    {
-        $this->check_login();
-
-        $id = $this->forms->create_form($name, '<form></form>', false);
-        $this->edit($id);
-    }
 
     /**
      * Megnyitja az űrlapot szerkesztésre
@@ -53,6 +45,7 @@ class My_forms extends BaseController {
      */
     function edit($id)
     {
+        $this->check_login();
         $form = $this->forms->get_form($id);
         $this->load->view('builder', $form);
     }
@@ -67,13 +60,44 @@ class My_forms extends BaseController {
     /// és esetleges újra-beléptetését AJAJ végzi
     /////////
 
+    /**
+     * Új űrlapot hoz létre
+     *
+     * @param name Az űrlap neve
+     *
+     * @return Az új űrlap azonosítója
+     */
+    function create()
+    {
+        $this->check_login(false);
+
+        $name = $_POST['name'];
+
+        $id = $this->forms->create_form($name, '<form></form>', false);
+        echo $id;
+    }
+
+
+    /**
+     * @return A felhasználó űrlapjainak listája JSON-ban
+     */
+    function list_forms()
+    {
+        $this->check_login(false);
+
+        echo json_encode($this->forms->get_form_list());
+    }
+
+    /**
+     * @return Egy űrlap tartalma
+     */
     function load()
     {
+        $this->check_login(false);
+
         $id = $_POST['id'];
-
         $form = $this->forms->get_form($id);
-
-        echo '<h3>'.$form->name.'</h3>'.$form->html;
+        echo $form->html;
     }
 
     /**
@@ -86,10 +110,12 @@ class My_forms extends BaseController {
      */
     function save()
     {
+        $this->check_login(false);
+
         $id   = $_POST['id'];
         $html = $_POST['html'];
 
-        echo $this->forms->save_form($id, $html) ?
+        echo $this->forms->save_form($id, '<form>'.$html.'</form>') ?
             'true' : 'false';
     }
 
@@ -103,10 +129,12 @@ class My_forms extends BaseController {
      */
     function rename()
     {
+        $this->check_login(false);
+
         $id   = $_POST['id'];
         $name = $_POST['name'];
 
-        echo $this->forms->rename($id, $name) ?
+        echo $this->forms->rename_form($id, $name) ?
             'true' : 'false';
     }
 
@@ -120,6 +148,8 @@ class My_forms extends BaseController {
      */
     function remove()
     {
+        $this->check_login(false);
+
         $id = $_POST['id'];
         echo $this->forms->remove_form($id) ?
             'true' : 'false';

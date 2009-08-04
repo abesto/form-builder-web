@@ -42,7 +42,7 @@ function save()
            }
           );
 
-    window.opener.cache.update(id, html);
+    window.opener.cache.update(id, '<form>'+html+'</form>');
     dirty = false;
 }
 
@@ -50,4 +50,5 @@ window.onbeforeunload = save_check;
 function save_check()
 {
     if (dirty == true) return 'die, biaaaatch';
+    return null;
 }

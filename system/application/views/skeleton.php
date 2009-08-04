@@ -10,7 +10,7 @@
     echo link_tag("css/style.css")."\n";
     if (isset($css)) echo link_tag($css)."\n";
     echo '<script type="text/javascript" src="/scripts/jquery-1.3.2.min.js"></script>'."\n";
-    echo '<script type="text/javascript" src="/scripts/jquery.validate.js"></script>'."\n";
+    echo '<script type="text/javascript" src="/scripts/jquery.blockUI.js"></script>'."\n";
     if (isset($js)) echo '<script type="text/javascript" src="/'.$js.'"></script>'."\n";
 ?>
 

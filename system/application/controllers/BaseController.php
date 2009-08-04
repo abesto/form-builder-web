@@ -30,6 +30,7 @@ class BaseController extends Controller
         $this->slots = array();
 
         $this->load->model('User_model', 'user');
+        $this->load->model('Forms_model', 'forms');
 
         $this->def_lang = 'hu';
     }
@@ -65,13 +66,47 @@ class BaseController extends Controller
 
     /**
      * Ha nincs bejelentkezve a felhasználó, átküldi a login oldalra
+     *
+     * @param redirect A sikeres bejelentkezés után erre a lapra küldjük a felhasználót
      */
-    protected function check_login($redirect)
+    protected function check_login($redirect='/my_forms')
     {
-        if ($this->user->get_user() == false) {
+        $user = $this->user->get_user(false);
+
+        if ($user === false) {
             $_SESSION['set']['redirect'] = $redirect;
             redirect('/login');
         }
+    }
+
+
+    /**
+     * AJAJ függvény
+     *
+     * @return 'OK'                : a felhasználó be van jelentkezve, és az űrlap az övé
+     *         'FORM_NOT_FOUND'    : a felhasználó be van jelentkezve, de az űrlap nem található, vagy nem módosíthatja
+     *         'NOT_LOGGED_IN'     : a felhasználó nincs bejelentkezve
+     */
+    public function remote_check_rights()
+    {
+        $write = $_POST['write'];
+        $id = isset($_POST['id']) ? $_POST['id'] : false;
+
+        if (($write == true) && ($this->user->get_user(false) === false)) {
+            echo 'NOT_LOGGED_IN';
+            return;
+        } else {
+            if ($id !== false) {
+                // Szerkesztésre nyitáskor ha nem a felhasználó űrlapja;
+                // Olvasásra nyitáskor ha nem a felhasználóé és nem is publikus
+                if ((($write == true) && ($this->forms->get_form($id) === false))
+                ||  (($write == false) && (($this->forms->get_form($id) === false) || ($this->forms->get_form_public($id) === false)))) {
+                    echo 'FORM_NOT_FOUND';
+                    return;
+                }
+            }
+        }
+        echo 'OK';
     }
 
 
@@ -91,7 +126,7 @@ class BaseController extends Controller
         $items = array('home'   => $trans['home'],
                        'manual' => $trans['manual']);
 
-        $user = $this->user->get_user();
+        $user = $this->user->get_user(false);
         if ($user == false)
             $items['login'] = $trans['login'];
         else {

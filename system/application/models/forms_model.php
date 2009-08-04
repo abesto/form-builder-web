@@ -25,19 +25,6 @@ class Forms_model extends Model
     ///////////////////////////////////////////////////////////
 
     /**
-     * Visszaadja a bejelentkezett felhasználót
-     * Előfeltétel: van bejelentkezett felhasználó
-     *
-     * @return A felhasználó adatait tartalmazó objektum
-     */
-    private function get_user()
-    {
-        $user = $this->user->get_user();
-        assert('$user != false');
-        return $user;
-    }
-
-    /**
      * Létrehoz egy új űrlapot a bejelentkezett felhasználóhoz kapcsolva
      *
      * @param name Az űrlap neve
@@ -48,7 +35,7 @@ class Forms_model extends Model
      */
     public function create_form($name, $html, $public)
     {
-        $user = $this->get_user();
+        $user = $this->user->get_user();
 
         $form = array('user_id' => $user->id,
                       'name'    => $name,
@@ -66,7 +53,7 @@ class Forms_model extends Model
      */
     function get_form_list()
     {
-        $user = $this->get_user();
+        $user = $this->user->get_user();
         $where = array('user_id' => $user->id);
         $select = array('id', 'name', 'public');
 
@@ -85,7 +72,7 @@ class Forms_model extends Model
      */
     function get_form($id)
     {
-        $user = $this->get_user();
+        $user = $this->user->get_user();
         $where = array('user_id' => $user->id,
                        'id'      => $id
                        );
@@ -108,14 +95,14 @@ class Forms_model extends Model
      */
     function rename_form($id, $name)
     {
-        $user = $this->get_user();
+        $user = $this->user->get_user();
 
         $update = array('name' => $name);
         $where  = array('id'      => $id,
                         'user_id' => $user->id);
 
-        $result = $this->db->update('forms', $update)->where($where);
-        return ($result->num_rows() == 1);
+        $this->db->where($where)->update('forms', $update);
+        return ($this->db->affected_rows() == 1);
     }
 
     /**
@@ -128,11 +115,11 @@ class Forms_model extends Model
      */
     function remove_form($id)
     {
-        $user = $this->get_user();
+        $user = $this->user->get_user();
         $where = array('id'      => $id,
                        'user_id' => $user->id);
 
-        $this->db->delete('forms')->where($where);
+        $this->db->where($where)->delete('forms');
 
         return ($this->db->affected_rows() == 1);
     }
@@ -149,7 +136,7 @@ class Forms_model extends Model
      */
     function save_form($id, $html)
     {
-        $user = $this->get_user();
+        $user = $this->user->get_user();
 
         $update = array('html' => $html);
         $where = array('id'      => $id,
@@ -172,7 +159,7 @@ class Forms_model extends Model
      */
     function make_copy($id, $name)
     {
-        $user = $this->get_user();
+        $user = $this->user->get_user();
         $where = "`id` = '$id' AND (`public` = TRUE OR `user_id` = '{$user->id}'";
 
         $result = $this->db->from('forms')->where($where)->get();
@@ -209,7 +196,7 @@ class Forms_model extends Model
      */
     function get_form_public($id)
     {
-        $user = $this->get_user();
+        $user = $this->user->get_user();
         $where = array('id'     => $id,
                        'public' => true
                        );

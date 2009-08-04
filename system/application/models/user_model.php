@@ -102,15 +102,21 @@ class User_model extends Model
      *   - session_id megegyezik az adatbázisban tárolttal
      *   - kevesebb, mint egy napja volt az utolsó ellenőrzés/bejelentkezés
      *
+     * @param die True esetén meghal, ha nincs bejelentkezett felhasználó
+     *            False esetén false-t ad vissza, ha nincs bejelentkezett felhasználó.
+     *
      * @return A felhasználó adatai egy objektumban, ha be van jelentkezve; egyébként false
      */
-    function get_user()
+    function get_user($die=true)
     {
         $where = "`sid` = SHA('".session_id()."') AND NOW() < DATE_ADD(`last_action`, INTERVAL 1 DAY)";
         $rel = $this->db->select(array('id', 'name', 'email'))->from('users')->where($where)->get();
 
         if ($rel->num_rows() !== 1)
-            return false;
+            if ($die === true)
+                die('You are not logged in. Also, you shouldn\'t get this message - doing something funny?');
+            else
+                 return false;
 
         $this->update_last_action();
         return $rel->row();
