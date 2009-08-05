@@ -144,7 +144,8 @@ class Forms_model extends Model
 
         $where = array('id'      => $id,
                        'user_id' => $user->id);
-        $update = array('html' => str_replace(' class=""', '', $html));
+        $update = array('html' => str_replace(' class=""', '', $html),
+                        'name' => $name);
 
         if ($this->get_form($id) === false)
             $id = $this->create_form($name, $html, false);

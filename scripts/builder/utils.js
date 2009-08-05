@@ -277,6 +277,7 @@ function get_title() { return $('#title').html(); }
 function set_title(title)
 {
     $('#title').html(title);
+    $('title').html(title + ' - FormBuilder');
     handle_prop_change();
 }
 
