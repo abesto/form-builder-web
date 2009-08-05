@@ -8,8 +8,8 @@
 <table>
   <tr>
     <td>
-      <form method="post" id="login" action="/login/do_login">
-        <input type="hidden" name="redirect" value="<?php echo $redirect; ?>" />
+      <form method="post" id="login" action="<?php echo base_url(); ?>/login/do_login">
+        <input type="hidden" name="redirect" value="<?php echo base_url().$redirect; ?>" />
         <fieldset>
           <legend><?php echo $login; ?></legend>
           <p>
@@ -43,8 +43,8 @@
       </form>
     </td>
     <td>
-      <form method="post" id="register" action="/login/register">
-        <input type="hidden" name="redirect" value="<?php echo $redirect; ?>" />
+      <form method="post" id="register" action="<?php echo base_url(); ?>/login/register">
+        <input type="hidden" name="redirect" value="<?php echo base_url().$redirect; ?>" />
         <fieldset>
           <legend><?php echo $register; ?></legend>
           <p>

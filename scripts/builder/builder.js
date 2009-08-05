@@ -42,11 +42,13 @@ function update_actions(type)
 
     var current = actions[type];
     if (!current) {
-        // Ha nincs végezhető művelet, ezt tudatjuk a felhasználóval, és végeztünk
-        bar.append(node_with_text('span', trans.no_actions(type)));
-        return;
+        current = function() { return Array(); };
     }
     current = current();
+    // Ezeket mindenhol mutatjuk
+    if (current.length > 0)
+        current.push('br');
+    current.push('add_fieldset()');
 
     // Létrehozzuk a műveletekhez tartozó gombokat
     for (var i = 0; i < current.length; i++) {
@@ -78,7 +80,7 @@ function update_props(type)
     var current = props[type];
     if (!current) {
         // Ha nincs beállítható tulajdonság, ezt tudatjuk a felhasználóval, és végeztünk
-        $('#props_form').append(node_with_text('span', trans.no_props(type)));
+        $('#props_form').append(node_with_text('span', trans.no_props('<strong>'+type+'</strong>')));
         return;
     }
     current = current();
@@ -192,6 +194,18 @@ function set_lang(lang)
         update_actions(name);
         update_props(name);
     }
+
+    // Bejelentkező párbeszédablak
+    $('#user_label').html(trans.user+':');
+    $('#pass_label').html(trans.pass+':');
+
+    var login_buttons = {};
+    login_buttons[trans.cancel] = function() { $(this).dialog('close'); };
+    login_buttons[trans.login]  = function() { $(this).find('form').submit(); };
+    $('#login_dialog').dialog('option', {title: trans.login,
+                                         buttons: login_buttons
+                                        });
+
 }
 
 function make_html()
@@ -210,7 +224,8 @@ function make_html()
     if ($html.width() < 300) $html.css({'width': '300px'});
 }
 
-$(document).ready(function (){    // #main alap magassága
+$(document).ready(function (){
+    // #main alap magassága
     $('#main').height($(window).height() - $('#actions').height());
 
     // Átméretezhető tulajdonságok div
@@ -221,8 +236,8 @@ $(document).ready(function (){    // #main alap magassága
                            }});
 
     // A kijelölhető elemek eseménykezelése
-    $('#main td, #main table, #main form, #main fieldset').livequery(function() {$(this).hover(hover, unhover);})
-                                                          .livequery(function() {if ($(this).hasClass('hovered')) $(this).select(); });
+    $('#main td, #main table, #main fieldset').livequery(function() {$(this).hover(hover, unhover);})
+                                              .livequery(function() {if ($(this).hasClass('hovered')) $(this).select(); });
 
     // A felesleges szóközöket mindig levágjuk
     $('body input').livequery('change', function() { this.value = trim(this.value); });
@@ -245,12 +260,24 @@ $(document).ready(function (){    // #main alap magassága
         );
         lang.append(span);
     }
-    set_lang('hu');
+
+    // Bejelentkező párbeszédablak inicializálása
+    $('#login_dialog').dialog({
+                        autoOpen : false,
+                        width    : 'auto',
+                        modal    : true
+                       });
+    $('#login_form').submit(function() { return login(); });
+
+    set_lang(default_lang);
     $('#props_form fieldset legend').html(trans.props);
+
+    // HTML párbeszédablak inicializálása
     $('#html').dialog({autoOpen: false,
                        width: 'auto',
                        modal: true,
                        // Tulajdonság-mező fókuszának visszaállítására
                        close: function() { update_props($('.selected')[0].nodeName.toLowerCase()); }});
+
     $('#main form').select();
 });

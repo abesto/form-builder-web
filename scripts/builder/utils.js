@@ -265,3 +265,13 @@ function set_td_type(in_type)
     set_td_text($selected, text);
     update_props('td');
 }
+
+/**
+ * @return Az éppen szerkesztett űrlap neve
+ */
+function get_title() { return $('#title').html(); }
+
+/**
+ * @param title Az űrlap új neve
+ */
+function set_title(title) { $('#title').html(title); }

@@ -39,7 +39,7 @@ class Login extends BaseController {
         $this->load_lang('login', $lang);
         $slots = $this->lang->line('login');
         //$slots['redirect'] = '/profile';
-        $slots['redirect'] = '/home';
+        $slots['redirect'] = 'home';
 
         foreach ($_SESSION['set'] as $key => $val)
             $slots[$key.'_val'] = $val;
@@ -66,10 +66,10 @@ class Login extends BaseController {
 
         if (($user == '') && ($pass == '')) {
             $_SESSION['set']['login_failed'] = false;
-            redirect('/login/'.$lang);
+            redirect('login/'.$lang);
         } elseif ($this->user->login($user, $pass) == false) {
             $_SESSION['set']['login_failed'] = true;
-            redirect('/login/'.$lang);
+            redirect('login/'.$lang);
         } else {
             $_SESSION['set']['login_failed'] = false;
             redirect($_POST['redirect'].'/'.$lang);
@@ -85,7 +85,7 @@ class Login extends BaseController {
     public function logout($lang=null)
     {
         $this->user->logout();
-        redirect('/home/'.$lang);
+        redirect('home/'.$lang);
     }
 
 
@@ -107,7 +107,7 @@ class Login extends BaseController {
                 $_SESSION['set']['email'] = $_POST['email'];
                 $_SESSION['set']['reg_failed']   = true;
                 // És vissza a reg formra
-                redirect('/login/'.$lang);
+                redirect('login/'.$lang);
             }
         }
 
@@ -145,6 +145,9 @@ class Login extends BaseController {
      */
     public function ajaj_do_login()
     {
+        $lang = isset($_POST['lang'])
+                ? $lang = $_POST['lang']
+                : (isset($_SESSION['lang']) ? $lang = $_SESSION['lang'] : $this->def_lang);
         $this->load_lang('login', $lang);
         $msgs = $this->lang->line('login');
 

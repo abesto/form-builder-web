@@ -4,10 +4,7 @@ html, body {
   padding: 0;
 }
 
-#content {
-    font-family: sans;
-    font-size: .9em;
-}
+#content { font-family: sans; }
 
 #forms {
     width: 100%;
@@ -23,7 +20,7 @@ html, body {
 
 #forms tr.odd      { background-color: #eeeeee; }
 #forms tr.even     { background-color: #e0e0e0; }
-#forms tr.hovered  { background-color: #dd9; }
+#forms tr.hovered  { background-color: #eeb; }
 #forms tr.selected {
     background-color: #d0d0ee;
     border: 3px solid #b0b0ce;
@@ -45,11 +42,10 @@ html, body {
     border: 1px solid black;
 }
 
-div.dialog {
-    text-align: center;
-    font-size: .7em;
-}
+div.dialog { text-align: center; }
 div.dialog th { text-align: right; }
+
+div.ui-widget { font-size: .9em; }
 
 #forms td.actions { text-align: center; }
 

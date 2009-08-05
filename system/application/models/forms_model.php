@@ -38,7 +38,7 @@ class Forms_model extends Model
         $user = $this->user->get_user();
 
         $form = array('user_id' => $user->id,
-                      'name'    => $name,
+                      'name'    => mb_substr($name, 0, 100),
                       'html'    => $html,
                       'public'  => $public
                       );
@@ -97,7 +97,7 @@ class Forms_model extends Model
     {
         $user = $this->user->get_user();
 
-        $update = array('name' => $name);
+        $update = array('name'    => mb_substr($name, 0, 100));
         $where  = array('id'      => $id,
                         'user_id' => $user->id);
 
@@ -130,21 +130,28 @@ class Forms_model extends Model
      * Megkötés: a bejelentkezett felhasználóhoz tartozzon
      *
      * @param id Az űrlap azonosítója
+     * @param name Az űrlap mentendő neve
      * @param html Az új tartalom
      *
-     * @return True ha sikeres volt a mentés; különben false
+     * @return Az mentett űrlap azonosítója
+     *         Nem feltétlenül azonos az id paraméterrel. Új azonosítót kap, ha:
+     *          - a mentés előtt törölték az űrlapot, vagy
+     *          - az űrlap más felhasználóhoz tartozik
      */
-    function save_form($id, $html)
+    function save_form($id, $name, $html)
     {
         $user = $this->user->get_user();
 
-        $update = array('html' => $html);
         $where = array('id'      => $id,
                        'user_id' => $user->id);
+        $update = array('html' => str_replace(' class=""', '', $html));
+
+        if ($this->get_form($id) === false)
+            $id = $this->create_form($name, $html, false);
 
         $this->db->where($where)->update('forms', $update);
 
-        return ($this->db->affected_rows() == 1);
+        return $id;
     }
 
 
@@ -196,7 +203,7 @@ class Forms_model extends Model
      */
     function get_form_public($id)
     {
-        $user = $this->user->get_user();
+        $user = $this->get_user();
         $where = array('id'     => $id,
                        'public' => true
                        );

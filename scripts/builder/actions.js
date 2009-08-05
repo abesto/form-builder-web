@@ -234,13 +234,6 @@ const actions = {
         return Array('remove_table()');
     },
 
-    /** A formhoz lehet hozzáadni táblázatot vagy fieldsetet */
-    form: function()
-    {
-        check_selected_type('form');
-        return Array('add_table()', 'add_fieldset()');
-    },
-
     /** A fieldsethez lehet hozzáadni táblázatot, vagy lehet törölni a fieldsetet */
     fieldset: function()
     {

@@ -17,21 +17,23 @@ class My_forms extends BaseController {
 
     /**
      * Az űrlapok listáját megjelenítő lap
-     * A listát AJAJ-al mutatjuk meg
+     * A listát AJAJ-al mutatjuk meg, ezért itt nem adjuk át
      *
      * @param lang Nyelv
      */
 	function index($lang=null)
 	{
         $this->check_login();
+        $this->load_lang('forms', $lang);
 
-        $data = array('owner' => true,
-                      'labels' => array('edit' => 'Szerkesztés',
-                                        'rename' => 'Átnevezés',
-                                        'remove' => 'Törlés',
-                                        'new'    => 'Új űrlap',
-                                        'html' => 'HTML&nbsp;megtekintése'
-                                        )
+        $js_labels = $this->lang->line('js');
+        foreach ($js_labels as $key => $text)
+            $js_labels[$key] = str_replace(' ', '&nbsp;', $text);
+
+        $data = array('owner'    => true,
+                      'js'       => $js_labels,
+                      'php'      => $this->lang->line('php'),
+                      'base_url' => base_url()
                       );
 
         $this->slots['content'] = $this->load->view('form_table', $data, true);
@@ -104,19 +106,25 @@ class My_forms extends BaseController {
      * Menti az űrlap tartalmát
      *
      * @param id A mentendő űrlap azonosítója
+     * @param name A mentendő űrlap neve
      * @param html A mentendő űrlap tartalma
      *
-     * @return 'true' ha sikeres volt a mentés, különben 'false'
+     * @return 'false' ha hiba történt, egyébként a mentett űrlap azonosítója
+     *         Nem feltétlenül azonos az id paraméterrel (ha a mentés előtt törölték az űrlapot, új azonosítót kap)
      */
     function save()
     {
         $this->check_login(false);
 
         $id   = $_POST['id'];
+        $name = $_POST['name'];
         $html = $_POST['html'];
 
-        echo $this->forms->save_form($id, '<form>'.$html.'</form>') ?
-            'true' : 'false';
+        $res = $this->forms->save_form($id, $name, '<form>'.$html.'</form>');
+        if ($res == false)
+            echo 'false';
+        else
+            echo $res;
     }
 
     /**

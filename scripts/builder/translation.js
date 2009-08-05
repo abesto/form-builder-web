@@ -33,12 +33,17 @@ const TRANS = {
     /* Angol */
     en: {
         name: 'English',
+        code: 'en',
         wrong_node: function(name) {return 'Selected node is not a(n) ' + name;},
         no_actions: function(name) {return 'No actions for node ' + name;},
         no_props:   function(name) {return 'No properties for node ' + name;},
         actions_label : "Actions",
         props         : "Properties",
         no_file_label : "No label",
+        user          : 'Username',
+        pass          : 'Password',
+        login         : 'Login',
+        cancel        : 'Cancel',
         prop_groups: {
             input    : "Input field",
             td       : "Table cell",
@@ -85,12 +90,17 @@ const TRANS = {
     /* Magyar */
    hu: {
         name: 'Magyar',
+        code: 'hu',
         wrong_node: function(name) {return 'A kiválasztott elem nem ' + name;},
         no_actions: function(name) {return 'Nincs művelet a(z) ' + name + ' elemhez';},
         no_props:   function(name) {return 'A(z) ' + name + ' elemnek nincsenek beállítható tulajdonságai';},
         actions_label : "Műveletek",
         props         : "Tulajdonságok",
         no_file_label : "Nincs felirat",
+        user          : 'Felhasználónév',
+        pass          : 'Jelszó',
+        login         : 'Bejelentkezés',
+        cancel        : 'Mégsem',
         prop_groups: {
             td       : "Cella",
             input    : "Beviteli mező",

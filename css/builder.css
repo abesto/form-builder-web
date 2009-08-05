@@ -54,10 +54,15 @@ body {
 #actions {
     background-color: #fff;
     border-top: 2px solid #777;
-    height: 135px;
+    height: 145px;
     width: 75%;
     position: fixed;
     bottom: 0;
+}
+
+#actions fieldset {
+    position: relative;
+    height: 100px;
 }
 
 #props {
@@ -77,11 +82,6 @@ body {
 #props > form {
     clear: both;
     margin: 15px;
-}
-
-#actions fieldset {
-    position: relative;
-    height: 90px;
 }
 
 h1 {

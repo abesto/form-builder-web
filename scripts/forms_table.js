@@ -15,10 +15,9 @@ var can_preview = false;
 var cache = {
     forms: Array(),
 
-    cache_form: function(id, html) { this.forms[id] = html; },
-
     /**
      * Űrlap előnézetének megjelenítése
+     * Ha még nem szerepel a gyorsítótárban az űrlap, akkor letölti a szerverről
      *
      * @param id Az űrlap azonosítója
      */
@@ -26,27 +25,28 @@ var cache = {
     {
         if (id == 'add_command') return;
 
-        var $pre = $('#preview-form, #preview-html-inner');
+        var $pre = $('#preview-form');
         if (this.forms[id] != undefined) {
-            $pre.html(this.forms[id]);
-            $('#preview-html-inner').html(make_html(this.forms[id]));
+            $pre.html(this.forms[id]['html']);
+            $('#preview-html-inner').html(make_html(this.forms[id]['html']));
             $pre.fadeIn('slow');
         } else {
             check_rights('', false, id);
             if (can_preview === false) return;
-            $.blockUI({message: 'Űrlap letöltése',
+            $.blockUI({message: downloading+'...',
                        css: {'z-index': 2000}});
-            $pre.load('/my_forms/load',
+            $pre.load(base_url+'my_forms/load',
                       {'id': id},
                       function (response) {
                           $.unblockUI({
                               onUnblock: function()
                                           {
-                                              cache.cache_form(id, response);
+                                              cache.forms[id] = response;
                                               $('#preview-html-inner').html(make_html(cache.forms[id]));
                                           }
                           });
-                      }
+                      },
+                      'text'
                      );
         }
     },
@@ -60,10 +60,12 @@ var cache = {
      *
      * A szerkesztő-alkalmazás hívja mentéskor
      */
-    update: function(id, html)
+    update: function(id, name, html)
     {
-        this.forms[id] = html;
-        if (($selected != null) && ($selected.attr('id') == id))
+        this.forms[id] = {name: name,
+                          html: html};
+        set_name(id, name);
+        if (($selected != null) && (get_id($selected) == id))
             this.preview(id);
     }
 };
@@ -88,14 +90,14 @@ function check_rights(callback, write, id)
         data['id'] = id;
 
     $.ajaxSetup({async: false});
-    $.post('/my_forms/remote_check_rights',
+    $.post(base_url+'my_forms/remote_check_rights',
            data,
            function(resp) {
                if (resp == 'NOT_LOGGED_IN') {
-                   window.location = '/login';
+                   window.location = base_url+'login';
                    throw 'User is not logged in - redirecting to login page';
                } else if (resp == 'FORM_NOT_FOUND') {
-                   $.blockUI({message: 'A kért űrlap nem található',
+                   $.blockUI({message: not_found,
                               css: {'z-index': 2000}});
                    remove_row(id);
                    setTimeout($.unblockUI, 3000);
@@ -132,7 +134,7 @@ function get_id($row)       { return $row.attr('id');                        }
 function action_icon(name, label, fun, id, write)
 {
     fun = fun.replace('{id}', id);
-    return $('<img>').attr({'src': '/img/tango/'+name+'.png',
+    return $('<img>').attr({'src': base_url+'img/tango/'+name+'.png',
                             'alt': label
                            })
                      .click(function() { check_rights(fun, write, id); });
@@ -150,17 +152,17 @@ function add_row(id, name)
                         .append($('<td>').append(name))
                         .append($('<td>').addClass('actions')
                                         .append(action_icon('document-properties',
-                                                            edit_label,
+                                                            edit,
                                                             'open_editor({id})',
                                                             id, true
                                                             ))
                                          .append(action_icon('accessories-text-editor',
-                                                             rename_label,
+                                                             rename,
                                                              'rename_dialog({id})',
                                                              id, true
                                                             ))
                                         .append(action_icon('emblem-unreadable',
-                                                            remove_label,
+                                                            remove,
                                                             'remove_dialog({id})',
                                                             id, true
                                                             ))
@@ -193,9 +195,8 @@ function remove_row(id)
  */
 function open_editor(id)
 {
-    window.open ("/builder/"+id,
-                 "builder_app",
-                 "status=0,toolbar=0,location=0,menubar=0,directories=0,scrollbars=0");
+    window.open (base_url+"builder/"+id,
+                 "builder_app");
 }
 
 /**
@@ -211,7 +212,7 @@ function rename_dialog(id)
 /**
  * Átnevez egy űrlapot a párbeszédablakból kapott adatok alapján
  */
-function rename()
+function rename_form()
 {
     var form = $('#rename_form')[0];
     var id   = form.id.value;
@@ -242,10 +243,11 @@ function new_form()
     var form = $('#new_form')[0];
     var name = form.name.value;
 
-    $.post('/my_forms/create',
+    $.post(base_url+'my_forms/create',
            {'name': name},
            function(resp) {
                add_row(resp, name);
+               cache.forms[resp] = '<form></form>';
                $('#new_dialog').dialog('close').find('input[name=name]').val('');
            }
           );
@@ -265,12 +267,12 @@ function remove_dialog(id)
  *
  * @param id A törlendő űrlap azonosítója
  */
-function remove()
+function remove_form()
 {
     var form = $('#remove_form')[0];
     var id = form.id.value;
 
-    $.post('/my_forms/remove',
+    $.post(base_url+'my_forms/remove',
            {'id': id},
            function(resp) {
                remove_row(id);
@@ -279,9 +281,16 @@ function remove()
           );
 }
 
+/**
+ * @param text formázandó HTML
+ * @return Szépen formázott HTML kód
+ */
 function make_html(text)
 {
     text = htmlize($(text)[0], 0);
+    // tbody nem kell
+    text = text.replace(/ *<tbody>.*\n/g, '');
+    text = text.replace(/ *<\/tbody>.*\n/g, '');
     // Hogy meg tudjuk mutatni
     text = text.replace(/</g, '&lt;');
     text = text.replace(/>/g, '&gt;');
@@ -338,7 +347,7 @@ $(document).ready( function() {
                        );
 
                        // Form-lista letöltése a szerverről
-                       $.post('/my_forms/list_forms',
+                       $.post(base_url+'my_forms/list_forms',
                               Array(),
                               function (forms)
                               {
@@ -349,21 +358,37 @@ $(document).ready( function() {
                               'json'
                              );
 
-                       // Átnevezés párbeszédablak inicializálása
-                       $('#rename_dialog').dialog({autoOpen: false,
-                                                   modal   : true,
-                                                   width   : 'auto'
-                                                  });
                        // Új űrlap párbeszédablak inicializálása
+                       var new_buttons = {};
+                       new_buttons[cancel] = function() { $(this).dialog('close'); };
+                       new_buttons[create] = function() { $(this).find('form').submit(); };
                        $('#new_dialog').dialog({autoOpen: false,
                                                 modal   : true,
-                                                width   : 'auto'
-                                               });
+                                                width   : 'auto',
+                                                buttons : new_buttons
+                       });
+                       $('#new_form').submit(function() { return check_rights('new_form()', true, false); });
+
+                       // Átnevezés párbeszédablak inicializálása
+                       var rename_buttons = {};
+                       rename_buttons[cancel] = function() { $(this).dialog('close'); };
+                       rename_buttons[rename] = function() { $(this).find('form').submit(); };
+                       $('#rename_dialog').dialog({autoOpen: false,
+                                                   modal   : true,
+                                                   width   : 'auto',
+                                                   buttons : rename_buttons
+                       });
+                       $('#rename_form').submit(function() { return check_rights('rename_form()', true, get_id($selected)); });
+
                        // Törlés párbeszédablak inicializálása
+                       var remove_buttons = {};
+                       remove_buttons[cancel] = function() { $(this).dialog('close'); };
+                       remove_buttons[remove] = function() { $(this).find('form').submit(); };
                        $('#remove_dialog').dialog({autoOpen: false,
-                                                modal   : true,
-                                                width   : 'auto'
-                                               });
+                                                   modal   : true,
+                                                   buttons: remove_buttons
+                       });
+                       $('#remove_form').submit(function() { return check_rights('remove_form()', true, get_id($selected)); });
 
                        // Az előnézet-fülek inicializálása
                        $('#preview').tabs();

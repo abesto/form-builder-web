@@ -18,10 +18,20 @@ class Builder extends BaseController {
 
     function open($id)
     {
-        $data = array();
+        $this->load_lang('login');
+
+        if ($this->user->get_user(false) === false)
+            redirect('/login');
+
         $form = $this->forms->get_form($id);
-        $data['title'] = $form->name;
-        $data['form']  = $form->html;
+
+        $data = array('title' => $form->name,
+                      'form'  => $form->html,
+                      'lang'  => $_SESSION['lang'],
+                      'id'    => $id,
+                      'login' => $this->lang->line('login')
+                      );
+
         $this->load->view('builder', $data);
     }
 }

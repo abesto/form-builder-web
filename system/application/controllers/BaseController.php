@@ -69,13 +69,13 @@ class BaseController extends Controller
      *
      * @param redirect A sikeres bejelentkezés után erre a lapra küldjük a felhasználót
      */
-    protected function check_login($redirect='/my_forms')
+    protected function check_login($redirect='my_forms')
     {
         $user = $this->user->get_user(false);
 
         if ($user === false) {
             $_SESSION['set']['redirect'] = $redirect;
-            redirect('/login');
+            redirect('login');
         }
     }
 
