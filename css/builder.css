@@ -35,10 +35,6 @@ body {
 
 #layout > tbody > tr > td { vertical-align: top; }
 
-#lang span { cursor: pointer; }
-#lang span:after { content: " | "; }
-#lang span:last-child:after { content: ""; }
-
 #left {
     position: fixed;
     left: 0;
@@ -46,42 +42,13 @@ body {
     width: 75%;
 }
 
+/*************
+ * Main pane *
+ *************/
+
 #main {
     overflow: auto;
     width: 75%;
-}
-
-#actions {
-    background-color: #fff;
-    border-top: 2px solid #777;
-    height: 145px;
-    width: 75%;
-    position: fixed;
-    bottom: 0;
-}
-
-#actions fieldset {
-    position: relative;
-    height: 100px;
-}
-
-#props {
-    background-color: #fff;
-    border-left: 2px solid #777;
-    overflow: auto;
-    position: fixed;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 25%;
-}
-
-
-#props legend { font-weight: bold; font-size: 1.05em;}
-
-#props > form {
-    clear: both;
-    margin: 15px;
 }
 
 h1 {
@@ -135,6 +102,69 @@ h1 {
     background-color: #EEF;
 }
 
+/***************
+ * Bottom pane *
+ ***************/
+#actions {
+    background-color: #fff;
+    border-top: 2px solid #777;
+    height: 145px;
+    width: 75%;
+    position: fixed;
+    bottom: 0;
+}
+
+#actions fieldset {
+    position: relative;
+    height: 120px;
+}
+
+
 #actions form {
     margin: 10px;
+}
+
+/**************
+ * Right pane *
+ **************/
+#props {
+    background-color: #fff;
+    border-left: 2px solid #777;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 25%;
+}
+
+
+#props legend { font-weight: bold; font-size: 1.05em;}
+
+#props > form {
+    clear: both;
+    margin: 15px;
+}
+
+#menu input { margin: 2px; }
+
+#lang {
+    margin-top: 7px;
+    text-align: center;
+}
+#lang span {
+    cursor: pointer;
+    margin: 0 7px;
+}
+#lang span:hover { text-decoration: underline; }
+
+/* Status */
+#status {
+    font-family: sans;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    margin: 0;
+    background-color: #ddd;
+    border-top: 2px ridge silver;
 }

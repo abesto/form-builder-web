@@ -61,7 +61,7 @@ function save()
                             },
                             function (resp) {
                                 form_id = resp;
-                                $('#status').html('saved');
+                                status.set('saved');
                                 window.opener.cache.update(form_id, get_title(), '<form>'+html+'</form>');
                             },
                             'text'
@@ -107,6 +107,7 @@ function login()
 window.onbeforeunload = save_check;
 function save_check()
 {
-    if (dirty == true) return 'die, biaaaatch';
+    if (dirty == true)
+        return trans.leave_confirm;
     return null;
 }

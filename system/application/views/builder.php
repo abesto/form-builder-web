@@ -35,6 +35,15 @@
       </form>
     </div>
     <div id="props">
+      <form action="javascript:void(0)" id="menu">
+        <fieldset>
+          <legend id="menu_label"></legend>
+          <input type="button" value="HTML" onclick="make_html()" />
+          <input type="button" value="" id="save_button" onclick="save()" />
+          <input type="button" value="" id="rename_button" onclick="$('#rename_dialog').dialog('open')" />
+          <div id="lang"></div>
+        </fieldset>
+      </form>
       <form id="props_form" action="javascript:void(0)">
         <fieldset>
           <legend></legend>
@@ -43,15 +52,6 @@
               <td></td>
             </tr>
           </table>
-        </fieldset>
-      </form>
-      <form action="javascript:void(0)">
-        <fieldset>
-          <legend>TRANSLATEME Menu</legend>
-          <input type="button" value="HTML" onclick="make_html()" />
-          <input type="button" value="Mentés" onclick="save()" />
-          <div id="lang" style="display: inline; float: right"></div>
-          <div id="status"></div>
         </fieldset>
       </form>
     </div>
@@ -76,5 +76,23 @@
         </table>
       </form>
     </div>
+
+    <div id="rename_dialog">
+      <form id="rename_form" >
+        <table>
+          <tr>
+            <th style="text-align: right" id="old_name_label"></th>
+            <td id="old_name"></td>
+          </tr>
+          <tr>
+            <th id="new_name_label" style="text-align: right"></th>
+            <td>
+              <input type="text" name="new_name" />
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
   </body>
+  <div id="status">&nbsp;</div>
 </html>

@@ -54,6 +54,54 @@ body {
  * Menü vége *
  *************/
 
+/*****************
+ * Nyelvválasztó *
+ *****************/
+#langs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #eee;
+    border: 2px ridge silver;
+    border-left: 0;
+    border-top: 0;
+    -moz-border-radius-bottomright: 10px;
+    -webkit-border-radius-bottomright: 10px;
+}
+
+#langs ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 7px 0;
+}
+
+#langs ul li {
+    font-size: .9em;
+    font-family: sans;
+    margin: 7px 0;
+}
+
+#langs ul li a {
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    padding: 3px 10px;
+}
+
+#langs ul li a:hover {
+    background-color: #ddf;
+    border-color: silver;
+}
+
+#langs ul li a img {
+    display: inline;
+    border: 0;
+}
+/**********************
+ * Nyelvválasztó vége *
+ **********************/
+
 /************
  * Tartalom *
  ************/

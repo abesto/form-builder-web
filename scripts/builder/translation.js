@@ -40,10 +40,26 @@ const TRANS = {
         actions_label : "Actions",
         props         : "Properties",
         no_file_label : "No label",
-        user          : 'Username',
-        pass          : 'Password',
-        login         : 'Login',
-        cancel        : 'Cancel',
+        leave_confirm : 'There are unsaved changes on this form. Are you sure you want to leave?',
+        menu: {
+            cancel : 'Cancel',
+            menu   : 'Menu',
+            save   : 'Save'
+        },
+        rename: {
+            rename   : 'Rename',
+            old_name : 'Old name',
+            new_name : 'New name'
+        },
+        login: {
+            user  : 'Username',
+            pass  : 'Password',
+            login : 'Login'
+        },
+        status: {
+            saved  : 'Form saved',
+            loaded :'Form loaded'
+        },
         prop_groups: {
             input    : "Input field",
             td       : "Table cell",
@@ -88,7 +104,7 @@ const TRANS = {
     },
 
     /* Magyar */
-   hu: {
+    hu: {
         name: 'Magyar',
         code: 'hu',
         wrong_node: function(name) {return 'A kiválasztott elem nem ' + name;},
@@ -97,10 +113,26 @@ const TRANS = {
         actions_label : "Műveletek",
         props         : "Tulajdonságok",
         no_file_label : "Nincs felirat",
-        user          : 'Felhasználónév',
-        pass          : 'Jelszó',
-        login         : 'Bejelentkezés',
-        cancel        : 'Mégsem',
+        leave_confirm : 'Az űrlapon mentetlen változások vannak. Biztosan el kívánja hagyni az oldalt?',
+        menu: {
+            cancel : 'Mégsem',
+            menu   : 'Menü',
+            save   : 'Mentés'
+        },
+        rename: {
+            rename   : 'Átnevezés',
+            old_name : 'Eredeti név',
+            new_name : 'Új név'
+        },
+        login: {
+            user  : 'Felhasználónév',
+            pass  : 'Jelszó',
+            login : 'Bejelentkezés'
+        },
+        status: {
+            saved  : 'Űrlap elmentve',
+            loaded : 'Űrlap betöltve'
+        },
         prop_groups: {
             td       : "Cella",
             input    : "Beviteli mező",

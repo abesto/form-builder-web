@@ -21,14 +21,14 @@ var cache = {
      *
      * @param id Az űrlap azonosítója
      */
-    preview: function(id)
+    preview: function(id, name)
     {
         if (id == 'add_command') return;
 
         var $pre = $('#preview-form');
         if (this.forms[id] != undefined) {
-            $pre.html(this.forms[id]['html']);
-            $('#preview-html-inner').html(make_html(this.forms[id]['html']));
+            $pre.html(this.forms[id].html);
+            $('#preview-html-inner').html(make_html(this.forms[id].html));
             $pre.fadeIn('slow');
         } else {
             check_rights('', false, id);
@@ -41,8 +41,9 @@ var cache = {
                           $.unblockUI({
                               onUnblock: function()
                                           {
-                                              cache.forms[id] = response;
-                                              $('#preview-html-inner').html(make_html(cache.forms[id]));
+                                              cache.forms[id] = {html: response,
+                                                                 name: name};
+                                              $('#preview-html-inner').html(make_html(cache.forms[id].html));
                                           }
                           });
                       },
@@ -393,4 +394,15 @@ $(document).ready( function() {
                        // Az előnézet-fülek inicializálása
                        $('#preview').tabs();
                        $('#preview').tabs('select', '#preview-form');
+
+                       // Értesítések stílusa
+                       $.blockUI.defaults.css['padding']               = '15px';
+                       $.blockUI.defaults.css['border']                = 'none';
+                       $.blockUI.defaults.css['backgroundColor']       = '#000';
+                       $.blockUI.defaults.css['-webkit-border-radius'] = '10px';
+                       $.blockUI.defaults.css['-moz-border-radius']    = '10px';
+                       $.blockUI.defaults.css['opacity']               = .5;
+                       $.blockUI.defaults.css['color']                 = '#fff';
+                       $.blockUI.defaults.css['font-family']           = 'sans';
+
                    });

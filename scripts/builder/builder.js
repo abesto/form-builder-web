@@ -183,6 +183,7 @@ function set_lang(lang)
 {
     trans = eval('TRANS.'+lang);
     $('#actions_fs legend').html(trans.actions_label);
+    $('#props_form fieldset legend').html(trans.props);
 
     var prop_groups = $('#props_form fieldset');
     for (var i = 0; i < prop_groups.length; i++)
@@ -195,19 +196,39 @@ function set_lang(lang)
         update_props(name);
     }
 
-    // Bejelentkező párbeszédablak
-    $('#user_label').html(trans.user+':');
-    $('#pass_label').html(trans.pass+':');
+    $('#menu_label').html(trans.menu.menu);
+    $('#save_button').val(trans.menu.save);
+    $('#rename_button').val(trans.rename.rename);
+
+    // Bejelentkezés párbeszédablak
+    $('#user_label').html(trans.login.user+':');
+    $('#pass_label').html(trans.login.pass+':');
 
     var login_buttons = {};
-    login_buttons[trans.cancel] = function() { $(this).dialog('close'); };
-    login_buttons[trans.login]  = function() { $(this).find('form').submit(); };
-    $('#login_dialog').dialog('option', {title: trans.login,
+    login_buttons[trans.menu.cancel] = function() { $(this).dialog('close'); };
+    login_buttons[trans.login.login]  = function() { $(this).find('form').submit(); };
+    $('#login_dialog').dialog('option', {title: trans.login.login,
                                          buttons: login_buttons
                                         });
 
+
+    // Átnevezés párbeszédablak
+    $('#old_name_label').html(trans.rename.old_name+':');
+    $('#new_name_label').html(trans.rename.new_name+':');
+
+    var rename_buttons = {};
+    rename_buttons[trans.menu.cancel] = function() { $(this).dialog('close'); };
+    rename_buttons[trans.rename.rename]  = function() { $(this).find('form').submit(); };
+    $('#rename_dialog').dialog('option', {title: trans.rename.rename,
+                                          buttons: rename_buttons
+                                         });
+
+    status.update_lang();
 }
 
+/**
+ * Megmutatja az űrlap HTML-jét szépen formázva
+ */
 function make_html()
 {
     var text = htmlize($('#main form')[0], 0);
@@ -224,6 +245,9 @@ function make_html()
     if ($html.width() < 300) $html.css({'width': '300px'});
 }
 
+
+
+// Inicializálás
 $(document).ready(function (){
     // #main alap magassága
     $('#main').height($(window).height() - $('#actions').height());
@@ -265,19 +289,43 @@ $(document).ready(function (){
     $('#login_dialog').dialog({
                         autoOpen : false,
                         width    : 'auto',
-                        modal    : true
+                        modal    : true,
+                        open : function ()
+                        {
+                            $(this).find('input').val('');
+                            $(this).find('input[name=user]').focus();
+                        }
                        });
     $('#login_form').submit(function() { return login(); });
 
+    // Átnevezés párbeszédablak inicializálása
+    $('#rename_dialog').dialog({autoOpen : false,
+                                width    : 'auto',
+                                modal    : true,
+                                open     : function()
+                                           {
+                                               $(this).find('#old_name').html(get_title());
+                                               $(this).find('input[name=new_name]').html('').focus();
+                                           }
+                               });
+    $('#rename_form').submit(function ()
+                             {
+                                 set_title(this.new_name.value);
+                                 $('#rename_dialog').dialog('close');
+                                 return false;
+                             });
+
+    // Az alapértelmezett nyelv alkalmazása
     set_lang(default_lang);
-    $('#props_form fieldset legend').html(trans.props);
+    status.set('loaded');
 
     // HTML párbeszédablak inicializálása
-    $('#html').dialog({autoOpen: false,
-                       width: 'auto',
-                       modal: true,
+    $('#html').dialog({autoOpen : false,
+                       width    : 'auto',
+                       modal    : true,
                        // Tulajdonság-mező fókuszának visszaállítására
-                       close: function() { update_props($('.selected')[0].nodeName.toLowerCase()); }});
+                       close    : function() { update_props($('.selected')[0].nodeName.toLowerCase()); }});
 
     $('#main form').select();
+
 });

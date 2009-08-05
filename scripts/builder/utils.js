@@ -274,4 +274,28 @@ function get_title() { return $('#title').html(); }
 /**
  * @param title Az űrlap új neve
  */
-function set_title(title) { $('#title').html(title); }
+function set_title(title)
+{
+    $('#title').html(title);
+    handle_prop_change();
+}
+
+// Az állapotsor kezelése
+var status = {
+    date: new Date(),
+    status: null,
+
+    // Az adott értékkel frissíti az állapotsor szövegét
+    set: function(val)
+    {
+        this.status = val;
+        this.date = new Date();
+        $('#status').html(this.date.toLocaleString() + ': '+trans.status[val]);
+    },
+
+    // Újratölti a tartalmat az aktuális nyelvvel
+    update_lang: function()
+    {
+        $('#status').html(this.date.toLocaleString() + ': '+trans.status[this.status]);
+    }
+};

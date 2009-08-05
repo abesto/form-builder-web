@@ -147,7 +147,7 @@ class Login extends BaseController {
     {
         $lang = isset($_POST['lang'])
                 ? $lang = $_POST['lang']
-                : (isset($_SESSION['lang']) ? $lang = $_SESSION['lang'] : $this->def_lang);
+                : (isset($_SESSION['lang']) ? $lang = $_SESSION['lang'] : $this->langs[0]);
         $this->load_lang('login', $lang);
         $msgs = $this->lang->line('login');
 

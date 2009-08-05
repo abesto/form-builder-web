@@ -32,7 +32,9 @@ class BaseController extends Controller
         $this->load->model('User_model', 'user');
         $this->load->model('Forms_model', 'forms');
 
-        $this->def_lang = 'hu';
+        $this->lang_names = array('hu' => 'Magyar',
+                                  'en' => 'English');
+        $this->langs = array_keys($this->lang_names); /**< Az elérhető nyelvek. Az első az alapértelmezett. */
     }
 
 
@@ -54,6 +56,8 @@ class BaseController extends Controller
         $file = 'css/' . strtolower(get_class($this)) . '.css';
         if (file_exists($file))
             $this->slots['css'] = $file;
+
+        $this->slots['langs'] = $this->lang_names;
 
         // Ha van az aktuális controllernek saját js fájlja, akkor azt átadjuk a skeletonnak
         $file = 'scripts/' . strtolower(get_class($this)) . '.js';
@@ -152,7 +156,7 @@ class BaseController extends Controller
         if ($in !== null)
             $_SESSION['lang'] = $in;
         else if (!isset($_SESSION['lang']))
-            $_SESSION['lang'] = $this->def_lang;
+            $_SESSION['lang'] = $this->langs[0];
 
         $this->lang->load($file, $_SESSION['lang']);
     }
