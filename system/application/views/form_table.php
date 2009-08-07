@@ -6,6 +6,14 @@
 foreach ($js as $label => $value)
     echo "  var $label = '$value';\n";
 echo "  var base_url = '$base_url';\n";
+echo '  var is_public   = '.(int)$public.";\n";
+echo "  var forms_url = '$base_url";
+if ($public)
+    echo 'public_forms/';
+else
+    echo 'my_forms/';
+echo "';\n";
+
 ?>
 </script>
 <link rel="stylesheet" href="<?php echo base_url(); ?>css/smoothness/jquery-ui-1.7.custom.css" type="text/css" media="screen" />
@@ -17,12 +25,14 @@ echo "  var base_url = '$base_url';\n";
   <col style="width: 70%;"></col>
   <col style="width: 30%;"></col>
   <tr>
-    <th style="text-align: left"><?php echo $php['name']; ?></th>
-<?php if ($owner === true): ?>
-    <th style="text-align: center"><?php echo $php['actions']; ?></th>
+    <th style="text-align: left"><?php echo $php['form_name']; ?></th>
+<?php if ($public): ?>
+    <th style="text-align: left"><?php echo $php['user_name']; ?></th>
 <?php endif; ?>
+    <th style="text-align: center"><?php echo $php['actions']; ?></th>
   </tr>
   <tr id="add_command">
+<?php if (!$public): ?>
     <td colspan="2">
       <span onclick="new_dialog()" style="cursor: pointer">
         <img src="<?php echo base_url(); ?>/img/tango/list-add.png"
@@ -31,6 +41,7 @@ echo "  var base_url = '$base_url';\n";
         <?php echo $php['new']; ?>
       </span>
     </td>
+<?php endif; ?>
   </tr>
 </table>
 

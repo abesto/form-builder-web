@@ -66,13 +66,15 @@ class Forms_model extends Model
      * Megkötés: a bejelentkezett felhasználóhoz tartozzon
      *
      * @param id Az űrlap azonosítója
+     * @param throw ld. {@link User_model::get_user($throw=true)}
      *
      * @return Ha nincs ilyen űrlap, akkor false; egyébként az űrlapot
      *         leíró objektum
      */
-    function get_form($id)
+    function get_form($id, $throw=true)
     {
-        $user = $this->user->get_user();
+        $user = $this->user->get_user($throw);
+        if ($user === false) return false;
         $where = array('user_id' => $user->id,
                        'id'      => $id
                        );
@@ -187,10 +189,15 @@ class Forms_model extends Model
      */
     function get_form_list_public()
     {
-        $where  = array('public' => true);
-        $select = array('id', 'name', 'public');
+        $select = array('id', 'name', 'user_name');
+        $result = $this->db->select($select)->from('public_forms')->get()->result();
 
-        return $this->db->select($select)->from('forms')->where($where)->get()->result;
+        $user = $this->user->get_user(false);
+        if ($user !== false)
+            foreach ($result as $row)
+                $row->owner = ($user->name == $row->user_name);
+
+        return $result;
     }
 
 
@@ -204,10 +211,17 @@ class Forms_model extends Model
      */
     function get_form_public($id)
     {
-        $user = $this->get_user();
-        $where = array('id'     => $id,
-                       'public' => true
-                       );
-        return $this->db->from('forms')->where($where)->get()->row();
+        $where = array('id' => $id);
+        $result = $this->db->from('public_forms')->where($where)->get();
+
+        if ($result->num_rows() == 0)
+            return false;
+
+        $row = $result->row();
+
+        $user = $this->user->get_user(false);
+        if ($user !== false)
+            $row->owner = ($user->name == $row->user_name);
+        return $row;
     }
 }

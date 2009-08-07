@@ -30,7 +30,7 @@ class My_forms extends BaseController {
         foreach ($js_labels as $key => $text)
             $js_labels[$key] = str_replace(' ', '&nbsp;', $text);
 
-        $data = array('owner'    => true,
+        $data = array('public'   => false,
                       'js'       => $js_labels,
                       'php'      => $this->lang->line('php'),
                       'base_url' => base_url()
@@ -66,6 +66,7 @@ class My_forms extends BaseController {
      * Új űrlapot hoz létre
      *
      * @param name Az űrlap neve
+     * @param html Opcionális, a létrehozandó űrlap tartalma (mentés másként)
      *
      * @return Az új űrlap azonosítója
      */
@@ -74,8 +75,11 @@ class My_forms extends BaseController {
         $this->check_login(false);
 
         $name = $_POST['name'];
+        $html = isset($_POST['html'])
+                ? $_POST['html']
+                : '<form></form>';
 
-        $id = $this->forms->create_form($name, '<form></form>', false);
+        $id = $this->forms->create_form($name, $html, false);
         echo $id;
     }
 

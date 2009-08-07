@@ -4,17 +4,17 @@
   <head>
     <title><?php echo $title; ?> - FormBuilder</title>
     <meta name="Content-Type" content="text/html; charset=UTF-8" />
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/jquery-1.3.2.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/jquery-ui-1.7.custom.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/jquery.livequery.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery-ui-1.7.custom.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery.livequery.js"></script>
 
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/builder/utils.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/builder/props.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/builder/actions.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/builder/translation.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/builder/htmlize.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/builder/builder.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/builder/remote.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/utils.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/props.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/actions.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/translation.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/htmlize.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/builder.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/remote.js"></script>
 
     <script type="text/javascript">
       var default_lang = '<?php echo $lang; ?>';
@@ -22,8 +22,8 @@
       var base_url = '<?php echo base_url(); ?>';
     </script>
 
-    <link rel="stylesheet" href="<?php echo base_url(); ?>/css/builder.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="<?php echo base_url(); ?>/css/smoothness/jquery-ui-1.7.custom.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="<?php echo base_url(); ?>css/builder.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="<?php echo base_url(); ?>css/smoothness/jquery-ui-1.7.custom.css" type="text/css" media="screen" />
   </head>
   <body>
     <h1 id="title"><?php echo $title; ?></h1>
@@ -36,12 +36,12 @@
       </form>
     </div>
     <div id="props">
-      <form action="javascript:void(0)" id="menu">
+      <form action="javascript:void(0)" id="menu" onsubmit="return false;">
         <fieldset>
           <legend id="menu_label"></legend>
           <input type="button" value="HTML" onclick="make_html()" />
           <input type="button" value="" id="save_button" onclick="save()" />
-          <input type="button" value="" id="rename_button" onclick="$('#rename_dialog').dialog('open')" />
+          <input type="button" value="" id="save_as_button" onclick="$('#save_as_dialog').dialog('open')" />
           <div id="lang"></div>
         </fieldset>
       </form>
@@ -78,15 +78,11 @@
       </form>
     </div>
 
-    <div id="rename_dialog">
-      <form id="rename_form" >
+    <div id="save_as_dialog">
+      <form id="save_as_form" >
         <table>
           <tr>
-            <th style="text-align: right" id="old_name_label"></th>
-            <td id="old_name"></td>
-          </tr>
-          <tr>
-            <th id="new_name_label" style="text-align: right"></th>
+            <th id="name_label" style="text-align: right"></th>
             <td>
               <input type="text" name="new_name" />
             </td>

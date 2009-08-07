@@ -48,7 +48,7 @@ body {
 
 #main {
     overflow: auto;
-    width: 75%;
+    width: 65%;
 }
 
 h1 {
@@ -109,7 +109,7 @@ h1 {
     background-color: #fff;
     border-top: 2px solid #777;
     height: 145px;
-    width: 75%;
+    width: 65%;
     position: fixed;
     bottom: 0;
 }
@@ -135,7 +135,7 @@ h1 {
     right: 0;
     top: 0;
     height: 100%;
-    width: 25%;
+    width: 35%;
 }
 
 
@@ -146,12 +146,10 @@ h1 {
     margin: 15px;
 }
 
+#menu { text-align: center; }
 #menu input { margin: 2px; }
 
-#lang {
-    margin-top: 7px;
-    text-align: center;
-}
+#lang { margin-top: 7px; }
 #lang span {
     cursor: pointer;
     margin: 0 7px;

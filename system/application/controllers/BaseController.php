@@ -32,8 +32,9 @@ class BaseController extends Controller
         $this->load->model('User_model', 'user');
         $this->load->model('Forms_model', 'forms');
 
-        $this->lang_names = array('hu' => 'Magyar',
-                                  'en' => 'English');
+        $this->lang_names = array('en' => 'English',
+                                  'hu' => 'Magyar'
+                                  );
         $this->langs = array_keys($this->lang_names); /**< Az elérhető nyelvek. Az első az alapértelmezett. */
     }
 
@@ -60,9 +61,11 @@ class BaseController extends Controller
         $this->slots['langs'] = $this->lang_names;
 
         // Ha van az aktuális controllernek saját js fájlja, akkor azt átadjuk a skeletonnak
-        $file = 'scripts/' . strtolower(get_class($this)) . '.js';
-        if (file_exists($file))
-            $this->slots['js'] = $file;
+        if (!isset($this->slots['js'])) {
+            $file = 'scripts/' . strtolower(get_class($this)) . '.js';
+            if (file_exists($file))
+                $this->slots['js'] = $file;
+        }
 
         return $this->load->view('skeleton', $this->slots, $return);
     }
@@ -88,12 +91,17 @@ class BaseController extends Controller
      * AJAJ függvény
      *
      * @return 'OK'                : a felhasználó be van jelentkezve, és az űrlap az övé
-     *         'FORM_NOT_FOUND'    : a felhasználó be van jelentkezve, de az űrlap nem található, vagy nem módosíthatja
+     *         'FORM_NOT_FOUND'    : a felhasználó be van jelentkezve, de az űrlap nem található, vagy nem végezheti a kért műveletet
      *         'NOT_LOGGED_IN'     : a felhasználó nincs bejelentkezve
      */
     public function remote_check_rights()
     {
-        $write = $_POST['write'];
+        if ($_POST['write'] == 'true')
+            $write = true;
+        elseif ($_POST['write'] == 'false')
+            $write = false;
+        else
+            throw('Argument \'write\' of remote_check_rights expected to be \'true\' or \'false\'');
         $id = isset($_POST['id']) ? $_POST['id'] : false;
 
         if (($write == true) && ($this->user->get_user(false) === false)) {
@@ -101,10 +109,9 @@ class BaseController extends Controller
             return;
         } else {
             if ($id !== false) {
-                // Szerkesztésre nyitáskor ha nem a felhasználó űrlapja;
-                // Olvasásra nyitáskor ha nem a felhasználóé és nem is publikus
-                if ((($write == true) && ($this->forms->get_form($id) === false))
-                ||  (($write == false) && (($this->forms->get_form($id) === false) || ($this->forms->get_form_public($id) === false)))) {
+                $got_private = ($this->forms->get_form($id, false) !== false);
+                $got_public  = ($this->forms->get_form_public($id, false) !== false);
+                if (($write && !$got_private) || (!$write && !$got_private && !$got_public)) {
                     echo 'FORM_NOT_FOUND';
                     return;
                 }
@@ -128,7 +135,9 @@ class BaseController extends Controller
         $this->load_lang('menu');
         $trans = $this->lang->line('menu');
         $items = array('home'   => $trans['home'],
-                       'manual' => $trans['manual']);
+                       'manual' => $trans['manual'],
+                       'public_forms' => $trans['public_forms']
+                       );
 
         $user = $this->user->get_user(false);
         if ($user == false)

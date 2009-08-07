@@ -24,6 +24,11 @@ class Builder extends BaseController {
             redirect('/login');
 
         $form = $this->forms->get_form($id);
+        if ($form == false)
+            $form = $this->forms->get_form_public($id);
+
+        if ($form == false)
+            redirect('/my_forms');
 
         $data = array('title' => $form->name,
                       'form'  => $form->html,

@@ -27,18 +27,16 @@
 var dirty = false;
 
 /**
- * Ha a szerver szerint nincs bejelentkezve a felhasználó,
- * akkor átküldi a bejelentkező oldalra.
+ * Ha nincs bejelentkezett felhasználó, megnyitja a bejelentkezés párbeszédablakot
+ * és beállítja a bejelentkezés után hívandó függvényt a callback paraméterre.
  *
- * Ha nincs joga a kért művelethez, akkor erről értesíti a felhasználót.
+ * Ha létezik az adatbázisban űrlap a szerkesztett űrlap azonosítójával
+ * és van rá írásjoga a bejelentkezett felhasználónak, futtatja a callback-et.
  *
- * Egyébként futtatja a callback-ben stringként kapott programkódot
- *
- * @param callback A futtatandó programkód
- * @param write bool; true, írás jellegű művelethez ellenőrizzük a jogokat
- * @param id Az ellenőrzendő űrlap azonosítója; ha false, nem ellenőrizzük a létezését
+ * Ha nem létezik az űrlap, vagy nincs rá a bejelnetkezett felhasználónak írásjoga,
+ * egy új azonosítót kap a szervertől. Átirányítja a böngészőt az új űrlap szerkesztő-oldalára.
  */
-function save()
+function update_or_create(callback)
 {
     // id: views/builder.php
     var data = {'id':    form_id,
@@ -50,34 +48,94 @@ function save()
            function(resp) {
                if (resp == 'NOT_LOGGED_IN') {
                    $('#login_dialog').dialog('open');
-               } else if ((resp == 'FORM_NOT_FOUND')  // Létre fog jönni új azonosítóval
-                 || (resp == 'OK')) {
-                     var html = $('#form').html();
-                     $.post(base_url+'my_forms/save',
-                            {
-                              'id'   : form_id,
-                              'name' : get_title(),
-                              'html' : html
-                            },
-                            function (resp) {
-                                form_id = resp;
-                                status.set('saved');
-                                window.opener.cache.update(form_id, get_title(), '<form>'+html+'</form>');
-                            },
-                            'text'
-                           );
-                     dirty = false;
+                   $.data($('#login_form').get(0), 'callback', callback);
+
+               } else if ((resp == 'FORM_NOT_FOUND') || (resp == 'OK')) {
+
+                   callback.call();
+
                } else
                    throw('Unknown response from server');
            },
            'text'
     );
-    return false;
+
 }
+
+/**
+ * Elmenti a szerkesztett űrlapot a szerverre
+ *
+ * Ha az adott azonosítóra a felhasználónak nincs írásjoga,
+ * egy új azonosítót kap, és átküldi oda a böngészőt.
+ */
+function save()
+{
+    update_or_create(function()
+        {
+            var html = $('#form').html();
+            $.post(
+                base_url+'my_forms/save',
+                {
+                    'id'   : form_id,
+                    'name' : get_title(),
+                    'html' : html
+                },
+                function (resp)
+                {
+                    window.opener.cache.update(resp, get_title(), '<form>'+html+'</form>');
+                    if (form_id != resp) {
+                        window.opener.add_row(resp, get_title());
+                        window.opener.select_id(resp);
+                        window.location = base_url + 'builder/' + resp;
+                    }
+                    status.set('saved');
+                },
+                'text'
+            );
+            dirty = false;
+        });
+}
+
+
+/**
+ * Létrehoz egy új űrlapot a szerveren az aktuális tartalommal
+ * és átirányítja oda a böngészőt
+ *
+ * Előfeltétel: legyen a felhasználó bejelentkezve
+ */
+function save_as(form)
+{
+    var name = form.new_name.value;
+    update_or_create(function()
+    {
+        var html = $('#form').html();
+        $.post(
+            base_url+'my_forms/create',
+            {
+                'name' : name,
+                'html' : html
+            },
+            function (resp)
+            {
+                window.opener.add_row(resp, name);
+                window.opener.cache.update(resp, name, '<form>'+html+'</form>');
+                window.opener.select_id(resp);
+                window.location = base_url + 'builder/' + resp;
+            },
+            'text'
+        );
+        dirty = false;
+    });
+}
+
 
 /**
  * Ha szerkesztés közben megszűnik a bejelentkezés, a bejelentkező
  * párbeszédablak ezzel a függvénnyel küldi a bejelentkezést
+ *
+ * Ha a bejelentkezés sikeres, a {@link update_or_create} függvény
+ * által beállított, annak a callback paraméterben átadott függvény
+ * lefut.
  */
 function login()
 {
@@ -94,14 +152,14 @@ function login()
            {
                if (resp == true) {
                    $('#login_dialog').dialog('close');
-                   save();
+
+                   $.removeData(form);
                } else {
                    $('#login_error').html(resp);
                }
            },
            'json'
           );
-    return false;
 }
 
 window.onbeforeunload = save_check;

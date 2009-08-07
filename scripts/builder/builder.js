@@ -198,7 +198,6 @@ function set_lang(lang)
 
     $('#menu_label').html(trans.menu.menu);
     $('#save_button').val(trans.menu.save);
-    $('#rename_button').val(trans.rename.rename);
 
     // Bejelentkezés párbeszédablak
     $('#user_label').html(trans.login.user+':');
@@ -212,15 +211,15 @@ function set_lang(lang)
                                         });
 
 
-    // Átnevezés párbeszédablak
-    $('#old_name_label').html(trans.rename.old_name+':');
-    $('#new_name_label').html(trans.rename.new_name+':');
+    // Mentés másként párbeszédablak
+    $('#save_as_button').val(trans.save_as.save_as);
+    $('#save_as_dialog #name_label').html(trans.save_as.name+':');
 
-    var rename_buttons = {};
-    rename_buttons[trans.menu.cancel] = function() { $(this).dialog('close'); };
-    rename_buttons[trans.rename.rename]  = function() { $(this).find('form').submit(); };
-    $('#rename_dialog').dialog('option', {title: trans.rename.rename,
-                                          buttons: rename_buttons
+    var save_as_buttons = {};
+    save_as_buttons[trans.menu.cancel] = function() { $(this).dialog('close'); };
+    save_as_buttons[trans.save_as.save_as]  = function() { $(this).find('form').submit(); };
+    $('#save_as_dialog').dialog('option', {title: trans.save_as.save_as,
+                                          buttons: save_as_buttons
                                          });
 
     status.update_lang();
@@ -296,10 +295,10 @@ $(document).ready(function (){
                             $(this).find('input[name=user]').focus();
                         }
                        });
-    $('#login_form').submit(function() { return login(); });
+    $('#login_form').submit(function() { login(); return false; });
 
     // Átnevezés párbeszédablak inicializálása
-    $('#rename_dialog').dialog({autoOpen : false,
+    $('#save_as_dialog').dialog({autoOpen : false,
                                 width    : 'auto',
                                 modal    : true,
                                 open     : function()
@@ -308,12 +307,7 @@ $(document).ready(function (){
                                                $(this).find('input[name=new_name]').html('').focus();
                                            }
                                });
-    $('#rename_form').submit(function ()
-                             {
-                                 set_title(this.new_name.value);
-                                 $('#rename_dialog').dialog('close');
-                                 return false;
-                             });
+    $('#save_as_form').submit(function () { save_as(this); return false; });
 
     // Az alapértelmezett nyelv alkalmazása
     set_lang(default_lang);
@@ -328,4 +322,5 @@ $(document).ready(function (){
 
     $('#main form').select();
 
+    window.focus();
 });

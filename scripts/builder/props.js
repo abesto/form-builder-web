@@ -148,11 +148,11 @@ const PROPS = {
     {
         var $select = $('<select>').attr('name', 'input_type');
         var $selected = check_selected_type('td');
-        var types = Array('text', 'button', 'checkbox', 'radio', 'file', 'select');
+        var types = Array('text', 'password', 'button', 'checkbox', 'radio', 'file', 'select');
         var type = get_input_type($selected);
         for (var i = 0; i < types.length; i++) {
             var $option = $('<option>').value(types[i])
-                                     .append(trans.td_types[types[i]]);
+                                       .append(trans.td_types[types[i]]);
             if (type == types[i]) $option.attr('selected', 'true');
             $select.append($option);
         }

@@ -171,7 +171,7 @@ function get_td_text($td)
         // Input mező
     } else if (type == 'input') {
         var intype = $td.firstChild().attr('type');
-        if ((intype == 'text') || (intype == 'button')) text = $td.firstChild().value();
+        if ((intype == 'text') || (intype == 'button') || (intype == 'password')) text = $td.firstChild().value();
         else if ((intype == 'radio') || (intype == 'checkbox')) text = $td.text();
         // Select mező
     } else if (type == 'select') {
@@ -197,7 +197,7 @@ function set_td_text($td, _text)
     } else if (type == 'input') {
         type = $td.firstChild().attr('type');
         if ($td.children().size() == 2) $td.children(':last-child').remove();
-        if      ((type == 'text') || (type == 'button')) $td.firstChild().value(_text);
+        if      ((type == 'text') || (type == 'button') || (type == 'password')) $td.firstChild().value(_text);
         else if ((type == 'radio') || (type == 'checkbox')) {
             var label = node_with_text('label', _text);
             label.attr('for', $td.firstChild().attr('id'));

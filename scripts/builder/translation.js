@@ -46,10 +46,9 @@ const TRANS = {
             menu   : 'Menu',
             save   : 'Save'
         },
-        rename: {
-            rename   : 'Rename',
-            old_name : 'Old name',
-            new_name : 'New name'
+        save_as: {
+            save_as  : 'Save as',
+            name     : 'New name'
         },
         login: {
             user  : 'Username',
@@ -79,6 +78,7 @@ const TRANS = {
         },
         td_types: {
             text     : "Text",
+            'password' : "Password",
             'input|select' : "Input",
             button   : "Button",
             checkbox : "Checkbox",
@@ -119,10 +119,9 @@ const TRANS = {
             menu   : 'Menü',
             save   : 'Mentés'
         },
-        rename: {
-            rename   : 'Átnevezés',
-            old_name : 'Eredeti név',
-            new_name : 'Új név'
+        save_as: {
+            save_as  : 'Mentés másként',
+            name     : 'Az új űrlap neve'
         },
         login: {
             user  : 'Felhasználónév',
@@ -151,8 +150,9 @@ const TRANS = {
             option     : ""
         },
         td_types: {
-            'input|select' : "Beviteli mező",
             text     : "Szöveg",
+            'password' : "Jelszó",
+            'input|select' : "Beviteli mező",
             button   : "Gomb",
             checkbox : "Checkbox",
             radio    : "Radio",

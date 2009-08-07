@@ -4,5 +4,6 @@ $lang['menu'] = array('home'   => 'Főoldal',
                       'login'  => 'Regisztráció / Bejelentkezés',
                       'welcome'=> 'Bejelentkezve, mint %s',
                       'logout' => 'Kijelentkezés',
-                      'my_forms' => 'Űrlapjaim'
+                      'my_forms' => 'Űrlapjaim',
+                      'public_forms' => 'Nyilvános űrlapok'
                       );

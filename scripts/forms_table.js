@@ -1,13 +1,14 @@
 /**
- * @file   forms_table.js
+ * @file   my_forms.js
  * @author Zoltán Nagy <abesto0@gmail.com>
  * @date   Sat Aug  1 15:45:29 2009
  *
- * @fileOverview Az űrlapokat megjelenítő táblázathoz tartozó JS
+ * @fileOverview Az felhasználó saját űrlapjainak kezelése
  */
 
-var $selected = null;
+var $selected   = null;
 var can_preview = false;
+var editor      = null;
 
 /**
  * Az előnézetek letöltésére és gyorsítótárazása
@@ -35,7 +36,7 @@ var cache = {
             if (can_preview === false) return;
             $.blockUI({message: downloading+'...',
                        css: {'z-index': 2000}});
-            $pre.load(base_url+'my_forms/load',
+            $pre.load(forms_url+'load',
                       {'id': id},
                       function (response) {
                           $.unblockUI({
@@ -63,8 +64,14 @@ var cache = {
      */
     update: function(id, name, html)
     {
-        this.forms[id] = {name: name,
-                          html: html};
+        if (this.forms[id] === undefined)
+            this.forms[id] = {name: '',
+                              html: '<form></form>'};
+
+        this.forms[id].name = name;
+        if (html !== null)
+            this.forms[id].html = html;
+
         set_name(id, name);
         if (($selected != null) && (get_id($selected) == id))
             this.preview(id);
@@ -91,7 +98,7 @@ function check_rights(callback, write, id)
         data['id'] = id;
 
     $.ajaxSetup({async: false});
-    $.post(base_url+'my_forms/remote_check_rights',
+    $.post(forms_url+'remote_check_rights',
            data,
            function(resp) {
                if (resp == 'NOT_LOGGED_IN') {
@@ -101,7 +108,7 @@ function check_rights(callback, write, id)
                    $.blockUI({message: not_found,
                               css: {'z-index': 2000}});
                    remove_row(id);
-                   setTimeout($.unblockUI, 3000);
+                   setTimeout($.unblockUI, 2000);
                    can_preview = false;
                } else if (resp == 'OK') {
                    eval(callback);
@@ -112,7 +119,6 @@ function check_rights(callback, write, id)
            'text'
     );
     $.ajaxSetup({async: true});
-    return false;
 }
 
 /////////////////////////////////////////////////
@@ -155,7 +161,7 @@ function add_row(id, name)
                                         .append(action_icon('document-properties',
                                                             edit,
                                                             'open_editor({id})',
-                                                            id, true
+                                                            id, false
                                                             ))
                                          .append(action_icon('accessories-text-editor',
                                                              rename,
@@ -169,12 +175,55 @@ function add_row(id, name)
                                                             ))
                                         .append($('<div>').append('&nbsp;'))
                                );
-
     var rows = $('#forms tr');
     $row.find('td').hide();
     $(rows[rows.length-1]).before($row);
     $row.find('td').fadeIn('slow');
 }
+
+/**
+ * Hozzáad egy nyilvános űrlapot leíró sort az űrlapok táblázatához
+ *
+ * @param id Az űrlap azonosítója
+ * @param form_name Az űrlap neve
+ * @param user_name Az űrlap tulajdonosának neve
+ * @param logged_in Van bejelnetkezett felhasználó?
+ * @param actions A bejelentkezett felhasználóhoz tartozik az űrlap?
+ */
+function add_row_public(id, form_name, user_name, owner, logged_in)
+{
+    var $row = $('<tr>').attr('id', id)
+                        .append($('<td>').append(form_name))
+                        .append($('<td>').append(user_name))
+                        .append($('<td>').append('&nbsp;').addClass('actions')
+                                         .append($('<div>').append('&nbsp;')));
+
+    with ($row.find('td.actions div')) {
+        if (logged_in) {
+            before(action_icon('document-properties',
+                               edit,
+                               'open_editor({id})',
+                               id, false));
+            if (owner)
+               before(action_icon('accessories-text-editor',
+                                  rename,
+                                  'rename_dialog({id})',
+                                  id, true
+                                 ))
+               .before(action_icon('emblem-unreadable',
+                                   this.remove,
+                                   'remove_dialog({id})',
+                                   id, true
+                                  )
+               );
+        }
+    }
+    var rows = $('#forms tr');
+    $row.find('td').hide();
+    $(rows[rows.length-1]).before($row);
+    $row.find('td').fadeIn('slow');
+}
+
 
 /**
  * Törli a táblázatból az adott azonosítójú sort
@@ -196,8 +245,7 @@ function remove_row(id)
  */
 function open_editor(id)
 {
-    window.open (base_url+"builder/"+id,
-                 "builder_app");
+    window.open(base_url+"builder/"+id, "builder_app");
 }
 
 /**
@@ -219,7 +267,7 @@ function rename_form()
     var id   = form.id.value;
     var name = form.new_name.value;
 
-    $.post('/my_forms/rename',
+    $.post(base_url+'my_forms/rename',
            {'id'  : id,
             'name': name});
 
@@ -244,12 +292,14 @@ function new_form()
     var form = $('#new_form')[0];
     var name = form.name.value;
 
-    $.post(base_url+'my_forms/create',
+    $.post(forms_url+'create',
            {'name': name},
            function(resp) {
+               cache.update(resp, name, '<form></form>');
                add_row(resp, name);
-               cache.forms[resp] = '<form></form>';
+               select_id(resp);
                $('#new_dialog').dialog('close').find('input[name=name]').val('');
+               open_editor(resp);
            }
           );
 }
@@ -314,6 +364,8 @@ function select($row)
     cache.preview( get_id($row) );
 }
 
+/// Kijelöli az adott azonosítójú sort
+function select_id(id) { select($('#'+id)); }
 
 // Inicializálás
 $(document).ready( function() {
@@ -348,13 +400,19 @@ $(document).ready( function() {
                        );
 
                        // Form-lista letöltése a szerverről
-                       $.post(base_url+'my_forms/list_forms',
+                       $.post(forms_url+'list_forms',
                               Array(),
                               function (forms)
                               {
-                                  for (var i in forms) {
-                                      add_row(forms[i]['id'], forms[i]['name']);
-                                  }
+                                  if (is_public)
+                                      for (var i in forms['forms']) {
+                                          var form = forms['forms'][i];
+                                          add_row_public(form['id'], form['name'], form['user_name'], form['owner'], forms['logged_in']);
+                                          }
+                                  else
+                                      for (var i in forms)
+                                          add_row(forms[i]['id'], forms[i]['name']);
+
                               },
                               'json'
                              );
@@ -368,7 +426,7 @@ $(document).ready( function() {
                                                 width   : 'auto',
                                                 buttons : new_buttons
                        });
-                       $('#new_form').submit(function() { return check_rights('new_form()', true, false); });
+                       $('#new_form').submit(function() { check_rights('new_form()', true, false); return false; });
 
                        // Átnevezés párbeszédablak inicializálása
                        var rename_buttons = {};
@@ -379,7 +437,7 @@ $(document).ready( function() {
                                                    width   : 'auto',
                                                    buttons : rename_buttons
                        });
-                       $('#rename_form').submit(function() { return check_rights('rename_form()', true, get_id($selected)); });
+                       $('#rename_form').submit(function() { check_rights('rename_form()', true, get_id($selected)); return false; });
 
                        // Törlés párbeszédablak inicializálása
                        var remove_buttons = {};
@@ -389,7 +447,7 @@ $(document).ready( function() {
                                                    modal   : true,
                                                    buttons: remove_buttons
                        });
-                       $('#remove_form').submit(function() { return check_rights('remove_form()', true, get_id($selected)); });
+                       $('#remove_form').submit(function() { check_rights('remove_form()', true, get_id($selected)); return false; });
 
                        // Az előnézet-fülek inicializálása
                        $('#preview').tabs();
