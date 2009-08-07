@@ -23,9 +23,13 @@ class Builder extends BaseController {
         if ($this->user->get_user(false) === false)
             redirect('/login');
 
+        $public = false;
         $form = $this->forms->get_form($id);
-        if ($form == false)
+
+        if ($form == false) {
             $form = $this->forms->get_form_public($id);
+            $public = true;
+        }
 
         if ($form == false)
             redirect('/my_forms');
@@ -34,7 +38,9 @@ class Builder extends BaseController {
                       'form'  => $form->html,
                       'lang'  => $_SESSION['lang'],
                       'id'    => $id,
-                      'login' => $this->lang->line('login')
+                      'login' => $this->lang->line('login'),
+                      'public' => true,
+                      'user'  => $this->user->get_user()->name
                       );
 
         $this->load->view('builder', $data);

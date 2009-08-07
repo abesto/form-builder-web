@@ -84,7 +84,10 @@ function save()
                 {
                     window.opener.cache.update(resp, get_title(), '<form>'+html+'</form>');
                     if (form_id != resp) {
-                        window.opener.add_row(resp, get_title());
+                        if (is_public)
+                            window.opener.add_row_public(resp, get_title(), user, true, true);
+                        else
+                            window.opener.add_row(resp, get_title(), false);
                         window.opener.select_id(resp);
                         window.location = base_url + 'builder/' + resp;
                     }

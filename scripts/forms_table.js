@@ -101,6 +101,7 @@ function check_rights(callback, write, id)
     $.post(forms_url+'remote_check_rights',
            data,
            function(resp) {
+               $.ajaxSetup({async: true});
                if (resp == 'NOT_LOGGED_IN') {
                    window.location = base_url+'login';
                    throw 'User is not logged in - redirecting to login page';
@@ -118,7 +119,6 @@ function check_rights(callback, write, id)
            },
            'text'
     );
-    $.ajaxSetup({async: true});
 }
 
 /////////////////////////////////////////////////
@@ -135,6 +135,32 @@ function get_id($row)
 }
 
 /**
+ * @param id Az űrlap azonosítója
+ * @param form_is_public Az űrlap jelenleg nyilvános?
+ *
+ * @return Az űrlap nyilvánosságát ki/bekapcsoló gomb
+ */
+function toggle_public_icon(id, form_is_public)
+{
+    var public_img = 'famfamfam_silk/';
+    var label = '';
+
+    if (form_is_public) {
+        public_img += 'lock_open_go';
+        label = public_label;
+    } else {
+        public_img += 'lock_delete';
+        label = private_label;
+    }
+
+    return action_icon(public_img,
+                       label,
+                       'set_public({id}, ' + !form_is_public + ')',
+                       id, true
+                      );
+}
+
+/**
  * Létrehoz egy művelet-gombot (szerkesztés, átnevezés, stb)
  *
  * @param name  A megjelenítendő kép neve
@@ -146,7 +172,7 @@ function get_id($row)
 function action_icon(name, label, fun, id, write)
 {
     fun = fun.replace('{id}', id);
-    return $('<img>').attr({'src': base_url+'img/tango/'+name+'.png',
+    return $('<img>').attr({'src': base_url+'img/'+name+'.png',
                             'alt': label
                            })
                      .click(function(event) { check_rights(fun, write, id); });
@@ -155,31 +181,34 @@ function action_icon(name, label, fun, id, write)
 /**
  * Hozzáad egy sort az űrlapok táblázatához
  *
- * @param id Az űrlap azonosítója
- * @param name Az űrlap neve
+ * @param id     Az űrlap azonosítója
+ * @param name   Az űrlap neve
+ * @param form_is_public Az űrlap publikus?
  */
-function add_row(id, name)
+function add_row(id, name, is_form_public)
 {
     var $row = $('<tr>').attr('id', id)
                         .append($('<td>').append(name))
                         .append($('<td>').addClass('actions')
-                                        .append(action_icon('document-properties',
+                                        .append(action_icon('tango/document-properties',
                                                             edit,
                                                             'open_editor({id})',
                                                             id, false
                                                             ))
-                                         .append(action_icon('accessories-text-editor',
+                                        .append(action_icon('tango/accessories-text-editor',
                                                              rename,
                                                              'rename_dialog({id})',
                                                              id, true
                                                             ))
-                                        .append(action_icon('emblem-unreadable',
+                                        .append(toggle_public_icon(id, is_form_public))
+                                        .append(action_icon('tango/emblem-unreadable',
                                                             remove,
                                                             'remove_dialog({id})',
                                                             id, true
                                                             ))
                                         .append($('<div>').append('&nbsp;'))
                                );
+
     var rows = $('#forms tr');
     $row.find('td').hide();
     $(rows[rows.length-1]).before($row);
@@ -205,17 +234,17 @@ function add_row_public(id, form_name, user_name, owner, logged_in)
 
     with ($row.find('td.actions div')) {
         if (logged_in) {
-            before(action_icon('document-properties',
+            before(action_icon('tango/document-properties',
                                edit,
                                'open_editor({id})',
                                id, false));
-            if (owner){
-               before(action_icon('accessories-text-editor',
+            if (owner) {
+               before(action_icon('tango/accessories-text-editor',
                                   rename,
                                   'rename_dialog({id})',
                                   id, true
                                  ));
-               before(action_icon('emblem-unreadable',
+               before(action_icon('tango/emblem-unreadable',
                                    this.remove,
                                    'remove_dialog({id})',
                                    id, true
@@ -337,6 +366,26 @@ function remove_form()
           );
 }
 
+function set_public(id, to)
+{
+    $.post(base_url+'my_forms/set_public',
+           {
+               id: id,
+               to: to
+           },
+           function()
+           {
+               with ($('#'+id+' td.actions')) {
+                   var $img = toggle_public_icon(id, to);
+                   find('img:nth-child(3)')
+                       .after($img)
+                       .remove();
+                   find('div').html( $img.attr('alt') );
+               }
+           }
+          );
+}
+
 /**
  * @param text formázandó HTML
  * @return Szépen formázott HTML kód
@@ -402,8 +451,8 @@ $(document).ready( function() {
                            function()
                            {
                                $(this).hover(
-                                   function() { $(this).parent().find('div').html($(this).attr('alt')); },
-                                   function() { $(this).parent().find('div').html('&nbsp;');            }
+                                   function() { $(this).parent().find('div').html($(this).attr('alt')).css('color', 'inherit'); },
+                                   function() { $(this).parent().find('div').css('color', 'transparent');            }
                                );
                            }
                        );
@@ -420,7 +469,7 @@ $(document).ready( function() {
                                           }
                                   else
                                       for (var i in forms)
-                                          add_row(forms[i]['id'], forms[i]['name']);
+                                          add_row(forms[i]['id'], forms[i]['name'], forms[i]['public']=='1');
 
                               },
                               'json'

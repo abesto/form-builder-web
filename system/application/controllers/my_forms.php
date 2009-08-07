@@ -150,6 +150,24 @@ class My_forms extends BaseController {
             'true' : 'false';
     }
 
+    function set_public()
+    {
+        $this->check_login(false);
+
+        $id = $_POST['id'];
+
+        if ($_POST['to'] == 'true')
+            $to = true;
+        elseif ($_POST['to'] == 'false')
+            $to = false;
+        else
+            throw new Exception('Argument \'to\' of set_public expected to be \'true\' or \'false\'');
+
+        echo $this->forms->set_public($id, $to) ?
+            'true' : 'false';
+
+    }
+
     /**
      * Törli az űrlapot
      * Itt a törlés megerősítése már megtörtént

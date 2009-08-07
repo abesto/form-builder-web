@@ -23,7 +23,9 @@ echo "';\n";
 </p>
 <table id="forms">
   <col></col>
+<?php if ($public): ?>
   <col></col>
+<?php endif; ?>
   <col style="width: 30%;"></col>
   <tr>
     <th style="text-align: left"><?php echo $php['form_name']; ?></th>

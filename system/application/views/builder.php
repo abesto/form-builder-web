@@ -18,8 +18,10 @@
 
     <script type="text/javascript">
       var default_lang = '<?php echo $lang; ?>';
-      var form_id = <?php echo $id; ?>;
-      var base_url = '<?php echo base_url(); ?>';
+      var form_id      = <?php echo $id; ?>;
+      var base_url     = '<?php echo base_url(); ?>';
+      var is_public    = <?php echo (string)$public; ?>;
+      var user         = '<?php echo $user; ?>';
     </script>
 
     <link rel="stylesheet" href="<?php echo base_url(); ?>css/builder.css" type="text/css" media="screen" />

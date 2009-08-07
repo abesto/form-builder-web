@@ -57,7 +57,7 @@ class Forms_model extends Model
         $where = array('user_id' => $user->id);
         $select = array('id', 'name', 'public');
 
-        return $this->db->select($select)->from('forms')->where($where)->get()->result();
+        return $this->db->select($select)->from('forms')->where($where)->order_by('id')->get()->result();
     }
 
 
@@ -100,6 +100,27 @@ class Forms_model extends Model
         $user = $this->user->get_user();
 
         $update = array('name'    => mb_substr($name, 0, 100));
+        $where  = array('id'      => $id,
+                        'user_id' => $user->id);
+
+        $this->db->where($where)->update('forms', $update);
+        return ($this->db->affected_rows() == 1);
+    }
+
+    /**
+     * Adott azonosítójú űrlap nyilvános flagjének beállítása
+     * Megkötés: a bejelentkezett felhasználóhoz tartozzon
+     *
+     * @param id Az űrlap azonosítója
+     * @param public Nyilvános?
+     *
+     * @return Sikeres volt módosítás?
+     */
+    function set_public($id, $to)
+    {
+        $user = $this->user->get_user();
+
+        $update = array('public'    => $to);
         $where  = array('id'      => $id,
                         'user_id' => $user->id);
 
@@ -212,7 +233,7 @@ class Forms_model extends Model
     function get_form_public($id)
     {
         $where = array('id' => $id);
-        $result = $this->db->from('public_forms')->where($where)->get();
+        $result = $this->db->from('public_forms')->where($where)->order_by('id')->get();
 
         if ($result->num_rows() == 0)
             return false;
