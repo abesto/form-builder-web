@@ -127,7 +127,12 @@ function check_rights(callback, write, id)
 
 function get_name(id)       { return $('#'+id+' td:first-child').html();     }
 function set_name(id, name) { return $('#'+id+' td:first-child').html(name); }
-function get_id($row)       { return $row.attr('id');                        }
+function get_id($row)
+{
+    if ($row == null)
+        return null;
+    return $row.attr('id');
+}
 
 /**
  * Létrehoz egy művelet-gombot (szerkesztés, átnevezés, stb)
@@ -144,7 +149,7 @@ function action_icon(name, label, fun, id, write)
     return $('<img>').attr({'src': base_url+'img/tango/'+name+'.png',
                             'alt': label
                            })
-                     .click(function() { check_rights(fun, write, id); });
+                     .click(function(event) { check_rights(fun, write, id); });
 }
 
 /**
@@ -184,11 +189,11 @@ function add_row(id, name)
 /**
  * Hozzáad egy nyilvános űrlapot leíró sort az űrlapok táblázatához
  *
- * @param id Az űrlap azonosítója
+ * @param id        Az űrlap azonosítója
  * @param form_name Az űrlap neve
  * @param user_name Az űrlap tulajdonosának neve
- * @param logged_in Van bejelnetkezett felhasználó?
- * @param actions A bejelentkezett felhasználóhoz tartozik az űrlap?
+ * @param owner     A bejelentkezett felhasználóhoz tartozik az űrlap?
+ * @param logged_in Van bejelentkezett felhasználó?
  */
 function add_row_public(id, form_name, user_name, owner, logged_in)
 {
@@ -204,18 +209,18 @@ function add_row_public(id, form_name, user_name, owner, logged_in)
                                edit,
                                'open_editor({id})',
                                id, false));
-            if (owner)
+            if (owner){
                before(action_icon('accessories-text-editor',
                                   rename,
                                   'rename_dialog({id})',
                                   id, true
-                                 ))
-               .before(action_icon('emblem-unreadable',
+                                 ));
+               before(action_icon('emblem-unreadable',
                                    this.remove,
                                    'remove_dialog({id})',
                                    id, true
-                                  )
-               );
+                                 ));
+            }
         }
     }
     var rows = $('#forms tr');
@@ -255,7 +260,7 @@ function rename_dialog(id)
 {
     $('#rename_form')[0].id.value = id;
     $('#rename_form #old_name').html( get_name(id) );
-    $('#rename_dialog').dialog('open');
+    $('#rename_dialog').dialog('open').find('input[type=text]').focus();
 }
 
 /**
@@ -281,7 +286,7 @@ function rename_form()
 function new_dialog(id)
 {
     $('#new_form')[0].id.value = id;
-    $('#new_dialog').dialog('open');
+    $('#new_dialog').dialog('open').find('input[type=text]').focus();
 }
 
 /**
@@ -310,7 +315,7 @@ function new_form()
 function remove_dialog(id)
 {
     $('#remove_form')[0].id.value = id;
-    $('#remove_dialog').dialog('open');
+    $('#remove_dialog').dialog('open').find('input[type=text]').focus();
 }
 
 /**
@@ -379,7 +384,11 @@ $(document).ready( function() {
                                    function() { $(this).addClass('hovered');    },
                                    function() { $(this).removeClass('hovered'); }
                                ).click(
-                                   function() { select($(this));    }
+                                   function(event) {
+                                       // Ha a művelet-ikonokra kattintottak, nem jelöljük ki a sort
+                                       if (event.target.parentNode == this)
+                                           select($(this));
+                                   }
                                );
                            }
                        );
@@ -437,7 +446,7 @@ $(document).ready( function() {
                                                    width   : 'auto',
                                                    buttons : rename_buttons
                        });
-                       $('#rename_form').submit(function() { check_rights('rename_form()', true, get_id($selected)); return false; });
+                       $('#rename_form').submit(function() { check_rights('rename_form()', true, this.id.value); return false; });
 
                        // Törlés párbeszédablak inicializálása
                        var remove_buttons = {};
@@ -447,7 +456,7 @@ $(document).ready( function() {
                                                    modal   : true,
                                                    buttons: remove_buttons
                        });
-                       $('#remove_form').submit(function() { check_rights('remove_form()', true, get_id($selected)); return false; });
+                       $('#remove_form').submit(function() { check_rights('remove_form()', true, this.id.value); return false; });
 
                        // Az előnézet-fülek inicializálása
                        $('#preview').tabs();

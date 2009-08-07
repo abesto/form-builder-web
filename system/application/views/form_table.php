@@ -22,7 +22,8 @@ echo "';\n";
   Itt tudod b*szogatni őket.
 </p>
 <table id="forms">
-  <col style="width: 70%;"></col>
+  <col></col>
+  <col></col>
   <col style="width: 30%;"></col>
   <tr>
     <th style="text-align: left"><?php echo $php['form_name']; ?></th>
