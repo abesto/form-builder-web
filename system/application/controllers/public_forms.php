@@ -12,8 +12,8 @@ class Public_forms extends BaseController {
 	function __construct()
 	{
 		parent::__construct();
-        $this->slots['css'] = 'css/my_forms.css';
-        $this->slots['js'] =  'scripts/forms_table.js';
+        $this->slots['css'] = 'css/my_forms.min.css';
+        $this->slots['js'] =  'scripts/forms_table.min.js';
 	}
 
 	function index($lang=null)

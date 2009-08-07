@@ -38,8 +38,7 @@ class Login extends BaseController {
 
         $this->load_lang('login', $lang);
         $slots = $this->lang->line('login');
-        //$slots['redirect'] = '/profile';
-        $slots['redirect'] = 'home';
+        $slots['redirect'] = 'my_forms';
 
         foreach ($_SESSION['set'] as $key => $val)
             $slots[$key.'_val'] = $val;

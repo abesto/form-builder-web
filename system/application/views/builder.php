@@ -4,17 +4,11 @@
   <head>
     <title><?php echo $title; ?> - FormBuilder</title>
     <meta name="Content-Type" content="text/html; charset=UTF-8" />
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery-1.3.2.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery-ui-1.7.custom.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery.livequery.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery.livequery.min.js"></script>
 
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/utils.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/props.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/actions.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/translation.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/htmlize.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/builder.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder/remote.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder.min.js"></script>
 
     <script type="text/javascript">
       var default_lang = '<?php echo $lang; ?>';
@@ -25,7 +19,7 @@
     </script>
 
     <link rel="stylesheet" href="<?php echo base_url(); ?>css/builder.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="<?php echo base_url(); ?>css/smoothness/jquery-ui-1.7.custom.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="<?php echo base_url(); ?>css/smoothness/jquery-ui-1.7.custom.min.css" type="text/css" media="screen" />
   </head>
   <body>
     <h1 id="title"><?php echo $title; ?></h1>

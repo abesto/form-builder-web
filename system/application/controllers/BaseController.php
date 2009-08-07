@@ -54,7 +54,7 @@ class BaseController extends Controller
         $this->slots['menu'] = $this->load->view('menu', $menu, true);
 
         // Ha van az aktuális controllernek saját css fájlja, akkor azt átadjuk a skeletonnak
-        $file = 'css/' . strtolower(get_class($this)) . '.css';
+        $file = 'css/' . strtolower(get_class($this)) . '.min.css';
         if (file_exists($file))
             $this->slots['css'] = $file;
 
@@ -62,7 +62,7 @@ class BaseController extends Controller
 
         // Ha van az aktuális controllernek saját js fájlja, akkor azt átadjuk a skeletonnak
         if (!isset($this->slots['js'])) {
-            $file = 'scripts/' . strtolower(get_class($this)) . '.js';
+            $file = 'scripts/' . strtolower(get_class($this)) . '.min.js';
             if (file_exists($file))
                 $this->slots['js'] = $file;
         }

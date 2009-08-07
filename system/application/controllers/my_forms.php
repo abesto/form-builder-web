@@ -12,7 +12,7 @@ class My_forms extends BaseController {
 	function __construct()
 	{
 		parent::__construct();
-        $this->slots['js'] = 'scripts/forms_table.js';
+        $this->slots['js'] = 'scripts/forms_table.min.js';
 	}
 
     /**
