@@ -84,7 +84,7 @@ class User_model extends Model
     }
 
     /**
-     * A munkamenetben mentett felhasználót kijelentkezteti
+     * A bejelentkezett felhasználót kijelentkezteti
      */
     function logout()
     {

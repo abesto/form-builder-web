@@ -243,7 +243,7 @@ class Login extends BaseController {
                                   "mb_strpos('$user', ' ') !== false" => array('space'),
                                   "$length < $min_length" => array('short', 3),
                                   "$length > $max_length" => array('long', 100),
-                                  "\$controller->user->not_available('$user')" => array('name_exists')
+                                  "\$controller->user->not_available('$user')" => array('user_exists')
                                   )
                             );
     }

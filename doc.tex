@@ -1,0 +1,596 @@
+%Létrehozva: 2009. június 28.
+\documentclass[12pt,a4paper,twoside]{article}
+
+%Hosszú sorok helyett inkább sok hely szavak között
+\sloppy
+
+%Táblázatok formázásához
+\usepackage{array}
+
+%Ábrák
+\usepackage{graphicx}
+
+%Ékezetek, magyar nyelv
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[hungarian]{babel}
+
+%Forráskód megjelenítésére
+\usepackage{listings}
+\lstset{
+  numbers=left,
+  frame=shadowbox,
+  numberstyle=\tiny,
+  basicstyle=\ttfamily\small
+}
+
+%Definíciós lista kis whitespace-el
+\newcommand{\desc}{
+ \begin{description}{}{}
+   \setlength\itemsep{0pt}
+   \setlength\parskip{0pt}
+   \setlength\topsep{0pt}
+   \setlength\partopsep{0pt}
+   \small}
+ \newcommand{\ed}{
+  \end{description}
+\normalsize }
+
+%\fontfamily{garamond}
+%Elvárás a szakdolgozattal szemben
+\usepackage{times}
+
+%Az elektronikus változatban hiperhivatkozások
+\usepackage{hyperref}
+%PDF tulajdonságai
+\hypersetup{
+    bookmarks=true,
+    unicode=true,
+    pdftoolbar=true,
+    pdfmenubar=true,
+    pdffitwindow=false,
+    pdfstartview={FitH},
+    pdftitle={Szakdolgozat},
+    pdfauthor={Nagy Zoltán},
+    pdfsubject={Online űrlapkészítő},
+    pdfnewwindow=true,
+    colorlinks=true
+}
+
+%Nyomtatásba
+\hypersetup{
+    linkcolor=black,
+    citecolor=black,
+    filecolor=black,
+    urlcolor=black
+}
+
+%Elektronikus változat
+\hypersetup{
+    linkcolor=red,
+    citecolor=green,
+    filecolor=magenta,
+    urlcolor=cyan
+}
+
+%"Oldalbeállítás"
+\usepackage[margin=2.5cm, bmargin=3cm, bindingoffset=2cm]{geometry}
+
+%Fejléc
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[LO,RE]{}
+\fancyhead[LE,RO]{\footnotesize\sffamily\leftmark}
+
+
+\title{Szakdolgozat\\\normalsize Online űrlapkészítő}
+\author{} % Kézzel helyezem el, nem oda, ahol a document classban van
+
+\begin{document}
+
+\maketitle\thispagestyle{empty}
+\vspace{17cm}
+\hspace{8cm}
+Készítette: Nagy Zoltán
+\clearpage
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\clearpage
+\phantomsection
+\section{Feladatmeghatározás}
+
+A kitűzött cél egy olyan rendszer kialakítása, amely lehetővé teszi
+\texttt{HTML} űrlapok létrehozását egy point-and-click felület
+segítségével. Elvárás az \texttt{HTML 4.01} szabványban meghatározott minden
+\texttt{form} tagen belül legális elem támogatása. Törekedni kell a szabványos
+\texttt{XHTML 1.1} kód generálására. Ezen kívül biztosítani kell
+az űrlapok mentését, visszatöltését és letöltését. Opcionális cél a szerkesztés
+közbeni automatikus biztonsági mentés, valamint a módosítások visszavonása.
+
+Ennek megfelelően a projekt két jól elkülöníthető részből, illetve az ezek
+közötti kommunikációból áll:
+\begin{itemize}
+\item A gyors válaszidő biztosítása végett a kliensoldalon kell futnia az
+  űrlapszerkesztő alkalmazásnak. Ezt az alkalmazást az egyszerűség kedvéért a
+  továbbiakban hívjuk \textit{Builder}nek.
+\item A mentett űrlapok megtekintéséhez, módosítását és megnyitását egy
+  webes felületen keresztül tesszük lehetővé. Nevezzük ezt a programrészt
+  \textit{Manager}nek.
+\item Biztosítani kell a Builder kapcsolatát a szerverrel az űrlap mentése és
+  különböző ellenőrzések céljából.
+\end{itemize}
+
+Az alkalmazás tervezett felhasználói körébe elsősorban webmesterek
+tartoznak. Nekik a majdani kód tényleges felépítése ismeretében intuitív munkafolyamatot
+kell biztosítanunk. Ezen kívül az alkalmazással szemben elvárás, hogy más
+szakterületű, de szintén weblapokkal dolgozó felhasználók számára is könnyen
+használható legyen.
+
+További követelmény, hogy a felhasználói felület több nyelven elérhető
+legyen. Biztosítani kell a később elkészülő fordítások egyszerű hozzáadását.
+
+
+\subsection{Builder}
+
+A kliensoldali alkalmazásnak lehetőséget kell nyújtania tetszőleges elrendezés
+megvalósítására. Mivel a cél egy olyan megoldás, ahol a felhasználónak nem kell
+feltétlenül ismernie sem a \texttt{HTML}, sem a \texttt{CSS} leíró nyelveket,
+ennek legkézenfekvőbb módja a táblázatos elrendezés. Ilyen módon megvalósítandó
+a táblázat celláinak létrehozása, cellák vagy egész táblázatok törlése illetve
+cellák összevonása, majd felosztása.
+
+Az űrlapra \texttt{fieldset}ek, szöveg valamint beviteli mezők elhelyezését
+kell megoldani. Az egyes elemek következő tulajdonságait kell szerkeszthetővé
+tenni:
+
+\clearpage
+\desc
+\item[Táblázat cella:] Tartalom típusa (szöveg vagy beviteli mező); Szöveges
+  mező esetén a szöveg, beviteli mező esetén a mező típusa és értéke/felirata
+\item[Fieldset:] Cím (\texttt{legend} elem tartalma)
+\item[Beviteli mező:] Név (\texttt{name} tulajdonság)
+\item[Select (lenyíló menü):] A kiválasztható elemek
+\ed
+
+A cella, illetve a beviteli mező típusának megváltoztatásakor célszerű elkerülni
+a már beírt szöveg elvesztését. Ezért a szöveget a beviteli mező helyett a cella
+tulajdonságának tekintjük, ami az egyes típusoknál a következőképpen lesz
+értelmezve:
+
+\desc
+\item[Szöveges cella:] A cella tartalma
+\item[Szöveges és jelszó beviteli mező:] Alapértelmezett érték
+\item[Radiobox, checkbox:] A box mellett megjelenítendő szöveg
+\item[Nyomógomb:] A gomb felirata
+\item[Select:] Az első opció
+\ed
+
+Lehetőséget kell adni a felhasználónak, hogy bármikor megváltoztassa a
+felület nyelvét, valamint hogy a szerverre tetszőleges néven menthesse
+munkáját. Ezen kívül a \texttt{HTML} kódnak bármikor megtekinthetőnek kell
+lennie.
+
+Ha szerkesztés közben megszűnne a felhasználó bejelnetkezése, lehetőséget kell
+nyújtani az újbóli bejelentkezésre adatvesztés nélkül. Ha szerkesztés közben
+megszűnik a szerveren az űrlap, vagy a bejelentkezett felhasználónak nincs
+írásjoga az éppen szerkesztett űrlapra, mentéskor új példányt hozunk létre a
+felhasználó sajátjaként.
+
+\phantomsection
+\subsection{Manager}
+
+A mentett űrlapok kezelésére egy webes felületet fogunk
+biztosítani. Bejelentkezés után a felhasználó szerkesztheti és letöltheti a
+saját űrlapjait. Megjelölhet űrlapokat publikusként, amiket azután
+egy kereshető listán keresztül bárki megnyithat. Más felhasználó publikus
+űrlapjának mentésekor nem írjuk felül az eredetit, hanem a felhasználó
+sajátjaként mentünk egy másolatot.
+
+Ezen kívül a weblapon szerepelnie kell a szerkesztő leírásának,
+kézikönyvének. Mivel az alkalmazás mindig a DOM-mal\cite{DOM} dolgozik,
+\texttt{HTML} elemekkel egyszerűen megoldható az illusztráció.
+
+A felületnek és a tartalomnak itt is több nyelven elérhetőnek kell lennie.
+
+\clearpage
+\phantomsection
+\section{Környezet}
+
+\paragraph{Webszerver}
+A fejlesztés és tesztelés \textbf{Apache 2.2.11} szerveren történt. Az
+alkalmazás felhasználóbarát URL-eket hoz létre, ezért módosítás nélkül nem
+használható olyan környezetben, ahol a \texttt{mod\_rewrite} (vagy vele
+egyenértékű modul) nem elérhető.
+
+\paragraph{PHP értelmező}
+A Manager PHP programnyelven íródott, így mindenképpen PHP értelmező futtatására
+képes webszerverre van szükség. Gyorsabb fejlesztés, jobb karbantarthatóság és
+logikusabb felépítés elérése végett a \textbf{CodeIgniter}\cite{CI} framework
+\textbf{1.7.1}-es verzióját használtam. A frameworknek 4.3.2-es verziójú
+PHP értelmezőre van szüksége, de az alkalmazás működéséhez minimum \textbf{PHP
+  5.2.0} kell. A \texttt{php.ini}-ben engedélyezni kell a json, mysql
+és session kiegészítéseket.
+
+\paragraph{Adatbázis szerver}
+Az adatbáziskezelés csak \textbf{MySQL 5.1.37} adatbázison volt tesztelve, de a
+CI ActiveRecord\cite{CI-ActiveRecord} szolgáltatás használata miatt az
+alkalmazás módosítás nélkül működik az CI által támogatott SQL
+szervereken\cite{CI-Req}. Az adatbázis-szerver típusát és a kapcsolódáshoz
+szükséges adatokat a \texttt{system/application/config/database.php} fájlban
+kell beállítani, legalább az alábbi sorok szerkesztésével:
+
+\begin{lstlisting}[language=PHP, firstnumber=40]
+$db['default']['hostname'] = "db_host";
+$db['default']['username'] = "username";
+$db['default']['password'] = "password";
+$db['default']['database'] = "db_name";
+$db['default']['dbdriver'] = "mysql";
+// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
+\end{lstlisting}
+
+\paragraph{JavaScript}
+A Builder JavaScript programnyelven íródott a \textbf{jQuery}\cite{JQ} library
+\textbf{1.3.2} verziójával. A dinamikusan létrehozott DOM elemek egyszerű
+kezelésére a \textbf{LiveQuery}\cite{JQ-LiveQuery} plugin \textbf{1.0.3}
+verzióját használja. Ezeken kívül mind a Builder, mind a Manager használja
+kis részben a \textbf{jQuery-UI}\cite{JQ-UI} Draggable, Dialog és Tabs
+komponenseit. A felhasználó letöltési idejének minimalizálása érdekében a
+JavaScript és CSS fájlok méretét a \textbf{YUI Compressor}\cite{YUI} segítségével
+csökkentettem.
+
+\paragraph{Böngészők}
+Az alkalmazást a Firefox (és más XULRunner alapú) és az Opera böngészőkkel
+teszteltem. Jelenlegi állapotában az Internet Explorer böngészők JavaScript
+értelmezőjével a Builder nem működik.
+
+\paragraph{Szakdolgozat}
+Jelen dokumentum a \textbf{LaTeX} rendszer TexLive disztribúcióból származó
+3.1415926 verziójával készült az \textbf{Emacs} szerkesztőben, az
+\textbf{AUCTeX} csomag segítségével. A diagrammok létrehozására a \textbf{Dia 0.97}
+szerkesztőt használtam.
+
+
+\clearpage
+\phantomsection
+\section{Adatbáziskezelés}
+
+A karbantartás könnyítése és az átláthatóság megőrzése érdekében mindenképpen
+célszerű az adatbázis kezelését végző kódot elkülöníteni a felhasználói
+felülettől és a felhasználói bemenet kezelésétől. Erre egy bevett módszer az
+MVC\cite{MVC} minta implementálása, amit a CodeIgniter framework jelen esetben
+elvégez helyettünk. Ilyen módon az adatbázis-kezelés néhány modell megírásából
+áll. Az adatbázis-szerkezet leírása után a modellek által létrehozott
+absztrakciós szint ismertetése következik.
+
+\phantomsection
+\subsection{Adatbázis-szerkezet}
+
+Az alkalmazás szempontjából kritikus adatok a felhasználó azonossága, a hozzájuk
+tartozó űrlapok és az egyes űrlapok tartalma. Ezek köré szerveződik az egyszerű
+szerkezet: a felhasználók és az űrlapok számára létrehozunk két táblát, közöttük
+pedig $1..n$ kapcsolatot állítunk fel. A kapcsolómező a felhasználó
+azonosítója. Ezen a szinten feleslegesnek tűnik a az űrlapokat külön
+azonosítóval ellátni, de lehetőséget akarunk biztosítani az űrlapok
+átnevezésére; emiatt az űrlapok egyedi azonosítására ez a legegyszerűbb módszer.
+
+Az ábrán és a táblázatokban megadott adattípusok a MySQL adatbázis típusai.
+
+%Adatbázis diagramm
+\begin{figure}[htp]
+\centering
+\includegraphics[width=328px]{db.jpg}
+\caption{Adatbázis-szerkezet}\label{fig:db}
+\end{figure}
+
+%users tábla
+\subsubsection{\texttt{users} tábla}
+A \texttt{sid} és \texttt{last\_action} mezőket a felhasználók bejelnetkezésének
+ellenőrzésekor használjuk (TODO: lásd itt-és-itt)
+
+\small
+\vspace{.3cm}
+\begin{tabular*}{\textwidth}{>{\tt}l>{\tt}l>{\tt}l>{\tt}l|l}
+\rm Név       &  \rm Típus  &  \rm Méret  & \rm Index/Kulcs & Megjegyzés           \\
+\hline
+ id           &   INTEGER AUTO\_INCREMENT && PRIMARY KEY    &                      \\
+ sid          &   CHAR      & 40          &                 &  PHP session cookie  \\
+ name         &   VARCHAR   & 30          & INDEX           &                      \\
+ pass         &   CHAR      & 30          &                 &  SHA1 hash (hex)     \\
+ email        &   VARCHAR   & 100         & INDEX           &  Nem nyilvános       \\
+ last\_action &   DATETIME  &             &                 &                      \\
+\end{tabular*}
+\normalsize
+
+%forms tábla
+\subsubsection{\texttt{forms} tábla}
+
+A \texttt{user\_id} mezővel kapcsoljuk az űrlapot a létrehozó felhasználóhoz. A
+\texttt{html} mező tárolja magát az űrlapot (a \texttt{<form>} elem nélkül), míg
+a \texttt{public} mező adja meg, hogy az űrlap megjelenhet-e a nyilvános űrlapok
+listáján.
+
+\small
+\vspace{.3cm}
+\begin{tabular*}{\textwidth}{>{\tt}l>{\tt}l>{\tt}l>{\tt}l|l}
+\rm Név    & \rm Típus &  \rm Méret  & \rm Index/Kulcs & Megjegyzés\\
+\hline
+ id        & INTEGER AUTO\_INCREMENT && PRIMARY\_KEY   &                            \\
+ user\_id  & INTEGER   & 11          & INDEX           & $1..n \rightarrow{}$ users \\
+ html      & TEXT      &             &                 &                            \\
+ public    & BOOL      &             & INDEX           &                            \\
+\end{tabular*}
+\normalsize
+
+%public_forms nézet
+\subsubsection{\texttt{public\_forms} nézet}
+
+Az adatbázis szerkezetének szempontjából lényegtelen, de megkönnyíti a nyilvános
+űrlapok kiválasztását, és lehetőséget ad az adatbázismotornak az
+optimalizálásra. A nyilvános űrlapokat listázza azonosítójukkal, nevükkel, a
+létrehozó felhasználó nevével és az űrlap tartalmával.
+
+A MySQL adatbázis-rendszer támogatja az írható nézeteket, de számos más rendszer
+nem, így ezt a nézetet csak olvasásra használjuk.
+
+\small
+\vspace{.3cm}
+\begin{tabular*}{\textwidth}{>{\tt}l>{\tt}l>{\tt}l|>{\tt}l}
+\rm Név     &  \rm Típus    &  \rm Méret  & Megjegyzés \\
+\hline
+ id         &  INTEGER      &  11         & forms.id   \\
+ name       &  VARCHAR      &  100        & forms.name \\
+ user\_name &  VARCHAR      &  100        & users.name \\
+ html       &  TEXT         &             & forms.html \\
+\end{tabular*}
+\normalsize
+%----- Adatbázis-szerkezet vége -----
+
+
+\phantomsection
+\subsection{Modellek}
+
+A CodeIgniter a modelleket a \texttt{system/application/models} mappában
+tárolja. Az alkalmazás két modellt használ: egyet a felhasználók kezelésére
+(\texttt{user\_model}) és egyet az űrlapok kezelésére (\texttt{forms\_model}). A
+\texttt{user\_model} csak a \texttt{users} táblát, míg a
+\texttt{forms\_model} szükségszerűen mindkét táblát és a \texttt{public\_forms}
+nézetet is használja.
+
+A lekérdezések összeállításához és futtatásához a CodeIgniter ActiveRecord
+szolgáltatását használjuk. Ezzel egy tipikus lekérdezés a következőképpen
+valósul meg:
+
+\begin{lstlisting}[language=PHP]
+function get_form_public($id)
+{
+    // WHERE feltetel asszociativ tombben
+    $where = array('id' => $id);
+
+    // Lekerdezes es eredmeny
+    $this->db->from('public_forms')->where($where);
+    $result = $this->db->order_by('id')->get();
+
+    // Nincs ilyen azonositoju publikus urlap
+    if ($result->num_rows() == 0)
+        return false;
+
+    $row = $result->row();
+
+    $user = $this->user->get_user(false);
+
+    // Ha van bejelentkezett felhasznalo...
+    if ($user !== false)
+        // Es az ove az urlap, tudatjuk a hivoval
+        $row->owner = ($user->name == $row->user_name);
+
+    // Visszaadjuk az eredmenyt
+    return $row;
+// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
+}
+\end{lstlisting}
+
+\phantomsection
+\subsubsection{\texttt{user\_model}}
+
+\paragraph{Regisztráció}
+Itt történik a felhasználók regisztrálásához valamint ki- és bejelentkezéséhez
+szükséges adatbáziskezelés. Új felhasználó regisztrációjakor ellenőrizni
+kell, hogy a megadott felhasználónév és e-mail szerepel-e a már az
+adatbázisban. Az e-mail ellenőrzését a \texttt{check\_email}, a felhasználónév
+ellenőrzését pedig a nem túl szerencsés nevű \texttt{not\_available} függvény
+végzi. A \texttt{register} függvény csak akkor kerül meghívásra, ha már
+meggyőződtünk a kapott adatok helyességéről (TODO: lásd login\_controller kapott
+adatok ellenőrzése).
+
+TODO:
+Az e-mail címet jelenleg nem használjuk fel, de később a regisztrációról történő
+értesítésre lehet használni.
+
+A \texttt{get\_user} függvény a bejelentkezett felhasználó adatait, vagy ennek
+hiányában a \texttt{false} értéket adja vissza.
+
+\paragraph{Bejelentkezés}
+Igaz ugyan, hogy ennél az alkalmazásnál a biztonság nem elsődleges szempont, de
+így is szükség van a felhasználók bizonyos szintű védelmére. A jelszavakat és
+a bejelentkezett felhasználó PHP-től kapott munkamenet-azonosítóját (session
+id\cite{PHP-SID}) egyirányű titkosítás után tároljuk - előbbit a
+\texttt{users.pass}, utóbbit a \texttt{users.sid} mezőben.
+
+A felhasználónév és jelszó ellenőrzése a \texttt{login} függvényben
+történik. Sikeres bejelentkezés esetén, tehát ha a megadott név/jelszó páros
+szerepel az adatbázisban, az adott rekordba eltároljuk az aktuális munkamenet
+azonosítóját (titkosítás után). A bejelentkezés sikerességérők a visszatérési
+értékkel értesítjük a hívót.
+
+A modellben elvárjuk az alkalmazás többi részétől, hogy minden művelet
+elvégzésekor meghívja az \texttt{update\_last\_action} függvényt. Ezzel az
+aktuális munkamenethez tartozó \texttt{users.last\_action} mező értékét a
+jelenlegi időpontra állítjuk. Sikeres bejelentkezéskor is frissítjuk a dátumot.
+
+\paragraph{Kijelentkeztetés}
+A felhasználót csak akkor tekintjük bejelentkezettnek, ha a
+munkamenet azonosítója szerepel az adatbázisban, és a hozzá tartozó utolsó
+művelet nem régebbi egy napnál. A felhasználó kézi kijelentkezése esetén a
+\texttt{logout} függvényben munkamenet-azonosítót töröljük (üres sztringre állítjuk).
+
+
+\phantomsection
+\subsubsection{\texttt{forms\_model}}
+
+Az űrlapok létrehozását, mentését, törlését, átnevezését és listázását kezelő
+függvények. Az olvasás jellegű műveletek visszatérési értéke vagy a lekérdezés
+eredménye, vagy (eredménytelen lekérdezés esetén) \texttt{false}. Az írás
+jellegű műveletek eredménye mindig \texttt{true} vagy \texttt{false}.
+
+Másik szempontból csoportosítva beszélhetünk nyilvános és privát műveletekről. A
+privát műveletek csak bejelentkezett felhasználók számára elérhetőek - a
+felhasználói felület szintjén is, de ha eljut egy hívás a modellig,
+a futás bejelentkezett felhasználó hiányában hibával megáll. Két kivétellel az
+összes függvény privát: a \texttt{get\_form\_list\_public} és a
+\texttt{get\_form\_public} függvények csak publikus űrlapokkal dolgoznak. Itt
+használjuk ki a \texttt{public\_forms} nézetet.
+
+
+\phantomsection
+\section{Manager}
+
+A webes felület a modellek, vezérlők (controller), nézetek (view) és nyelvi fájlok
+együttműködéséből áll össze. Ezért egy-egy fájl helyett több fájl bizonyos
+részei alkotnak logikai egységet. Az egységek általában a felhasználó által
+végezhető művelet vagy műveletek kezelését és az eredmény megmutatását foglalják
+magukban. A korábban említett felhasználóbarát URL-ek bemutatása után ezen
+egységek kerülnek tárgyalásra.
+
+\phantomsection
+\subsection{Routing}
+
+
+\phantomsection
+\subsection{Regisztráció}
+
+A tényleges regisztrációt a \texttt{users\_model} hajtja végre. A feladatunk itt
+a felhasználó által megadott adatok ellenőrzése és normalizálása. Ellenőrizni
+kell a megadott felhasználónév és e-mail cím létezését. Figyelni kell az e-mail
+cím helyességére, a két jelszó mező egyezésére, valamint a kapott adatok
+hosszára - egy megadott minimum hossz és az adatbázisban meghatározott
+maximális hosszúság közé kell esnie.
+
+Az adatok ellenőrzésére, illetve ezekről visszajelzés küldésére négy
+lehetőségünk van:
+
+\paragraph{Csak szerveroldali ellenőrzés}
+Az űrlap kitöltése után közvetlenül a szervernek küldjük az adatokat, majd egy
+újragenerált lapon értesítjük a felhasználót a regisztráció sikerességéről, vagy
+a hibaüzenetekről. Utóbbi esetben a kapott adatokkal feltöltve adjuk vissza az
+űrlapot. Ennek a megoldásnak a megvalósítását jelentősen megkönnyíti a
+CodeIgniter framework Validation osztálya\cite{CI-Val}. A felhasználónak meg kell várnia az új lap
+letöltését és kitöltés közben nem kap visszajelzést a megadott adatok
+helyességéről.
+
+\paragraph{Csak kliensoldali ellenőrzés}
+A felhasználó szempontjából kényelmes, hiszen azonnali visszajelzést kap a
+megadott adatokról, ráadásul a lap újratöltésére sem kell várnia hiba
+esetén. Biztonsági szempontból azonban elfogadhatatlan megoldás, hiszen egy
+esetleges támadónak elég egy hibás kérést küldenie a szervernek. Ráadásul a
+kliensoldali ellenőrzés visszajelzéseiből megtudja, hogy milyen adatokkal tud
+hibát okozni.
+
+\paragraph{Önálló ellenőrzés a szerveren és a kliensen}
+A fenti módszerek előnyeit egyesíti, hátrányaikat kiküszöböli. A kliensoldali
+ellenőrzés miatt a felhasználó számára kényelmes, a szerveroldali ellenőrzés
+miatt biztonságos. Könnyű kezelni azt az esetet is, ha a kliens nem tudja
+futtatni az ellenőrzést (pl. a böngészőben le van tiltva a JavaScript
+futtatása). Hátrány, hogy minden ellenőrzést implementálni kell mind
+a szerveren, mind a kliensoldali nyelven. Így felesleges redundanciát vezettünk
+be - az ellenőrzési kritériumok változásait két helyen kell módosítani, kétszer
+kell tesztelni.
+
+Ez a fajta probléma elkerülhető némi metaprogramozás bevezetésével, például a
+CodeIgniter által használt kritérium-leírásokhoz hasonló nyelvvel
+\cite{CI-Val}. Ha a szerveren és a kliensen futó ellenőrzés is ugyanazt a
+szabályleíró fájlt használja, akkor elkerültük az ellenőrzendő esetek
+ismétlését. A redundancia így átkerül a szabályleírást értelmező programrészbe,
+ami valószínűleg bonyolultabb, mint maguk az ellenőrzések. Nagy számú
+ellenőrzésnél ez jó megoldás lehet, de ennél az alkalmazásnál túlzás.
+
+\paragraph{Szerveroldali ellenőrzés és AJAJ\cite{AJAJ}}
+A tényleges ellenőrzést a szerveren végezzük, és lehetővé tesszük, hogy a
+felhasználói felület szerkesztés közben a szervert megkérje egyes adatok
+ellenőrzésére. Így az előző megoldás redundanciáját kiküszöböltük néhány bájt
+hálózat-forgalom ellenében. A szerver terhelése így valamivel nő, de ennél az
+alkalmazásnál méreténél fogva valószínűsíthető, hogy nem fognak skálázhatósági
+problémák fellépni.
+
+Kérdés viszont, hogy az űrlap elküldését hogyan valósítsuk meg.
+A kliensoldali ellenőrzések aszinkron volta miatt a legegyszerűbb módszer, az
+űrlap \texttt{onsubmit} eseményének használata nem megoldható: itt visszatérési
+értékre van szükség, amit átlagos AJAJ hívásnál nem kapunk. Az eredmények
+összegyűjtése utáni küldés nem megoldás, hiszen előfordulhat, hogy közben a
+felhasználó még módosít az űrlapon. Lehetőség van szinkron, blokkoló módon
+futtatni az ellenőrzéseket, de a mai böngészőkben ilyenkor a felhasználó a kérés
+teljesítéséig semmit sem tud tenni.
+
+Ezt a problémát a csak szerveroldali ellenőrzésnél hátrányként említett módon
+oldottam meg: hiba esetén a regisztrációs oldal újra letöltődik. Mivel a
+beviteli mezők szerkesztésekor az \texttt{onchange} eseményre induló ellenőrzés
+jelzi a felhasználónak a megadott adatok helyességét, ez ritkán fog előfordulni.
+
+\phantomsection
+\subsubsection{Szerveroldal}
+
+A tényleges ellenőrzések a \texttt{system/application/controllers/login.php}
+fájlban történnek.
+
+
+\addcontentsline{toc}{section}{Hivatkozások}
+\begin{thebibliography}{99}
+
+\bibitem{CI}
+  \emph{CodeIgniter framework}\\
+  \url{http://codeigniter.com}
+
+\bibitem{CI-ActiveRecord}
+  \emph{CodeIgniter felhasználói kézikönyv - Active Record Class}\\
+  \url{http://codeigniter.com/user_guide/database/active_record.html}
+
+\bibitem{CI-Req}
+  \emph{CodeIgniter felhasználói kézikönyv - Server Requirements}\\
+  \url{http://codeigniter.com/user_guide/general/requirements.html}
+
+\bibitem{CI-Val}
+  \emph{CodeIgniter felhasználói kézikönyv - Form Validation Class}\\
+  \url{http://codeigniter.com/user_guide/libraries/form_validation.html}
+
+\bibitem{JQ}
+  \emph{jQuery framework}\\
+  \url{http://jquery.com}
+
+\bibitem{JQ-LiveQuery}
+  \emph{jQuery framework - LiveQuery plugin}\\
+  \url{http://jquery.com/Plugins/livequery}
+
+\bibitem{JQ-UI}
+  \emph{jQuery framework - user interface}\\
+  \url{http://jqueryui.com}
+
+\bibitem{YUI}
+  \emph{Yahoo YUI Compressor}\\
+  \url{http://developer.yahoo.com/yui/compressor}
+
+\bibitem{MVC}
+  \emph{Wikipédia - Modell-nézet-vezérlő}\\
+  \url{http://hu.wikipedia.org/wiki/Modell-n\%C3\%A9zet-vez\%C3\%A9rl\%C5\%91}
+
+\bibitem{PHP-SID}
+  \emph{PHP kézikönyv - session\_id}\\
+  \url{http://hu2.php.net/session_id}
+
+\bibitem{DOM}
+  \emph{Wikipedia - Document Object Model}\\
+  \url{http://en.wikipedia.org/wiki/Document_Object_Model}
+
+\end{thebibliography}
+
+\end{document}
