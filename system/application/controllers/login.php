@@ -169,7 +169,8 @@ class Login extends BaseController {
      * Lefuttatja a kapott ellenőrzéseket, és visszaadja a hibaüzeneteket
      *
      * @param checks [${ellenőrző kód} => $üzenet] alakú tömb
-     *               $üzenet: ld. {@link Login::parse_errors}
+     *               $üzenet: ['hiba %s hiba %s', 'helyettesítendő1', 'helyettesítendő2']
+     *                  az sprintf függvény paraméterei
      *
      * @return Hibaüzenetek tömbje amit a lang fájlból kaptunk
      */
@@ -205,7 +206,7 @@ class Login extends BaseController {
             echo 'true';
         else {
             $msgs = array();
-            /* Az összes hibaa kiírása
+            /* Az összes hiba kiírása
             foreach ($errors as $error) {
                 $error[0] = $error_msgs[$error[0]];
                 $msg = call_user_func_array('sprintf', $error);
@@ -239,10 +240,10 @@ class Login extends BaseController {
 
         return $this->check(
                             array(
-                                  "'$user' == ''" => array('required'),
-                                  "mb_strpos('$user', ' ') !== false" => array('space'),
-                                  "$length < $min_length" => array('short', 3),
-                                  "$length > $max_length" => array('long', 100),
+                                  "'$user' == ''"                              => array('required'),
+                                  "mb_strpos('$user', ' ') !== false"          => array('space'),
+                                  "$length < $min_length"                      => array('short', 3),
+                                  "$length > $max_length"                      => array('long', 100),
                                   "\$controller->user->not_available('$user')" => array('user_exists')
                                   )
                             );
@@ -264,10 +265,10 @@ class Login extends BaseController {
 
         return $this->check(
                             array(
-                                  "'$pass' == ''" => array('required'),
+                                  "'$pass' == ''"                     => array('required'),
                                   "mb_strpos('$pass', ' ') !== false" => array('space'),
-                                  "$length < $min_length" => array('short', 5),
-                                  "$length > $max_length" => array('long', 100)
+                                  "$length < $min_length"             => array('short', 5),
+                                  "$length > $max_length"             => array('long', 100)
                                   )
                             );
     }
@@ -289,7 +290,7 @@ class Login extends BaseController {
 
         return $this->check(
                             array(
-                                  "'$pass2' == ''" => array('required'),
+                                  "'$pass2' == ''"       => array('required'),
                                   "'$pass1' != '$pass2'" => array('passes_dont_match'),
                                   )
                             );
@@ -311,9 +312,9 @@ class Login extends BaseController {
 
         return $this->check(
                             array(
-                                  "'$email' == ''" => array('required'),
-                                  "preg_match(\"$regex\", \"$email\") == 0" => array('email'),
-                                  "$length > $max_length" => array('long', 100),
+                                  "'$email' == ''"                              => array('required'),
+                                  "preg_match(\"$regex\", \"$email\") == 0"     => array('email'),
+                                  "$length > $max_length"                       => array('long', 100),
                                   "\$controller->user->not_available('$email')" => array('email_exists')
                                   )
                             );

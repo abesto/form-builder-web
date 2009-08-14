@@ -15,7 +15,7 @@
  * @param $input Az input mező, ami után ki kell írni az eredményt
  * @param initial Kezdeti automatikus ellenőrzés? Ha igen, akkor az üres mezők után is írunk hibát
  */
-function check_ajax(data, $input, initial)
+function check_ajaj(data, $input, initial)
 {
     $.post('/login/check_remote',
            data,
@@ -36,7 +36,7 @@ function check_ajax(data, $input, initial)
  * Leellenőrizteti a szerverrel az adott mező értékének helyességét
  *
  * @param name Az ellenőrzendő mező neve
- * @param initial ld. {@link check_ajax}
+ * @param initial ld. {@link check_ajaj}
  */
 function check(name, initial)
 {
@@ -47,13 +47,13 @@ function check(name, initial)
     $input.next().remove();
     $input.next().remove();
 
-    check_ajax(data, $input, initial);
+    check_ajaj(data, $input, initial);
 }
 
 /**
  * A jelszavak egyezését ellenőrzi
  *
- * @param initial ld. {@link check_ajax}
+ * @param initial ld. {@link check_ajaj}
  */
 function check_pass_match(initial)
 {
@@ -68,7 +68,7 @@ function check_pass_match(initial)
     $input2.next().remove();
     $input2.next().remove();
 
-    check_ajax(data, $input2, initial);
+    check_ajaj(data, $input2, initial);
 }
 
 $(document).ready( function() {

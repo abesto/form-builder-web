@@ -280,7 +280,7 @@ Az ábrán és a táblázatokban megadott adattípusok a MySQL adatbázis típus
 %Adatbázis diagramm
 \begin{figure}[htp]
 \centering
-\includegraphics[width=328px]{db.jpg}
+\includegraphics[width=328px]{db.png}
 \caption{Adatbázis-szerkezet}\label{fig:db}
 \end{figure}
 
@@ -299,7 +299,7 @@ ellenőrzésekor használjuk (TODO: lásd itt-és-itt)
  name         &   VARCHAR   & 30          & INDEX           &                      \\
  pass         &   CHAR      & 30          &                 &  SHA1 hash (hex)     \\
  email        &   VARCHAR   & 100         & INDEX           &  Nem nyilvános       \\
- last\_action &   DATETIME  &             &                 &                      \\
+ last\_action &   DATETIME  &             &                 &
 \end{tabular*}
 \normalsize
 
@@ -319,7 +319,7 @@ listáján.
  id        & INTEGER AUTO\_INCREMENT && PRIMARY\_KEY   &                            \\
  user\_id  & INTEGER   & 11          & INDEX           & $1..n \rightarrow{}$ users \\
  html      & TEXT      &             &                 &                            \\
- public    & BOOL      &             & INDEX           &                            \\
+ public    & BOOL      &             & INDEX           &
 \end{tabular*}
 \normalsize
 
@@ -342,7 +342,7 @@ nem, így ezt a nézetet csak olvasásra használjuk.
  id         &  INTEGER      &  11         & forms.id   \\
  name       &  VARCHAR      &  100        & forms.name \\
  user\_name &  VARCHAR      &  100        & users.name \\
- html       &  TEXT         &             & forms.html \\
+ html       &  TEXT         &             & forms.html
 \end{tabular*}
 \normalsize
 %----- Adatbázis-szerkezet vége -----
@@ -459,19 +459,66 @@ használjuk ki a \texttt{public\_forms} nézetet.
 A webes felület a modellek, vezérlők (controller), nézetek (view) és nyelvi fájlok
 együttműködéséből áll össze. Ezért egy-egy fájl helyett több fájl bizonyos
 részei alkotnak logikai egységet. Az egységek általában a felhasználó által
-végezhető művelet vagy műveletek kezelését és az eredmény megmutatását foglalják
-magukban. A korábban említett felhasználóbarát URL-ek bemutatása után ezen
-egységek kerülnek tárgyalásra.
+végezhető művelet vagy műveletek kezelését és az eredmény megjelenítését foglalják
+magukban. Ezeken a művelet-központú egységeken kívül bemutatásra kerül a
+felhasználóbarát URL-ek használhatóvá tevő rendszer, a vezérlők alaposztálya
+és az új fordítások hozzáadásának módja is. Sok függvény elfogad egy opcionális
+\texttt{\$lang} paramétert, aminek az alapértelmezett értéke \texttt{null}. Ez a
+felhasználói felület kívánt nyelvét jelöli.
+
 
 \phantomsection
-\subsection{Routing}
+\subsection{Routing - felhasználóbarát URL-ek}
+
+A CodeIgniter framework routing\cite{CI-Routing} szolgáltatásán keresztül
+könnyen használhatunk felhasználók számára is könnyen olvasható URL-eket.
+A framework a futtatandó függvényt a következő módon olvassa ki az oldal
+címéből: \texttt{példa.com/vezérlő/függvény/paraméter1/paraméter2}.
+A \texttt{system/application/config/routes.php} fájlban megadhatunk más,
+tetszőleges címeket, amiket aztán az előbbi formátumú URI-khez rendelünk. Az
+URL-ek megadásánál használhatunk reguláris kifejezéseket\cite{regex}, így szinte
+bármilyen helyzetnek megfelelő szabályokat fel tudunk állítani. A használt
+beállítások:
+
+\begin{lstlisting}[language=PHP, firstnumber=46]
+$langs = '(en|hu)';
+
+$route[$langs]           = 'home/index/$1';
+$route['(:any)/'.$langs] = '$1/index/$2';
+$route['logout']         = 'login/logout';
+$route['builder/(:num)'] = 'builder/open/$1';
+// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
+\end{lstlisting}
+
+A 46. sorban egy reguláris kifejezés segítségével megadjuk azokat a
+nyelv-azonosítókat, amik szerepelhetnek érvényes címekben. Ezeknek az
+azonosítóknak meg kell egyezniük a nyelvi fájlokban használt azonosítókkal
+(TODO: lásd fordítások hozzáadása).
+
+Az alábbi táblázatban az átirányítási szabályokra szerepel egy-egy példa. A
+``pelda.com'' a \texttt{system/application/config/config.php} fájlban megadott
+\texttt{base\_path} érték.
+
+\begin{tabular*}{\textwidth}{>{\tt}l|>{\tt}r>{$\rightarrow$}c>{\tt}l}
+\rm Sor & \rm Honnan           & & \rm Hova        \\
+\hline
+48      & pelda.com/hu         & & pelda.com/home/index/hu  \\
+49      & pelda.com/teszt/hu   & & pelda.com/teszt/index/hu \\
+50      & pelda.com/logout     & & pelda.com/login/logout   \\
+51      & pelda.com/builder/20 & & pelda.com/builder/open/20
+\end{tabular*}
+
+
+\phantomsection
+
+\subsection{BaseController - a vezérlők alaposztálya}
 
 
 \phantomsection
 \subsection{Regisztráció}
 
 A tényleges regisztrációt a \texttt{users\_model} hajtja végre. A feladatunk itt
-a felhasználó által megadott adatok ellenőrzése és normalizálása. Ellenőrizni
+a felhasználó által megadott adatok ellenőrzése. Ellenőrizni
 kell a megadott felhasználónév és e-mail cím létezését. Figyelni kell az e-mail
 cím helyességére, a két jelszó mező egyezésére, valamint a kapott adatok
 hosszára - egy megadott minimum hossz és az adatbázisban meghatározott
@@ -515,13 +562,20 @@ ismétlését. A redundancia így átkerül a szabályleírást értelmező prog
 ami valószínűleg bonyolultabb, mint maguk az ellenőrzések. Nagy számú
 ellenőrzésnél ez jó megoldás lehet, de ennél az alkalmazásnál túlzás.
 
-\paragraph{Szerveroldali ellenőrzés és AJAJ\cite{AJAJ}}
-A tényleges ellenőrzést a szerveren végezzük, és lehetővé tesszük, hogy a
-felhasználói felület szerkesztés közben a szervert megkérje egyes adatok
-ellenőrzésére. Így az előző megoldás redundanciáját kiküszöböltük néhány bájt
-hálózat-forgalom ellenében. A szerver terhelése így valamivel nő, de ennél az
-alkalmazásnál méreténél fogva valószínűsíthető, hogy nem fognak skálázhatósági
-problémák fellépni.
+\paragraph{Szerveroldali ellenőrzés és AJAJ}
+AJAJ-nak az AJAX (Asynchronous JavaScript and XML \cite{ajax}) technológia egy
+olyan változatát nevezzük, ahol az adatok továbbítása XML helyett JSON
+(JavaScript Object Notation \cite{json}) formátumban történik. Így kisebb
+sávszélességet használunk, és a kliensoldalon az adatok feldolgozása egyszerűbbé
+válik (bár a jQuery library képes XML-ből is JavaScript objektumokká alakítani a
+kapott adatokat).
+
+A tényleges ellenőrzést ennél a megoldásnál a szerveren végezzük, és lehetővé
+tesszük, hogy a felhasználói felület szerkesztés közben a szervert megkérje
+egyes adatok ellenőrzésére. Így az előző megoldás redundanciáját kiküszöböltük
+néhány bájt hálózat-forgalom ellenében. A szerver terhelése így valamivel nő, de
+ennél az alkalmazásnál méreténél fogva valószínűsíthető, hogy nem fognak
+skálázhatósági problémák fellépni.
 
 Kérdés viszont, hogy az űrlap elküldését hogyan valósítsuk meg.
 A kliensoldali ellenőrzések aszinkron volta miatt a legegyszerűbb módszer, az
@@ -540,8 +594,133 @@ jelzi a felhasználónak a megadott adatok helyességét, ez ritkán fog előfor
 \phantomsection
 \subsubsection{Szerveroldal}
 
-A tényleges ellenőrzések a \texttt{system/application/controllers/login.php}
-fájlban történnek.
+%Registration check folyamatábra
+\begin{figure}[htp]
+\centering
+\includegraphics[width=328px]{reg_check.png}
+\caption{Regisztrációs adatok ellenőrzése}\label{fig:reg_check}
+\end{figure}
+
+Az regisztrációnál megadott adatok ellenőrzése két helyről indulhat. Ha a kliens
+kérte az ellenőrzést, akkor a \texttt{check\_remote} függvényen keresztül hívjuk
+meg a kért ellenőrzést (\emph{1/a}). Ha a felhasználó már elküldte az űrlapot,
+akkor a \texttt{register} függvény lefuttatja az összes ellenőrzést
+(\emph{1/b}). Az \texttt{Ellenőrzések} a kapott adatok biztonságossá tétele után a
+\texttt{check} függvényen keresztül végzik el az adatok tényleges ellenőrzését
+(\emph{2, 3}), majd visszaadják az eredményt a hívó függvénynek (\emph{4/a, 4/b}).
+
+
+\paragraph{\texttt{check(\$checks)}}
+Ez a függvény megkönnyíti az ellenőrzések elvégzését, a hozzájuk szükséges kódot
+lerövidíti. A \texttt{check\_*} függvények előkészítik számára az ellenőrzéseket
+egy-egy sztring formájában, ami a futtatandó ellenőrzést tartalmazza PHP kód
+formájában. Ezekben az ellenőrző kódokban a vezérlőt (controller) a
+\texttt{\$controller} változón keresztül lehet elérni. Erre például a
+felhasználónév létezésének ellenőrzésénél van szükség.
+
+A kapott paraméter egy asszociatív tömb, ahol a kulcs a futtatandó ellenőrzés,
+az érték pedig egy vektor: a hiba esetén megjelenítendó üzenet azonosítója és
+az abba behelyettesítendő értékek. Az üzenet tényleges szövegét az aktuális
+nyelvnek megfelelő nyelvi fájlból fogjuk kiolvasni. A behelyettesítendő érték
+lehet például nem megfelelő hosszúságú adatnál a minimális vagy maximális
+megengedett hosszúság.
+
+A ténylegesen futtatott
+ellenőrző-függvényt a \texttt{create\_function} függvénnyel hozzuk létre. Ha
+például a kapott ellenőrző kód:
+\texttt{"\$controller->user->not\_available('foo')"}, akkor a létrehozott
+függvény a következő:
+
+\begin{lstlisting}[language=PHP, numbers=none]
+function lambda($controller)
+{
+  return ($controller->user->not_available('foo'));
+}
+\end{lstlisting}
+
+A függvénynek a \texttt{\$controller} paraméterbe a \texttt{\$this} értékét
+adjuk át, ezzel biztosítva a hívó vezérlő elérhetőségét az ellenőrzésen
+belül. Ha az így létrehozott és futtatott függvény visszatérési értéke
+\texttt{false}, akkor az ellenőrzéshez tartozó üzenetleíró vektort hozzáadjuk a
+hibák listájához, amit aztán az összes ellenőrzés lefuttatása után visszaadunk a
+hívó függvénynek.
+
+
+\paragraph{\texttt{Ellenőrzések}}
+Az \texttt{check\_} prefixumú függvények egyetlen paraméterükként az
+ellenőrzendő értéket várják. Még a \texttt{check\_pass\_match} függvény is, ami
+a megadott jelszavak ellenőrzését végzi - itt az egyik jelszót a POST adatokból
+olvassuk ki. Mivel az ellenőrzendő és a hiba esetén újra kitöltendő mezők neve
+ugyanazon tömbben szerepel, és a bejelnetkezési űrlap nevét nem ellenőrizzük
+változtatásakor, a \texttt{check\_login\_user} függvény mindig egy üres tömböt
+ad vissza - ezzel jelezve, hogy nincsenek hibák.
+
+Az adott ellenőrzésekre jellemző adatok (például minimum és maximum hosszúság)
+beállítása után a vizsgálni kívánt adatokban a \texttt{'} karaktereket
+\texttt{\textbackslash'}-re cseréljük, mivel az ellenőrzéseket először sztringekként állítjuk
+össze. A cserével kivédjük a SQL injectionhöz hasonló támadásokat.
+
+Végül a szükséges ellenőrzéseket és hozzájuk tartozó hibaüzeneteket átadjuk a
+\texttt{check} függvénynek, aminek az eredményét feldolgozás nélkül visszaadjuk
+a hívónak. Itt nem dolgozzuk fel a hibaüzeneteket, hiszen nem tudhatjuk, hogy a
+hívó függvény hogyan kívánja értesíteni a felhasználót, vagy az őt hívó
+függvényt.
+
+
+\paragraph{\texttt{check\_remote}}
+Ezt a függvényt érik el a kliens ellenőrzési kérései egy POST hívás
+segítségével. Egy hívás pontosan egy mező ellenőrzését kéri, tehát pontosan egy
+\texttt{check\_*} függvény futását fogja eredményezni. Ha visszakapott, hibákat
+tartalmazó tömb üres, akkor a \texttt{true} sztringet írjuk ki, ami JSON-ként
+való értelmezés után a \texttt{true} bináris értéket fogja képviselni a
+kliensoldalon.
+
+Ha vannak hibák, akkor a hozzájuk tartozó üzenetet adjuk vissza idézőjelek
+között - így a JSON értelmezése után a kliensoldalon is sztringet kapunk. Ha
+több hiba van, akkor is csak az elsőt adjuk vissza. Ha például egy kötelezően
+kitöltendő mező üres, akkor elég csak a ``Kitöltés kötelező'' üzenetet kiírni, a
+``Legalább 5 karakter hosszú legyen'' figyelmeztetés felesleges.
+
+
+\paragraph{\texttt{register(\$lang=null)}}
+Ez a függvény kezeli az elküldött regisztrációs űrlapot. Lefuttatja az összes
+ellenőrzést, és ha bármelyik hibával tér vissza, visszaküldi a felhasználót a
+regisztrációs oldalra a felhasználónév és e-mail mezők értékét feltöltve a
+felhasználó által megadottakkal.
+
+Ha nincs hiba, \texttt{user\_model} \texttt{register} függvényén keresztül
+elvégzi az ellenőrzést, és a POST adatok között kapott \texttt{redirect} oldalra
+irányítja a felhasználót.
+
+
+\subsubsection{Kliensoldal}
+
+A kliens feladata csupán annyi, hogy szerkesztéskor, illetve hibás űrlap küldése
+után elvégeztesse a szerverrel a megfelelő ellenőrzéseket, és megjelenítse az
+eredményt a felhasználó számára.
+
+Az ellenőrzés meghívását és az eredmény kezelését a \texttt{check\_ajaj}
+függvény végzi. A jQuery framework segítségével elküldi a \texttt{data}
+paramétert a fenti \texttt{check\_remote} függvénynek, majd az eredménynek
+megfelelő képet és üzenetet helyez el az \texttt{\$input} paraméterben kapott
+beviteli mező után. A Builderben is megjelenő \$ prefixumú változónevek arra
+utalnak, hogy a tárolt érték egy jQuery objektum. Ha a \texttt{check\_ajaj}
+függvény \texttt{initial} paramétere \texttt{true}, akkor az üres mezőknél is
+megjelenítjük a hibaüzeneteket. Ez csak közvetlenül az oldal betöltődése után
+fordul elő, és az üresen elküldött mezők jelölésére szolgál.
+
+A \texttt{check} függvény a \texttt{name} paraméterben átadott mező értékének
+ellenőrzésére szolgál. Eltávolítja az előző ellenőrzések eredményeit az
+űrlapról, majd a mező értékéből és a \texttt{name} paraméterből összeállított
+\texttt{data} paraméterrel meghívja a \texttt{check\_ajaj} függvényt. Az
+\texttt{\$input} paraméterbe értelemszerűen az ellenőrzött beviteli mező kerül,
+az \texttt{initial} értéket pedig egyszerűen továbbadja. A
+\texttt{check\_pass\_match} függvény hasonló módon működik, de \texttt{data}
+értékeit a szerveroldali \texttt{check\_pass\_match} függvénynek megfelelő
+formában állítja össze.
+
+Mindkét függvényt a beviteli mezők \texttt{onchange} eseményének futásakor és az
+oldal betöltődésekor hívjuk meg.
 
 
 \addcontentsline{toc}{section}{Hivatkozások}
@@ -562,6 +741,10 @@ fájlban történnek.
 \bibitem{CI-Val}
   \emph{CodeIgniter felhasználói kézikönyv - Form Validation Class}\\
   \url{http://codeigniter.com/user_guide/libraries/form_validation.html}
+
+\bibitem{CI-Routing}
+  \emph{CodeIgniter felhasználói kézikönyv - URI Routing}\\
+  \url{http://codeigniter.com/user_guide/general/routing.html}
 
 \bibitem{JQ}
   \emph{jQuery framework}\\
@@ -590,6 +773,18 @@ fájlban történnek.
 \bibitem{DOM}
   \emph{Wikipedia - Document Object Model}\\
   \url{http://en.wikipedia.org/wiki/Document_Object_Model}
+
+\bibitem{regex}
+  \emph{Regular-Expressions.info}\\
+  \url{http://www.regular-expressions.info}
+
+\bibitem{ajax}
+  \emph{Wikipédia - Ajax (programozás)}\\
+  \url{http://hu.wikipedia.org/wiki/Ajax_(programoz\%C3\%A1s)}
+
+\bibitem{json}
+  \emph{Wikipedia - JSON}\\
+  \url{http://en.wikipedia.org/wiki/Json}
 
 \end{thebibliography}
 
