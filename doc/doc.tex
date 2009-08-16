@@ -1,21 +1,23 @@
-%Létrehozva: 2009. június 28.
+% Létrehozva: 2009. június 28.
 \documentclass[12pt,a4paper,twoside]{article}
 
-%Hosszú sorok helyett inkább sok hely szavak között
+% Hosszú sorok helyett inkább sok hely szavak között
 \sloppy
 
-%Táblázatok formázásához
+% Táblázatok formázásához
 \usepackage{array}
+\usepackage{multirow}
 
-%Ábrák
+% Ábrák
 \usepackage{graphicx}
+\usepackage{float}
 
-%Ékezetek, magyar nyelv
+% Ékezetek, magyar nyelv
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[hungarian]{babel}
 
-%Forráskód megjelenítésére
+% Forráskód megjelenítésére
 \usepackage{listings}
 \lstset{
   numbers=left,
@@ -24,63 +26,67 @@
   basicstyle=\ttfamily\small
 }
 
-%Definíciós lista kis whitespace-el
+% Definíciós lista kis whitespace-el
 \newcommand{\desc}{
- \begin{description}{}{}
-   \setlength\itemsep{0pt}
-   \setlength\parskip{0pt}
-   \setlength\topsep{0pt}
-   \setlength\partopsep{0pt}
-   \small}
- \newcommand{\ed}{
+  \begin{description}{}{}
+    \setlength\itemsep{0pt}
+    \setlength\parskip{0pt}
+    \setlength\topsep{0pt}
+    \setlength\partopsep{0pt}
+    \small}
+  \newcommand{\ed}{
   \end{description}
-\normalsize }
+  \normalsize }
 
-%\fontfamily{garamond}
-%Elvárás a szakdolgozattal szemben
-\usepackage{times}
+% Elvárás a szakdolgozattal szemben a Times - sebaj
+%\usepackage{times}
+\fontfamily{garamond}
 
-%Az elektronikus változatban hiperhivatkozások
+% Az elektronikus változatban hiperhivatkozások
 \usepackage{hyperref}
-%PDF tulajdonságai
+% PDF tulajdonságai
 \hypersetup{
-    bookmarks=true,
-    unicode=true,
-    pdftoolbar=true,
-    pdfmenubar=true,
-    pdffitwindow=false,
-    pdfstartview={FitH},
-    pdftitle={Szakdolgozat},
-    pdfauthor={Nagy Zoltán},
-    pdfsubject={Online űrlapkészítő},
-    pdfnewwindow=true,
-    colorlinks=true
+  bookmarks=true,
+  unicode=true,
+  pdftoolbar=true,
+  pdfmenubar=true,
+  pdffitwindow=false,
+  pdfstartview={FitH},
+  pdftitle={Szakdolgozat},
+  pdfauthor={Nagy Zoltán},
+  pdfsubject={Online űrlapkészítő},
+  pdfnewwindow=true,
+  colorlinks=true
 }
 
-%Nyomtatásba
+% Nyomtatásba
 \hypersetup{
-    linkcolor=black,
-    citecolor=black,
-    filecolor=black,
-    urlcolor=black
+  linkcolor=black,
+  citecolor=black,
+  filecolor=black,
+  urlcolor=black
 }
 
-%Elektronikus változat
+% Elektronikus változat
 \hypersetup{
-    linkcolor=red,
-    citecolor=green,
-    filecolor=magenta,
-    urlcolor=cyan
+  linkcolor=red,
+  citecolor=green,
+  filecolor=magenta,
+  urlcolor=cyan
 }
 
-%"Oldalbeállítás"
+% "Oldalbeállítás"
 \usepackage[margin=2.5cm, bmargin=3cm, bindingoffset=2cm]{geometry}
 
-%Fejléc
+% Fejléc
+\usepackage{extramarks}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\fancyhead[LO,RE]{}
-\fancyhead[LE,RO]{\footnotesize\sffamily\leftmark}
+\renewcommand{\sectionmark}[1]{\markright{#1}{}}
+\fancyhf{}
+\fancyhead[RE,LO]{\thepage}
+\fancyhead[RO,LE]{\rightmark}
+\fancyfoot[C]{\thepage}
 
 
 \title{Szakdolgozat\\\normalsize Online űrlapkészítő}
@@ -147,11 +153,11 @@ tenni:
 
 \clearpage
 \desc
-\item[Táblázat cella:] Tartalom típusa (szöveg vagy beviteli mező); Szöveges
-  mező esetén a szöveg, beviteli mező esetén a mező típusa és értéke/felirata
-\item[Fieldset:] Cím (\texttt{legend} elem tartalma)
-\item[Beviteli mező:] Név (\texttt{name} tulajdonság)
-\item[Select (lenyíló menü):] A kiválasztható elemek
+  \item[Táblázat cella:] Tartalom típusa (szöveg vagy beviteli mező); Szöveges
+    mező esetén a szöveg, beviteli mező esetén a mező típusa és értéke/felirata
+  \item[Fieldset:] Cím (\texttt{legend} elem tartalma)
+  \item[Beviteli mező:] Név (\texttt{name} tulajdonság)
+  \item[Select (lenyíló menü):] A kiválasztható elemek
 \ed
 
 A cella, illetve a beviteli mező típusának megváltoztatásakor célszerű elkerülni
@@ -160,11 +166,11 @@ tulajdonságának tekintjük, ami az egyes típusoknál a következőképpen les
 értelmezve:
 
 \desc
-\item[Szöveges cella:] A cella tartalma
-\item[Szöveges és jelszó beviteli mező:] Alapértelmezett érték
-\item[Radiobox, checkbox:] A box mellett megjelenítendő szöveg
-\item[Nyomógomb:] A gomb felirata
-\item[Select:] Az első opció
+  \item[Szöveges cella:] A cella tartalma
+  \item[Szöveges és jelszó beviteli mező:] Alapértelmezett érték
+  \item[Radiobox, checkbox:] A box mellett megjelenítendő szöveg
+  \item[Nyomógomb:] A gomb felirata
+  \item[Select:] Az első opció
 \ed
 
 Lehetőséget kell adni a felhasználónak, hogy bármikor megváltoztassa a
@@ -277,14 +283,14 @@ azonosítóval ellátni, de lehetőséget akarunk biztosítani az űrlapok
 
 Az ábrán és a táblázatokban megadott adattípusok a MySQL adatbázis típusai.
 
-%Adatbázis diagramm
+% Adatbázis diagramm
 \begin{figure}[htp]
-\centering
-\includegraphics[width=328px]{db.png}
-\caption{Adatbázis-szerkezet}\label{fig:db}
+  \centering
+  \includegraphics[width=328px]{db.png}
+  \caption{Adatbázis-szerkezet}\label{fig:db}
 \end{figure}
 
-%users tábla
+% users tábla
 \subsubsection{\texttt{users} tábla}
 A \texttt{sid} és \texttt{last\_action} mezőket a felhasználók bejelnetkezésének
 ellenőrzésekor használjuk (TODO: lásd itt-és-itt)
@@ -292,18 +298,18 @@ ellenőrzésekor használjuk (TODO: lásd itt-és-itt)
 \small
 \vspace{.3cm}
 \begin{tabular*}{\textwidth}{>{\tt}l>{\tt}l>{\tt}l>{\tt}l|l}
-\rm Név       &  \rm Típus  &  \rm Méret  & \rm Index/Kulcs & Megjegyzés           \\
-\hline
- id           &   INTEGER AUTO\_INCREMENT && PRIMARY KEY    &                      \\
- sid          &   CHAR      & 40          &                 &  PHP session cookie  \\
- name         &   VARCHAR   & 30          & INDEX           &                      \\
- pass         &   CHAR      & 30          &                 &  SHA1 hash (hex)     \\
- email        &   VARCHAR   & 100         & INDEX           &  Nem nyilvános       \\
- last\_action &   DATETIME  &             &                 &
+  \rm Név       &  \rm Típus  &  \rm Méret  & \rm Index/Kulcs & Megjegyzés           \\
+  \hline
+  id           &   INTEGER AUTO\_INCREMENT && PRIMARY KEY    &                      \\
+  sid          &   CHAR      & 40          &                 &  PHP session cookie  \\
+  name         &   VARCHAR   & 30          & INDEX           &                      \\
+  pass         &   CHAR      & 30          &                 &  SHA1 hash (hex)     \\
+  email        &   VARCHAR   & 100         & INDEX           &  Nem nyilvános       \\
+  last\_action &   DATETIME  &             &                 &
 \end{tabular*}
 \normalsize
 
-%forms tábla
+% forms tábla
 \subsubsection{\texttt{forms} tábla}
 
 A \texttt{user\_id} mezővel kapcsoljuk az űrlapot a létrehozó felhasználóhoz. A
@@ -314,16 +320,16 @@ listáján.
 \small
 \vspace{.3cm}
 \begin{tabular*}{\textwidth}{>{\tt}l>{\tt}l>{\tt}l>{\tt}l|l}
-\rm Név    & \rm Típus &  \rm Méret  & \rm Index/Kulcs & Megjegyzés\\
-\hline
- id        & INTEGER AUTO\_INCREMENT && PRIMARY\_KEY   &                            \\
- user\_id  & INTEGER   & 11          & INDEX           & $1..n \rightarrow{}$ users \\
- html      & TEXT      &             &                 &                            \\
- public    & BOOL      &             & INDEX           &
+  \rm Név    & \rm Típus &  \rm Méret  & \rm Index/Kulcs & Megjegyzés\\
+  \hline
+  id        & INTEGER AUTO\_INCREMENT && PRIMARY\_KEY   &                            \\
+  user\_id  & INTEGER   & 11          & INDEX           & $1..n \rightarrow{}$ users \\
+  html      & TEXT      &             &                 &                            \\
+  public    & BOOL      &             & INDEX           &
 \end{tabular*}
 \normalsize
 
-%public_forms nézet
+% public_forms nézet
 \subsubsection{\texttt{public\_forms} nézet}
 
 Az adatbázis szerkezetének szempontjából lényegtelen, de megkönnyíti a nyilvános
@@ -337,15 +343,15 @@ nem, így ezt a nézetet csak olvasásra használjuk.
 \small
 \vspace{.3cm}
 \begin{tabular*}{\textwidth}{>{\tt}l>{\tt}l>{\tt}l|>{\tt}l}
-\rm Név     &  \rm Típus    &  \rm Méret  & Megjegyzés \\
-\hline
- id         &  INTEGER      &  11         & forms.id   \\
- name       &  VARCHAR      &  100        & forms.name \\
- user\_name &  VARCHAR      &  100        & users.name \\
- html       &  TEXT         &             & forms.html
+  \rm Név     &  \rm Típus    &  \rm Méret  & Megjegyzés \\
+  \hline
+  id         &  INTEGER      &  11         & forms.id   \\
+  name       &  VARCHAR      &  100        & forms.name \\
+  user\_name &  VARCHAR      &  100        & users.name \\
+  html       &  TEXT         &             & forms.html
 \end{tabular*}
 \normalsize
-%----- Adatbázis-szerkezet vége -----
+% ----- Adatbázis-szerkezet vége -----
 
 
 \phantomsection
@@ -365,29 +371,29 @@ valósul meg:
 \begin{lstlisting}[language=PHP]
 function get_form_public($id)
 {
-    // WHERE feltetel asszociativ tombben
-    $where = array('id' => $id);
+  // WHERE feltetel asszociativ tombben
+  $where = array('id' => $id);
 
-    // Lekerdezes es eredmeny
-    $this->db->from('public_forms')->where($where);
-    $result = $this->db->order_by('id')->get();
+  // Lekerdezes es eredmeny
+  $this->db->from('public_forms')->where($where);
+  $result = $this->db->order_by('id')->get();
 
-    // Nincs ilyen azonositoju publikus urlap
-    if ($result->num_rows() == 0)
-        return false;
+  // Nincs ilyen azonositoju publikus urlap
+  if ($result->num_rows() == 0)
+  return false;
 
-    $row = $result->row();
+  $row = $result->row();
 
-    $user = $this->user->get_user(false);
+  $user = $this->user->get_user(false);
 
-    // Ha van bejelentkezett felhasznalo...
-    if ($user !== false)
-        // Es az ove az urlap, tudatjuk a hivoval
-        $row->owner = ($user->name == $row->user_name);
+  // Ha van bejelentkezett felhasznalo...
+  if ($user !== false)
+  // Es az ove az urlap, tudatjuk a hivoval
+  $row->owner = ($user->name == $row->user_name);
 
-    // Visszaadjuk az eredmenyt
-    return $row;
-// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
+  // Visszaadjuk az eredmenyt
+  return $row;
+  // TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
 }
 \end{lstlisting}
 
@@ -409,7 +415,10 @@ Az e-mail címet jelenleg nem használjuk fel, de később a regisztrációról 
 értesítésre lehet használni.
 
 A \texttt{get\_user} függvény a bejelentkezett felhasználó adatait, vagy ennek
-hiányában a \texttt{false} értéket adja vissza.
+hiányában a \texttt{false} értéket adja vissza. Ha van bejelnetkezettt
+felhasználó, akkor itt futtatjuk az \texttt{update\_last\_action} függvényt,
+ezzel biztosítva, hogy minden műveletnél frissítjük a felhasználó
+bejelentkezését.
 
 \paragraph{Bejelentkezés}
 Igaz ugyan, hogy ennél az alkalmazásnál a biztonság nem elsődleges szempont, de
@@ -500,19 +509,144 @@ Az alábbi táblázatban az átirányítási szabályokra szerepel egy-egy péld
 \texttt{base\_path} érték.
 
 \begin{tabular*}{\textwidth}{>{\tt}l|>{\tt}r>{$\rightarrow$}c>{\tt}l}
-\rm Sor & \rm Honnan           & & \rm Hova        \\
-\hline
-48      & pelda.com/hu         & & pelda.com/home/index/hu  \\
-49      & pelda.com/teszt/hu   & & pelda.com/teszt/index/hu \\
-50      & pelda.com/logout     & & pelda.com/login/logout   \\
-51      & pelda.com/builder/20 & & pelda.com/builder/open/20
+  \rm Sor & \rm Honnan           & & \rm Hova        \\
+  \hline
+  48      & pelda.com/hu         & & pelda.com/home/index/hu  \\
+  49      & pelda.com/teszt/hu   & & pelda.com/teszt/index/hu \\
+  50      & pelda.com/logout     & & pelda.com/login/logout   \\
+  51      & pelda.com/builder/20 & & pelda.com/builder/open/20
 \end{tabular*}
 
 
 \phantomsection
-
 \subsection{BaseController - a vezérlők alaposztálya}
 
+A \texttt{system/application/controllers/BaseController.php} fájlban található
+osztályban összegyűjtöttem azokat a függvényeket és beállításokat, amikre
+bármelyik vezérlőben szükség lehet.
+
+\paragraph{\texttt{render(\$return=false)}}
+Mivel a Buildert alkalmazáson kívül minden oldalon megtalálhatóak bizonyos
+elemek - a fejléc, a menü, a lábléc - logikus lépés volt ezeknek az állandó
+elemeknek egy nézetbe foglalása. A CodeIgniter lehetőséget ad rá, hogy a
+nézetet betöltő függvénynek átadjunk egy tömböt, aminek a tartalma elérhető lesz
+a nézetből - a kulcsok lesznek a változók nevei, az értékek pedig értelemszerűen
+a tömb értékei.
+
+Az állandó elemeket tartalmazó \texttt{skeleton} nézetnek a vezérlő
+\texttt{slots} nevű tulajdonságát adjuk át. Így a megjelenítendő elemeket a
+vezérlő futása során bármikor módosíthatjuk. Az aktuális oldal tartalmát a
+\texttt{slots} tulajdonság \texttt{content} kulcsához rendeljük. Ez általában
+egy másik nézet futtatásának eredménye, amit nem megjelenítettünk, hanem egy
+változóban tároltunk. A \texttt{render} függvény \texttt{\$return} paramétere is
+ezt a célt szolgálja - ha értéke \texttt{true}, akkor az eredményt megjelenítés
+helyett visszaadjuk a hívó függvénynek.
+
+Még a tényleges megjelenítés előtt felépítjük a menüt a \texttt{builde\_menu}
+függvény és a \texttt{menu} nézet segítségével, majd ha van a vezérlő nevével
+megegyező fájlnevű javascript, illetve css fájl, ezeket is átadjuk a
+\texttt{skeleton} nézetnek.
+
+\paragraph{\texttt{check\_login(\$redirect='my\_forms')}}
+Ez a függvény ellenőrzi, hogy van-e bejelentkezett felhasználó, és ha nincs,
+akkor átirányítja a felhasználót a bejelentkező olralra. Onnan sikeres
+bejelentkezés vagy regisztráció után a \texttt{\$redirect} paraméterben tárolt
+oldalra fog kerülni.
+
+\paragraph{\texttt{remote\_check\_rights}}
+
+Ezt a függvényt AJAJ kérésekkel hívjuk a felhasználó jogainak ellenőrzése
+céljából. A POST adatokból a \texttt{write} és az \texttt{id} paramétereket
+olvassa be. A \texttt{write} a végzendő művelet típusára utal - ha
+\texttt{true}, akkor írni, ha \texttt{false}, akkor olvasni akarunk.
+Az \texttt{id} paraméter a módosítani vagy olvasni kívánt űrlap azonosítója.
+A lehetséges eredmények:
+
+\desc
+  \item[OK:] A felhasználónak van joga a megadott művelethez
+  \item[NOT\_LOGGED\_IN:] A kért művelethez bejelentkezett felhasználóra van szükség
+  \item[FORM\_NOT\_FOUND:] A felhasználónak nincs joga kért művelethez, vagy az űrlap
+    nem található.
+\ed
+
+Az eredmény kiválasztásának folyamatát a következő ábra mutatja be.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=400px]{rights.png}
+
+  \desc\small
+    \item[WRITE:] A POST-ban kapott \texttt{write} paraméter
+    \item[PRIV:] Az űrlap az éppen bejelentkezett felhasználóhoz tartozik?
+    \item[PUB:] Az űrlap publikus?
+  \ed\normalsize
+
+  \begin{tabular*}{\textwidth}{r|cc|cc}
+    \multirow{2}{*}{WRITE} & \multicolumn{2}{c|}{PRIV = 1} & \multicolumn{2}{c}{PRIV = 0} \\
+    & PUB = 1 & PUB = 0 & PUB = 1 & PUB = 0 \\
+    \hline
+    true  & OK & OK & NOT\_FOUND & NOT\_FOUND \\
+    false & OK & OK & OK         & NOT\_FOUND \\
+  \end{tabular*}
+
+  \caption{Felhasználói jogok ellenőrzése}\label{fig:rights}
+\end{figure}
+
+
+\paragraph{\texttt{load\_lang(\$file, \$in=null)}}
+Betölti a kért nyelvi fájlt a megfelelő nyelvi fájlból. Az \texttt{\$in}
+paraméter a vezérlőkben megjelenő \texttt{\$lang} opcionális paraméter értékét
+kapja. Ha tehát az URL-ben szerepel egy nyelv, akkor itt töltjük be az annak
+megfelelő sztringeket. Ezen kívül elmentjük a munkamenetbe a nyelvet, amit akkor
+használunk, ha az URL-ből nem kaptunk nyelvet. Ha még a munkamenetben sincs
+mentett nyelv, akkor a konstruktorban megadott első nyelvet használjuk.
+
+
+\phantomsection
+\subsection{Új fordítások hozzáadása}
+
+A felhasználói felület nyelvi fájljait a Manager és a Builder külön tárolja: a
+Manager a \texttt{system/application/language} mappában, a Builder pedig a
+\texttt{scripts/builder/translations.js} fájlban. Egy új nyelv hozzáadása négy
+lépésből áll:
+
+\begin{itemize}
+  \item A nyelv azonosítójának kiválasztása. Általában a legegyszerűbb az
+    \texttt{img/famfamfam/png} mappában található zászló nevével megegyező
+    azonosítót választani. Ez a spanyol nyelv esetén például
+    \texttt{es}. Ellenkező esetben a zászlóról készíteni kell egy
+    másolatot, aminek a neve megegyezik az azonosítóval, hiszen a nyelvek
+    kiválasztását lehetővé tevő menü ezt a képet fogja használni.
+  \item A Manager felületének lefordítása. Egy már létező fordítás fájljait
+    (például a \texttt{system/application/language/hu} mappa tartalmát)
+    lemásoljuk az új nyelv azonosítójával megegyező nevű mappába, majd
+    elvégezzük a fordítást.
+  \item A \texttt{BaseController} osztály konstruktorában a
+    \texttt{\$this->lang\_names} tömbhöz hozzáadjuk az új nyelv azonosítóját és
+    nevét. Például az angol, magyar és spanyol nyelvekkel a tömb a következő
+    értéket kapná:
+    \begin{lstlisting}[firstnumber=35]
+$this->lang_names = array('en' => 'English',
+                          'hu' => 'Magyar',
+                          'es' => 'Espanol'
+                         );
+// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
+    \end{lstlisting}
+    Így az új nyelv be fog kerülni a nyelv kiválasztását lehetővé tevő menübe.
+  \item A \texttt{system/application/config/routes.php} fájlban a
+    \texttt{\$langs} változóhoz hozzáadjuk a nyelv azonosítóját. Például az
+    angol, magyar és spanyol nyelvekkel a változó a következő értéket kapná:
+    \begin{lstlisting}[firstnumber=46]
+$langs = '(en|hu|es)';
+// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
+    \end{lstlisting}
+    Így a \texttt{*/es} alakú oldalak megnyitásakor ``Az oldal nem található''
+    hiba helyett spanyol nyelven nyílik meg a kért oldal.
+
+\end{itemize}
+
+Ezen kívül még le kell fordítani a Builder felületének üzeneteit is - ezt a
+(TODO: lásd ott) részben tárgyalom.
 
 \phantomsection
 \subsection{Regisztráció}
@@ -594,11 +728,11 @@ jelzi a felhasználónak a megadott adatok helyességét, ez ritkán fog előfor
 \phantomsection
 \subsubsection{Szerveroldal}
 
-%Registration check folyamatábra
+% Registration check folyamatábra
 \begin{figure}[htp]
-\centering
-\includegraphics[width=328px]{reg_check.png}
-\caption{Regisztrációs adatok ellenőrzése}\label{fig:reg_check}
+  \centering
+  \includegraphics[width=328px]{reg_check.png}
+  \caption{Regisztrációs adatok ellenőrzése}\label{fig:reg_check}
 \end{figure}
 
 Az regisztrációnál megadott adatok ellenőrzése két helyről indulhat. Ha a kliens
@@ -722,6 +856,24 @@ formában állítja össze.
 Mindkét függvényt a beviteli mezők \texttt{onchange} eseményének futásakor és az
 oldal betöltődésekor hívjuk meg.
 
+
+\clearpage
+\phantomsection
+\subsection{Saját űrlapok listázása}
+
+\centering
+\begin{figure}[H]
+  \includegraphics[width=420px]{form_list.png}
+  \caption{Űrlapok listája, előnézet}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[width=420px]{form_list_html.png}
+  \caption{Űrlap HTML nézete}
+\end{figure}
+
+Az ``Űrlapjaim'' menüpontból elérhető lista két részből áll: az űrlapokat  és
+rajtuk végezhető műveleteket tartalmazó táblázatból, illetve a kiválasztott
+űrlap előnézetéből.
 
 \addcontentsline{toc}{section}{Hivatkozások}
 \begin{thebibliography}{99}

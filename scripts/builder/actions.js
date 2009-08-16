@@ -51,12 +51,11 @@ function call_action(fun)
  * elvárja, hogy már a DOM része legyen az elem
  */
 const ACTIONS = {
-    /** Új fieldset táblázattal */
+    /** Új fieldset */
     add_fieldset: function()
     {
-        var $selected = check_selected_type('form');
         var $fieldset = $('<fieldset>').append($('<legend>'));
-        $selected.append($fieldset);
+        $('#form').append($fieldset);
         $fieldset.select();
     },
 

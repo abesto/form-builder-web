@@ -90,9 +90,9 @@ class BaseController extends Controller
     /**
      * AJAJ függvény
      *
-     * @return 'OK'                : a felhasználó be van jelentkezve, és az űrlap az övé
-     *         'FORM_NOT_FOUND'    : a felhasználó be van jelentkezve, de az űrlap nem található, vagy nem végezheti a kért műveletet
-     *         'NOT_LOGGED_IN'     : a felhasználó nincs bejelentkezve
+     * @return 'OK'             : a felhasználó be van jelentkezve, és az űrlap az övé
+     *         'FORM_NOT_FOUND' : a felhasználó be van jelentkezve, de az űrlap nem található, vagy nem végezheti a kért műveletet
+     *         'NOT_LOGGED_IN'  : a felhasználó nincs bejelentkezve
      */
     public function remote_check_rights()
     {
@@ -111,7 +111,7 @@ class BaseController extends Controller
             if ($id !== false) {
                 $got_private = ($this->forms->get_form($id, false) !== false);
                 $got_public  = ($this->forms->get_form_public($id, false) !== false);
-                if (($write && !$got_private) || (!$write && !$got_private && !$got_public)) {
+                if (!$got_private && (!$got_public || $write)) {
                     echo 'FORM_NOT_FOUND';
                     return;
                 }

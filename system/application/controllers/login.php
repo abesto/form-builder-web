@@ -35,6 +35,8 @@ class Login extends BaseController {
             $_SESSION['set']['login_failed'] = false;
         if (!isset($_SESSION['set']['reg_failed']))
             $_SESSION['set']['reg_failed'] = false;
+        if (!isset($_SESSION['set']['redirect']))
+            $_SESSION['set']['redirect'] = 'my_forms';
 
         $this->load_lang('login', $lang);
         $slots = $this->lang->line('login');
@@ -55,7 +57,8 @@ class Login extends BaseController {
      */
     public function do_login($lang=null)
     {
-        $_SESSION['set'] = array();
+        if (!isset($_SESSION['set']))
+            $_SESSION['set'] = array();
         $_SESSION['set']['reg_failed'] = false;
         $_SESSION['set']['login_user'] = $_POST['user'];
 
@@ -71,7 +74,7 @@ class Login extends BaseController {
             redirect('login/'.$lang);
         } else {
             $_SESSION['set']['login_failed'] = false;
-            redirect($_POST['redirect'].'/'.$lang);
+            redirect($_SESSION['set']['redirect'].'/'.$lang);
         }
     }
 
