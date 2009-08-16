@@ -86,7 +86,6 @@
 \fancyhf{}
 \fancyhead[RE,LO]{\thepage}
 \fancyhead[RO,LE]{\rightmark}
-\fancyfoot[C]{\thepage}
 
 
 \title{Szakdolgozat\\\normalsize Online űrlapkészítő}
@@ -292,8 +291,8 @@ Az ábrán és a táblázatokban megadott adattípusok a MySQL adatbázis típus
 
 % users tábla
 \subsubsection{\texttt{users} tábla}
-A \texttt{sid} és \texttt{last\_action} mezőket a felhasználók bejelnetkezésének
-ellenőrzésekor használjuk (TODO: lásd itt-és-itt)
+A \texttt{sid} és \texttt{last\_action} mezőket a felhasználók bejelentkezésének
+ellenőrzésekor használjuk.
 
 \small
 \vspace{.3cm}
@@ -407,12 +406,11 @@ kell, hogy a megadott felhasználónév és e-mail szerepel-e a már az
 adatbázisban. Az e-mail ellenőrzését a \texttt{check\_email}, a felhasználónév
 ellenőrzését pedig a nem túl szerencsés nevű \texttt{not\_available} függvény
 végzi. A \texttt{register} függvény csak akkor kerül meghívásra, ha már
-meggyőződtünk a kapott adatok helyességéről (TODO: lásd login\_controller kapott
-adatok ellenőrzése).
+meggyőződtünk a kapott adatok helyességéről (ld. \ref{sec:reg_check} Manager -
+Regisztráció).
 
-TODO:
-Az e-mail címet jelenleg nem használjuk fel, de később a regisztrációról történő
-értesítésre lehet használni.
+Az e-mail címet jelenleg nem használjuk fel, de későbbi fejlesztéseknél szükség
+lehet rá.
 
 A \texttt{get\_user} függvény a bejelentkezett felhasználó adatait, vagy ennek
 hiányában a \texttt{false} értéket adja vissza. Ha van bejelnetkezettt
@@ -502,7 +500,8 @@ $route['builder/(:num)'] = 'builder/open/$1';
 A 46. sorban egy reguláris kifejezés segítségével megadjuk azokat a
 nyelv-azonosítókat, amik szerepelhetnek érvényes címekben. Ezeknek az
 azonosítóknak meg kell egyezniük a nyelvi fájlokban használt azonosítókkal
-(TODO: lásd fordítások hozzáadása).
+(ld. \ref{sec:manager-i18n} Manager - Új fordítások hozzáadása és
+TODO \ref{sec:builder-i18n} Builder - Új fordítások hozzáadása).
 
 Az alábbi táblázatban az átirányítási szabályokra szerepel egy-egy példa. A
 ``pelda.com'' a \texttt{system/application/config/config.php} fájlban megadott
@@ -554,6 +553,7 @@ bejelentkezés vagy regisztráció után a \texttt{\$redirect} paraméterben tá
 oldalra fog kerülni.
 
 \paragraph{\texttt{remote\_check\_rights}}
+\label{par:check_rights}
 
 Ezt a függvényt AJAJ kérésekkel hívjuk a felhasználó jogainak ellenőrzése
 céljából. A POST adatokból a \texttt{write} és az \texttt{id} paramétereket
@@ -604,6 +604,7 @@ mentett nyelv, akkor a konstruktorban megadott első nyelvet használjuk.
 
 \phantomsection
 \subsection{Új fordítások hozzáadása}
+\label{sec:manager-i18n}
 
 A felhasználói felület nyelvi fájljait a Manager és a Builder külön tárolja: a
 Manager a \texttt{system/application/language} mappában, a Builder pedig a
@@ -645,11 +646,12 @@ $langs = '(en|hu|es)';
 
 \end{itemize}
 
-Ezen kívül még le kell fordítani a Builder felületének üzeneteit is - ezt a
-(TODO: lásd ott) részben tárgyalom.
+Ezen kívül még le kell fordítani a Builder felületének üzeneteit is (ld. TODO
+\ref{sec:builder-i18n}.
 
 \phantomsection
 \subsection{Regisztráció}
+\label{sec:reg_check}
 
 A tényleges regisztrációt a \texttt{users\_model} hajtja végre. A feladatunk itt
 a felhasználó által megadott adatok ellenőrzése. Ellenőrizni
@@ -694,7 +696,7 @@ CodeIgniter által használt kritérium-leírásokhoz hasonló nyelvvel
 szabályleíró fájlt használja, akkor elkerültük az ellenőrzendő esetek
 ismétlését. A redundancia így átkerül a szabályleírást értelmező programrészbe,
 ami valószínűleg bonyolultabb, mint maguk az ellenőrzések. Nagy számú
-ellenőrzésnél ez jó megoldás lehet, de ennél az alkalmazásnál túlzás.
+ellenőrzésnél ez jó megoldás lehet, de ennél az alkalmazásnál nem kifizetődő.
 
 \paragraph{Szerveroldali ellenőrzés és AJAJ}
 AJAJ-nak az AJAX (Asynchronous JavaScript and XML \cite{ajax}) technológia egy
@@ -859,10 +861,10 @@ oldal betöltődésekor hívjuk meg.
 
 \clearpage
 \phantomsection
-\subsection{Saját űrlapok listázása}
+\subsection{Űrlapok listázása}
 
-\centering
 \begin{figure}[H]
+\centering
   \includegraphics[width=420px]{form_list.png}
   \caption{Űrlapok listája, előnézet}
 \end{figure}
@@ -870,11 +872,167 @@ oldal betöltődésekor hívjuk meg.
   \includegraphics[width=420px]{form_list_html.png}
   \caption{Űrlap HTML nézete}
 \end{figure}
+\clearpage
 
-Az ``Űrlapjaim'' menüpontból elérhető lista két részből áll: az űrlapokat  és
-rajtuk végezhető műveleteket tartalmazó táblázatból, illetve a kiválasztott
-űrlap előnézetéből.
+Az ``Űrlapjaim'' és ``Nyilvános űrlapok'' menüpontból elérhető lista két részből
+áll: az űrlapokat  és rajtuk végezhető műveleteket tartalmazó táblázatból,
+illetve a kiválasztott űrlap előnézetéből. Az előnézet két fület tartalmaz: az
+``Előnézet'' az űrlapot úgy mutatja meg, ahogyan a felhasználó böngészőjében
+megjelenik; a ``HTML'' nézet pedig az űrlap forrását teszi elérhetővé.
 
+A lista felépítése két lépésből áll. Először a \texttt{My\_forms} vagy
+\texttt{Public\_forms} vezérlő
+segítségével betöltjük a \texttt{form\_table} nézetet, és átadjuk neki
+\begin{itemize}
+\item A \texttt{public = false} értéket. Ez a nézet kezeli a nyilvános és a
+  saját űrlapok megjelenítését is - így tudatjuk vele, hogy most saját
+  űrlapokról van szó. Ha a változó értékét futásidőben megváltoztatják, az
+  állandó jog-ellenőrzés miatt akkor sem lehet kihasználni ezt a tényt.
+\item A \texttt{forms\_lang.php} nyelvi fájl \texttt{js} és \texttt{php} nevű
+  tömbjeit. A tömbök neve azt jelzi, hogy melyik programnyelv fogja felhasználni
+  az adott szövegrészleteket.
+\item A \texttt{base\_url} CodeIgniter függvény visszatérési értékét. Ez a
+  \texttt{config.php}-ben megadott \texttt{base\_url} változó értéke.
+\end{itemize}
+
+Ezután a \texttt{form\_table.php} nézetben a \texttt{js} tömb, a
+\texttt{base\_url} és \texttt{public} változók értékét átadjuk a
+JavaScriptnek. Végül a \texttt{php} tömb lefordított sztringjeit felhasználva
+létrehozzuk a felhasználói felület részeit.
+
+\vspace{1cm}
+
+A második lépésben AJAJ-al lekérdezzük a felhasználó űrlapjainak
+a listáját, amiket JavaScripttel megjelenítünk. Az űrlap táblázathoz adására
+itt is ugyanazt a függvényt használjuk, mint új űrlap létrehozásakor. Ezt,
+illetve az űrlapokon végezhető műveletek kezelését a
+\texttt{scripts/forms\_table.js} végzi.
+
+Az új sor hozzáadását két függvény végezheti: az \texttt{add\_row} saját űrlap
+hozzáadását, az \texttt{add\_row\_public} pedig más felhasználók nyilvános
+űrlapjainak hozzáadását teszi lehetővé. A vezérlőtől kapott, JavaScriptnek
+átadott \texttt{public} változó értékétől függ, hogy melyiket használjuk.
+
+Az űrlapok táblázata a fejlécből, a létező űrlapok listájából, és a saját
+űrlapok listájának esetén egy ``Új űrlap'' sorból áll. Minden űrlapnál szerepel
+az űrlap neve, nyilvános űrlaplista esetén az űrlap tulajdonosának neve, és az
+adott űrlapon végezhető műveletek. Ha a felhasználó nincs bejelentkezve, akkor
+nincsenek műveletek. Bejelentkezett felhasználó más felhasználó nyilvános űrlapjait
+szerkesztésre nyithatja meg, amit később mentés esetén sajátjaként mentünk, új
+űrlapként. Saját űrlapoknál a nyilvános űrlapok listázásakor a szerkesztés,
+átnevezés és törlés műveletek elérhetőek. Ezeken kívül a saját űrlapok listáján
+az űrlap nyilvánosságának megváltoztatására is van lehetőség.
+
+\begin{figure}[H]
+\centering
+\small
+  \includegraphics[width=420px]{private.png}
+  Saját űrlap az ``Űrlapjaim'' menüpont alatt: minden művelet elérhető\\
+
+  \vspace{.5cm}
+  \includegraphics[width=420px]{public_sajat.png}
+  Saját űrlap a ``Nyilvános űrlapok'' menüpont alatt: látjuk az űrlap
+  létrehozójának nevét. A nyilvánosság átállításán kívül minden művelet
+  elérhető\\
+
+  \vspace{.5cm}
+  \includegraphics[width=420px]{public_mas.png}
+  Más felhasználó nyilvános űrlapja a ``Nyilvános űrlapok'' menüpont alatt: csak
+  a szerkesztés menüpont érhető el. Mentéskor másolat készül a felhasználó
+  sajátjaként.\\
+
+  \vspace{.5cm}
+  \includegraphics[width=420px]{public_none.png}
+  Nyilvános űrlap a ``Nyilvános űrlapok'' menüpont alatt, bejelentkezés nélkül:
+  az űrlapok listája és az előnézet megtekinthető, de nincs végezhető művelet.
+\normalsize
+  \caption{Egy űrlap lehetséges megjelenési formái}
+\end{figure}
+\vspace{.7cm}
+
+
+\paragraph{Előnézet, gyorsítótár}
+Egy űrlap sorára - nem egy műveletre - kattintva az űrlap kijelölésre kerül. Ezt
+jelezzük a sor kiemelésével, és az előnézetben a kijelölt űrlapot mutatjuk. Némi
+sávszélesség megspórolása érdekében az űrlapok tartalmát nem töltjük le, amíg
+nincs rájuk szükség. A kijelölt űrlap letöltése közben a felhasználó egy ``Űrlap
+letöltése'' feliratú üzenetet kap. Ezután az űrlap illetve a HTML forráskód
+megjelennek a megfelelő lapokon. Az adatbázisban az űrlapokat whitespace nélkül
+tároljuk, ezért szükség van a kód olvashatóvá tételére. Ezt az átalakítást az
+eredetileg csak a Builderben használt \texttt{scripts/builder/htmlize.js}
+fájlban definiált \texttt{htmlize} rekurzív függvény végzi.
+
+Az űrlap letöltődése utána az bekerül a \texttt{cache} nevű
+gyorsítótár-objektumba. Ha az űrlapot a felhasználó később újra kijelöli, akkor
+az a szerver helyett innen, a kliensgép memóriájából fog betöltődni. A
+\texttt{cache} objektumnak van egy \texttt{update} tagfüggvénye is, ami az
+űrlapok nevének és tartalmának módosítására szolgál. Ezt a Builder mentéskor a
+\texttt{window.opener} tulajdonságon keresztül próbálja meghívni. Természetesen
+ha a szerkesztőt nem az aktuális ablakból nyitotta meg a felhasználó, akkor a
+gyorsítótár - és így az előnézet - nem frissül.
+
+Ezt a gyorsítótár adott időközönként történő újratöltésével, vagy egy Comet (más
+néven AJAX Push, Fordított AJAX \cite{comet}) megoldással ki lehetnek kerülni,
+de jelen alkalmazásnál a befektetett munka nem lenne arányos a megoldott
+probléma nagyságával.
+
+
+\paragraph{Műveletek}
+Az űrlapokon végezhető műveleteket tartalmozó cellában az ikonok alatt helyet
+kapott egy alaphelyzetben üres \texttt{div}, ami az egérkurzor alatti ikonhoz
+tartozó művelet nevét mutatja. Az ikonok létrehozására (a nyilvánosság
+beállítása kivételével, ami a két állapot miatt különleges) az
+\texttt{action\_icon} függvényt használjuk. A megadott képfájllal, felirattal és
+űrlap-azonosítóval létrehozott kép elemet ad vissza.
+
+Kattintásra a \texttt{check\_rights} függvénynek átadja a kapott \texttt{fun,
+  write} és \texttt{id} paramétereket. Ez a vezérlő
+\texttt{remote\_check\_rights} függvényét a \texttt{write} és \texttt{id}
+paraméterekkel hívja (ld. \ref{par:check_rights} BaseController -
+\texttt{remote\_check\_rights}). Ha a kapott eredmény NOT\_LOGGED\_IN, akkor a
+felhasználót átirányítja a bejelentkező oldalra; ha FORM\_NOT\_FOUND, akkor a
+felhasználó értesítése után törli a listáról az űrlapot; ha OK, akkor lefuttatja
+a \texttt{callback} paraméterben kapott programkódot (ez az
+\texttt{action\_icon} függvényben a \texttt{fun} nevet viselte). Egyéb esetben
+kivételt dob és a futás megáll.
+
+A műveleteket a szerverloldalon elvégző függvények az adatbázis módosítása előtt
+ellenőrzik a bejelentkezett felhasználót. A modellben is csak akkor hajtódik
+végre a művelet, ha a bejelentkezett felhasználó megfelelő jogosultsággal
+rendelkezik. Az űrlapokon végezhető műveletek:
+
+\begin{itemize}
+\item \textbf{Szerkesztés}: az \texttt{open\_editor} megnyitja a ``builder\_app'' nevű ablakban az űrlapot
+  szerkesztésre. A Builder a lap bezárása előtt ha van mentetlen változtatás,
+  rákérdez a mentésre, így nincs adatvesztés akkor sem, ha új űrlapot nyitunk meg.
+\item \textbf{Átnevezé}s: az ikonra kattintva a \texttt{rename\_dialog} függvény megnyitja
+  az új nevet bekérő jQuery UI párbeszédablakot. Az ott található űrlap
+  elküldése után a \texttt{rename\_form} függvény elküldi a szervernek az
+  átnevezést, és az űrlapok listáját is frissíti az új névvel.
+\item \textbf{Új űrlap}: a \texttt{new\_dialog} függvénnyel megnyitjuk az új űrlap nevét
+  bekérő párbeszédablakot, majd a \texttt{new\_form} függvénnyel azt létre is
+  hozzuk. A szervernek küldött kérésre érkező válasz az új űrlap
+  azonosítója. Ezt felhasználva adjuk hozzá a gyorsítótárhoz és az űrlapok
+  listájához az űrlapot, majd megnyitjuk szerkesztésre a fent említett
+  \texttt{open\_editor} függvény segítségével.
+\item \textbf{Űrlap eltávolítása}: a \texttt{remove\_dialog} függvénnyel megnyitjuk a
+  megerősítést kérő párbeszédablakot, majd a \texttt{remove\_form} függvénnyel
+  azt el is távolítjuk a szerverről és az űrlapok listájáról.
+\item \textbf{Nyilvánosság módosítása}: itt nem használunk párbeszédablakot. Az ikon,
+  illetve ha felette van a kurzor, akkor a felirat, mutatják az aktuális
+  állapotot, ami kattintásra megváltozik. Az ikont a
+  \texttt{toggle\_public\_icon} függvényben hozzuk létre, amit először az \texttt{add\_row}
+  függvényben hív az adatbázisban szereplő értékkel - tudnia kell a függvénynek,
+  hogy mi az aktuális állapot. Kattintásra az ikon a \texttt{set\_public}
+  függvényt hívja az aktuális állapot negáltjával - erre akarjuk állítani a
+  nyilvánosságot. Ez a függvény elvégzi az állapot megváltoztatását a szerveren,
+  majd a \texttt{toggle\_public\_icon} függvény segítségével létrehozza az új
+  ikont, ami már az új állapotot mutatja, és lecseréli a régi ikont.
+\end{itemize}
+
+
+\clearpage
+\phantomsection
 \addcontentsline{toc}{section}{Hivatkozások}
 \begin{thebibliography}{99}
 
@@ -937,6 +1095,10 @@ rajtuk végezhető műveleteket tartalmazó táblázatból, illetve a kiválaszt
 \bibitem{json}
   \emph{Wikipedia - JSON}\\
   \url{http://en.wikipedia.org/wiki/Json}
+
+\bibitem{comet}
+  \emph{Wikipedia - Comet}\\
+  \url{http://en.wikipedia.org/wiki/Comet_(programming)}
 
 \end{thebibliography}
 
