@@ -5,8 +5,8 @@ all: builder.min.js
 clean:
 	rm -f *.min.js
 
-builder_big.js:
-	cat $(BUILDER_SOURCES) >> $@
+builder_big.js: $(BUILDER_SOURCES)
+	cat $(BUILDER_SOURCES) > $@
 
 builder.min.js: builder_big.js
 	cat ../PREAMBLE > $@

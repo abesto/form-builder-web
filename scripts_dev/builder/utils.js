@@ -90,6 +90,19 @@ function node_with_text(name, text) { return $('<' + name + '>').append(text); }
  */
 function make_input(name, type) { return $('<input />').attr({'type': type, 'name': name}); }
 
+/**
+ * Megadja egy elem adott tulajdonságát int típusú változóként
+ * @param el Egy elem
+ * @param attrib A tulajdonság neve
+ * @return Ha a tulajdonság értéke null akkor 1, különben az érték intként
+ */
+function get_int_attrib($el, attrib)
+{
+    var val = $el.attr(attrib);
+    if (!val) return 1;
+    return parseInt(val);
+}
+
 
 /**
  * @param td A td elem
@@ -104,32 +117,21 @@ function get_td_type($td) {
 }
 
 /**
- * Beállítja a kapott cellában levő input mező name és id tulajdonságát.
- * Az id tulajdonság végére egy szám kerül, hogy az azonosító egyedi legyen.
- * A szám 1-től indul és a törlés miatt keletkező "lyukakat" feltölti
- *
- * @param td A td elem
- * @param name A name tulajdonság értéke
+ * A kiválasztott td elem tartalmának típusát állítja be
+ * @param type Az elem tartalmának típusa
  */
-function set_name($td, name) {
-    var $input = $td.firstChild();
-
-    // Ha üres a kapott name, töröljük a tulajdonságokat
-    if (name == '') {
-        $input.removeAttr('name').removeAttr('id');
-        return;
+function set_td_type(in_type)
+{
+    var $selected = check_selected_type('td');
+    var text = get_td_text($selected);
+    if      (in_type == 'text') $selected.html('');
+    else if (in_type == 'input|select') {
+        var $input = make_input('', 'text');
+        $input.change( function() { update_props('input'); } );
+        $selected.html('').append($input);
     }
-
-    // Megkeressük és beállítjuk az első szabad azonosítót
-    var num = 1;
-    $('#main input[id^=' + name + ']').each(
-        function() {
-            if ($(this).attr('id') == name + '_' + num)
-                num += 1;
-        });
-    var id = name + '_' + num;
-    $input.attr({'name': name, 'id': id});
-    $input.next().attr('for', id); // Radio és checkbox elemek feliratához
+    set_td_text($selected, text);
+    update_props('td');
 }
 
 /**
@@ -145,16 +147,40 @@ function get_input_type($td) {
 }
 
 /**
- * Megadja egy elem adott tulajdonságát int típusú változóként
- * @param el Egy elem
- * @param attrib A tulajdonság neve
- * @return Ha a tulajdonság értéke null akkor 1, különben az érték intként
+ * A kiválasztott cella input elemének típusát állítja be
+ * @param type Az elem type tulajsonsága
  */
-function get_int_attrib($el, attrib)
+function set_input_type(type)
 {
-    var val = $el.attr(attrib);
-    if (!val) return 1;
-    return parseInt(val);
+    var $td = check_selected_type('td');
+    var text = get_td_text($td);
+    var old_type = get_input_type($td);
+
+    var $input = null;
+
+    if ((old_type == 'select') && (type != 'select'))
+        $input = $('<input type="'+type+'">');
+    else if ((old_type != 'select') && (type == 'select'))
+    $input = $('<select>');
+
+    if ((old_type != 'select') && (type != 'select')) {
+        $input = $td.firstChild();
+        $input.get(0).setAttribute('type', type);  // JQuery nem szereti átállítani a type tulajdonságot
+    } else {
+        var $old_input = $td.firstChild();
+        $input.attr('name', $old_input.attr('name')).attr('id', $old_input.attr('id'));  // id és name tulajdonságokat átvesszük
+        $td.children().remove();
+        $td.append($input);
+    }
+
+    if (type == 'text') $input.change( function() { update_props('td'); } );
+    else $input.unbind('change');
+
+    set_td_text($td, text);
+    // Fájl input esetén nincs felirat, ezért frissíteni kell a tulajdonságokat
+    // Selectnél pedig borul a szokásos felépítés
+    if ((type == 'file') || (old_type == 'file') || (old_type == 'select') || (type == 'select'))
+        update_props('td');
 }
 
 /**
@@ -212,58 +238,32 @@ function set_td_text($td, _text)
 }
 
 /**
- * A kiválasztott cella input elemének típusát állítja be
- * @param type Az elem type tulajsonsága
+ * Beállítja a kapott cellában levő input mező name és id tulajdonságát.
+ * Az id tulajdonság végére egy szám kerül, hogy az azonosító egyedi legyen.
+ * A szám 1-től indul és a törlés miatt keletkező "lyukakat" feltölti
+ *
+ * @param td A td elem
+ * @param name A name tulajdonság értéke
  */
-function set_input_type(type)
-{
-    var $td = check_selected_type('td');
-    var text = get_td_text($td);
-    var old_type = get_input_type($td);
+function set_name($td, name) {
+    var $input = $td.firstChild();
 
-    var $input = null;
-
-    if ((old_type == 'select') && (type != 'select'))
-        $input = $('<input type="'+type+'">');
-    else if ((old_type != 'select') && (type == 'select'))
-    $input = $('<select>');
-
-    if ((old_type != 'select') && (type != 'select')) {
-        $input = $td.firstChild();
-        $input.get(0).setAttribute('type', type);  // JQuery nem szereti átállítani a type tulajdonságot
-    } else {
-        var $old_input = $td.firstChild();
-        $input.attr('name', $old_input.attr('name')).attr('id', $old_input.attr('id'));  // id és name tulajdonságokat átvesszük
-        $td.children().remove();
-        $td.append($input);
+    // Ha üres a kapott name, töröljük a tulajdonságokat
+    if (name == '') {
+        $input.removeAttr('name').removeAttr('id');
+        return;
     }
 
-    if (type == 'text') $input.change( function() { update_props('td'); } );
-    else $input.unbind('change');
-
-    set_td_text($td, text);
-    // Fájl input esetén nincs felirat, ezért frissíteni kell a tulajdonságokat
-    // Selectnél pedig borul a szokásos felépítés
-    if ((type == 'file') || (old_type == 'file') || (old_type == 'select') || (type == 'select'))
-        update_props('td');
-}
-
-/**
- * A kiválasztott td elem tartalmának típusát állítja be
- * @param type Az elem tartalmának típusa
- */
-function set_td_type(in_type)
-{
-    var $selected = check_selected_type('td');
-    var text = get_td_text($selected);
-    if      (in_type == 'text') $selected.html('');
-    else if (in_type == 'input|select') {
-        var $input = make_input('', 'text');
-        $input.change( function() { update_props('input'); } );
-        $selected.html('').append($input);
-    }
-    set_td_text($selected, text);
-    update_props('td');
+    // Megkeressük és beállítjuk az első szabad azonosítót
+    var num = 1;
+    $('#main input[id^=' + name + ']').each(
+        function() {
+            if ($(this).attr('id') == name + '_' + num)
+                num += 1;
+        });
+    var id = name + '_' + num;
+    $input.attr({'name': name, 'id': id});
+    $input.next().attr('for', id); // Radio és checkbox elemek feliratához
 }
 
 /**

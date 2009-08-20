@@ -161,6 +161,7 @@ legyen. Biztosítani kell a később elkészülő fordítások egyszerű hozzáa
 
 
 \subsection{Builder}
+\label{sec:spec}
 
 A kliensoldali alkalmazásnak lehetőséget kell nyújtania tetszőleges elrendezés
 megvalósítására. Mivel a cél egy olyan megoldás, ahol a felhasználónak nem kell
@@ -430,8 +431,8 @@ kell, hogy a megadott felhasználónév és e-mail szerepel-e a már az
 adatbázisban. Az e-mail ellenőrzését a \texttt{check\_email}, a felhasználónév
 ellenőrzését pedig a nem túl szerencsés nevű \texttt{not\_available} függvény
 végzi. A \texttt{register} függvény csak akkor kerül meghívásra, ha már
-meggyőződtünk a kapott adatok helyességéről (ld. \ref{sec:reg_check} Manager -
-Regisztráció).
+meggyőződtünk a kapott adatok helyességéről (ld. \ref{sec:reg_check} \textit{Manager -
+Regisztráció}).
 
 Az e-mail címet jelenleg nem használjuk fel, de későbbi fejlesztéseknél szükség
 lehet rá.
@@ -507,15 +508,16 @@ A Managerhez tartozó fájlok:
     valid.jpg} és \texttt{error.jpg} fájlokat a GIMP képszerkesztővel
   készítettem.
 \fitem{scripts/login.js} a bejelentkező és regisztráló oldalhoz tartozó
-  JavaScript kód (ld. \ref{sec:reg-client} Builder - Regisztráció, Kliensoldal)
+  JavaScript kód (ld. \ref{sec:reg-client} \textit{Builder - Regisztráció,
+    Kliensoldal})
 \fitem{scripts/forms\_table.js} az űrlapok listáihoz tartozó JavaScript kód
 \fitem{system/appliaction/controllers mappa} vezérlők
 \fitem{system/appliaction/models mappa} modellek (ld. \ref{sec:modellek}
-  Builder - Modellek)
+  \textit{Builder - Modellek})
 \fitem{system/application/views mappa} nézetek
 \fitem{system/application/languages mappa} nyelvi fájlok
-  (ld. \ref{sec:manager-i18n} Manager - Új fordítások hozzáadása és
-  \ref{sec:builder-i18} Builder - Új fordítások hozzáadása)
+  (ld. \ref{sec:manager-i18n} \textit{Manager - Új fordítások hozzáadása} és
+  \ref{sec:builder-i18} \textit{\texttt{translations.js} - fordítások}
 \end{itemize}
 
 \phantomsection
@@ -544,8 +546,8 @@ $route['builder/(:num)'] = 'builder/open/$1';
 A 46. sorban egy reguláris kifejezés segítségével megadjuk azokat a
 nyelv-azonosítókat, amik szerepelhetnek érvényes címekben. Ezeknek az
 azonosítóknak meg kell egyezniük a nyelvi fájlokban használt azonosítókkal
-(ld. \ref{sec:manager-i18n} Manager - Új fordítások hozzáadása és
-TODO \ref{sec:builder-i18n} Builder - Új fordítások hozzáadása).
+(ld. \ref{sec:manager-i18n} \textit{Manager - Új fordítások hozzáadása} és
+TODO \ref{sec:builder-i18n} \textit{\texttt{translations.js} - fordítások})
 
 Az alábbi táblázatban az átirányítási szabályokra szerepel egy-egy példa. A
 ``pelda.com'' a \texttt{system/application/config/config.php} fájlban megadott
@@ -690,8 +692,8 @@ $langs = '(en|hu|es)';
 
 \end{itemize}
 
-Ezen kívül még le kell fordítani a Builder felületének üzeneteit is (ld. TODO
-\ref{sec:builder-i18n}.
+Ezen kívül még le kell fordítani a Builder felületének üzeneteit is (ld.
+\ref{sec:builder-i18n} \textit{Builder - Új fordítások hozzáadása}).
 
 \phantomsection
 \subsection{Regisztráció}
@@ -1033,8 +1035,8 @@ beállítása kivételével, ami a két állapot miatt különleges) az
 Kattintásra a \texttt{check\_rights} függvénynek átadja a kapott \texttt{fun,
   write} és \texttt{id} paramétereket. Ez a vezérlő
 \texttt{remote\_check\_rights} függvényét a \texttt{write} és \texttt{id}
-paraméterekkel hívja (ld. \ref{par:check_rights} BaseController -
-\texttt{remote\_check\_rights}). Ha a kapott eredmény NOT\_LOGGED\_IN, akkor a
+paraméterekkel hívja (ld. \ref{par:check_rights} \textit{BaseController -
+\texttt{remote\_check\_rights}}). Ha a kapott eredmény NOT\_LOGGED\_IN, akkor a
 felhasználót átirányítja a bejelentkező oldalra; ha FORM\_NOT\_FOUND, akkor a
 felhasználó értesítése után törli a listáról az űrlapot; ha OK, akkor lefuttatja
 a \texttt{callback} paraméterben kapott programkódot (ez az
@@ -1190,6 +1192,169 @@ figyelmeztető párbeszédablakába, ami az oldal elhagyásáról szól. Ha a
 felhasználó elhagyhatja. A \texttt{dirty} változó értékét a \texttt{remote.js}
 fájl \texttt{save} és \texttt{save\_as} függvényeiben állítjuk \texttt{false}-ra,
 értelemszerűen az űrlap mentésekor és új néven történő mentéskor.
+
+
+\phantomsection
+\subsubsection{\texttt{utils.js} - segédfüggvények}
+Ez a fájl olyan függvényeket tartalmaz, amiket az alkalmazás több részében
+használunk. A kényelmi funkciók mellett a következő függvények az alkalmazás
+működéséhez szükséges algoritmusokat is tartalmaznak:
+
+\begin{itemize}
+\fitem{check\_selected\_type}
+Szinte minden művelet és tulajdonságot kezelő
+függvény használja. Ellenőrzi, hogy az éppen kijelölt elem a paraméterben
+megadott típusú-e (pl. TD), és ha igen, visszaadja az elemet tartalmazó jQuery
+objektumot. Ellenkező esetben hibával megállítja a futást. Az alkalmazás
+helyes működése esetén ez nem fordulhat elő, hiszen a megjelenítendő
+tulajdonságok és műveletek a kiválasztott elem figyelembevételével kerülnek
+kiválasztásra.
+
+\fitem{get\_td\_type}
+A táblázat-cella tartalmának típusát adja vissza. Minden cellát három típusba
+sorolunk: máshogyan kell kezelni a csak szöveget, a lenyíló menüt
+(select) és az egyéb beviteli mezőket tartalmazó mezőket. A felhasználó nem
+tud arról, hogy a lenyíló menüt ilyen szinten is megkülönböztetjük - az ő
+szempontjából az is egy beviteli mező.
+
+\fitem{set\_td\_type}
+A kért típusra állítja a kijelölt mezőt. A cella szöveges tartalma a
+\texttt{get\_td\_text} és \texttt{set\_td\_text} függvényeknek köszönhetően a cella
+típusváltásai között megmaradhat (kivéve a \texttt{file} inputot, ahol a
+szöveges tartalom nem értelmezhető).
+
+\fitem{get\_input\_type, set\_input\_type}
+Az adott cella beviteli mezőjének típusát visszaadó, illetve a kiválasztott
+cella beviteli mezőjének típusát beállító függvények. Itt kezeljük a select és a
+többi beviteli mező közti különbséget: ezen függvények hívójának nem kell
+törődnie ezekkel a különbségekkel.
+
+\fitem{get\_td\_text, set\_td\_text}
+Az adott cella szöveges tartalmát visszaadó, illetve új szövegre állító
+függvények. Itt implementáljuk a szöveges tartalmak \ref{sec:spec}
+\textit{Feladatmeghatározás - Builder} részben meghatározott értelmezését. A hívó
+függvénynek nem kell foglalkoznia a cella tényleges tartalmával.
+
+\fitem{set\_name}
+A paraméterként átadott cellában levő beviteli mező \texttt{name} és \texttt{id}
+tulajdonságait állítja be. A \texttt{name} értéke pontosan az lesz, amit a
+felhasználó megadott. Az \texttt{id} a mező egyedi azonosítására szolgál az
+alkalmazás számára. A törlés következtében felszabaduló azonosítókat kiosztjuk
+a később létrehozott elemeknek. Az azonosítót jelenleg nem használjuk, de a
+műveletek visszavonásánál szükség lesz rá. Akadályt jelenthet az azonosítók
+újrakiosztása, de ez könnyen kikapcsolható.
+
+\fitem{status}
+Az állapotsor kezeléséért felelős objektum. A \texttt{set} függvény a hívás
+időpontjával és a kapott \texttt{val} paraméterhez tartozó, aktuális nyelvre
+lefordított szöveget írja az állapotsorba. Az \texttt{update\_lang} függvény az
+időpont frissítése nélkül frissíti a szöveget, újra beolvasva azt a fordításokat
+tartalmazó objektumból. A felhasználói felület nyelvének megváltoztatásakor
+hívjuk.
+\end{itemize}
+
+\phantomsection
+\subsection{\texttt{actions.js} - műveletek}
+Ez a fájl írja le az egyes műveletek végrehajtásának módját, illetve módot ad
+rá, hogy adott elemen végezhető műveletek listáját egyszerűen lekérdezzük. A
+\texttt{call\_action} függvény kizárólagos használata a műveleteket végző
+függvények hívására biztosítja, hogy a mentetlen műveletek ellenőrzésére
+használt \texttt{dirty} változó értéke \texttt{true} lesz egy-egy művelet
+után. Ezen kívül a műveletek tervezett visszavonásánál is itt fogjuk hozzáadni a
+műveletet a veremhez.
+
+Az \texttt{ACTIONS} objektum (csupa nagybetűvel) gyakorlatilag a JavaScriptben
+nem létező névtér helyettesítésére szolgál. Minden függvénye egy-egy műveletet
+végez el a kiválasztott elemen. Ha a kiválasztott elem nem olyan típusú, amire a
+függvénynek szüksége van, akkor a \texttt{check\_selected\_type} függvény
+jóvoltából a futás hibával megáll.
+
+Az \texttt{actions} objektum (csupa kisbetűvel) szintén egy névtérként
+értelmezhető. Itt az egyes függvények a függvény nevének megfelelő elemen
+végezhező műveletek listáját adják vissza. A lista minden eleme egy függvényhívást
+tartalmaz szöveges formában, vagy a ``\texttt{br}'' sztringet. A felhasználói
+felületen az előbbi helyére a megfelelő műveletet végző gomb fog kerülni, az
+utóbbi helyére pedig egy sortörés. A sortörésekkel logikai csoportokba tudjuk
+szedni a műveletek gombjait. A végezhető műveletek kiválasztásánál figyelembe
+vesszük nem csak az elem típusát, de állapotát és helyzetét is - például ha egy
+cella a sor bal szélső cellája, akkor a ``Cellák egyesítése balra'' művelet nem
+fog szerepelni a listában.
+
+
+\phantomsection
+\subsection{\texttt{props.js} - tulajdonságok}
+Az alapelv megegyezik a fenti \texttt{actions.js} megvalósításával, de a
+műveletek és a tulajdonságok természete közti különbségek megjelennek az
+alkalmazásban is. Egy művelet egyértelműen megjeleníthető egy nyomógombbal, de
+egy tulajdonság megjelenítése nem automatizálható ilyen módon.
+
+Ezért a \texttt{PROPS} névtér függvényei nem a tulajdonság módosítását végzik,
+hanem egy DOM elemet adnak vissza (pontosabban egy jQuery objektumot, ami a DOM
+elemet tartalmazza), ami a megfelelő események kezelőiben módosítja az éppen
+kiválasztott elem megfelelő tulajdonságát.
+
+A \texttt{props} névtér függvényeinek feladata itt is a kiválasztott elemen
+értelmezhető tulajdonságok meghatározása, de itt nem elég egy egyszerű listát
+létrehozni. Egy fa-szerű szerkezetre van szükség, ugyanis a különböző
+csoportokhoz tartozó tulajdonságokat logikai egységekben kell
+megjelenítenünk. Tekintsük a következő példát: a felhasználó kijelölt egy
+cellát, amiben szerepel egy lenyíló menü. Így meg kell jelenítenünk
+\desc
+\item[a cella tulajdonságait:] a cella típusát (szöveges vagy beviteli mező),
+  iletve a cella szövegét
+\item[a beviteli mező tulajdonságait:] a mező nevét és típusát
+\item mivel a lenyíló menüről van szó, a mező értékeit (illetve az új érték
+  hozzáadásához és létező értékek törléséhez szükséges vezérlőket).
+\ed
+
+Ezt valósítják meg a \texttt{PropsCollection} és a \texttt{Prop} osztályok. A
+\texttt{Prop} objektum csak egy gyűjtemény a művelet tulajdonságairól - a nyelvi
+fájlban szereplő leírás azonosítóját és a megjelenítendő DOM elemeket
+tartalmazza. A \texttt{PropsCollection} osztály két tömbből és az ezeket
+manipuláló függvényekből áll. A \texttt{groups} vektor az objektumhoz hozzáadott
+csoportok listáját tartalmazza. A lista elemei a nyelvi fájlban lefordított,
+adott csoportot leíró szövegek azonosítói. Ezen kívül ugyanezek az értékek a
+kulcsai a \texttt{PropsCollection} objektum \texttt{props} tömbjének is. Minden
+helyen egy vektor szerepel, aminek elemei a tulajdonságokat leíró \texttt{Prop}
+objektumok.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=420px]{PropsCollection.png}
+  \caption{Tulajdonságok gyűjteménye, ha a kijelölt cella egy lenyíló cellát
+    tartalmaz, ami két elemmel van feltöltve. A harmadik elem az üres mező,
+    amivel új elemet vehet fel a felhasználó.}\label{fig:props_collection}
+\end{figure}
+
+
+\phantomsection
+\subsection{\texttt{translations.js} - fordítások}
+\label{sec:builder-i18n}
+
+A fájlban egyetlen objektum, a \texttt{TRANS} definíciója található. Az objektum
+tartalmazza a Builder által használt összes szöveg fordítását minden nyelven. A
+nyelvek azonosítója az objektum tulajdonságainak neve. A kulcshoz tartozó érték
+egy újabb objektum, ami tartalmazza a nyelv nevét, azonosítóját és a lefordított
+szövegeket. A nyelvek azonosítóin kívül a \texttt{TRANS} objektum \texttt{list}
+tömbjében tároljuk az elérhető nyelvek listáját. Új fordítás hozzáadása ezek
+alapján három lépésből áll:
+
+\begin{itemize}
+\item A nyelv azonosítójának hozzáadása a \texttt{TRANS.list} tömbhöz
+\item Másolat készítése egy már létező nyelvről a nyelv nevének és
+  azonosítójának beállításával. Az azonosítónak muszáj egyeznie a
+  \ref{sec:manager-i18n} \textit{Manager - Új fordítások hozzáadása} részben leírt
+  azonosítóval, és javasolt, hogy a nyelv megnevezése is ugyanaz legyen.
+\item A sztringek lefordítása. Az egyes szövegek környezetének egyértelműsítése
+  érdekében a sztringeket további objektumokba csoportosítottam - ezt a
+  szerkezetet pontosan meg kell őrizni, különben az alkalmazás nem fogja
+  megtalálni a megfelelő sztringeket.
+\end{itemize}
+
+
+\phantomsection
+\subsection{\texttt{builder.js}}
+Ez a
 
 \clearpage
 \phantomsection
