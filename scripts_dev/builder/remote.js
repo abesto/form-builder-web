@@ -92,10 +92,10 @@ function save()
                         window.location = base_url + 'builder/' + resp;
                     }
                     status.set('saved');
+                    dirty = false;
                 },
                 'text'
             );
-            dirty = false;
         });
 }
 
@@ -124,10 +124,10 @@ function save_as(form)
                 window.opener.cache.update(resp, name, '<form>'+html+'</form>');
                 window.opener.select_id(resp);
                 window.location = base_url + 'builder/' + resp;
+                dirty = false;
             },
             'text'
         );
-        dirty = false;
     });
 }
 

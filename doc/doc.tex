@@ -36,8 +36,31 @@
     \small}
   \newcommand{\ed}{
   \end{description}
-  \normalsize }
+}
 
+% Itemize környezetbe, fájlok leírására
+\newcommand{\fitem}[1]{\item \texttt{#1}:}
+
+% Elemek műveleteinek és tulajdonságainak leírásához
+\usepackage{ifthen}
+\newcommand{\elem}[3]{
+  \vspace{1cm}
+  \hspace{-.7cm}
+  \begin{tabular*}{\textwidth}{rl}
+  \hline
+  \multicolumn{2}{c}{\large\texttt{#1}\normalsize}\\
+  \hline
+  \ifthenelse{\not{\equal{#2}{-}}}{
+    \textbf{Műveletek:} & \parbox{9.5cm}{#2}\\\vspace{-.4cm}&
+    \ifthenelse{\not{\equal{#3}{-}}}{\\}{}
+  }{}
+  \ifthenelse{\not{\equal{#3}{-}}}{
+    \textbf{Tulajdonságok:} & \parbox{9.5cm}{#3}
+    \\
+  }{}
+  \end{tabular*}
+
+}
 % Elvárás a szakdolgozattal szemben a Times - sebaj
 %\usepackage{times}
 \fontfamily{garamond}
@@ -240,10 +263,10 @@ A Builder JavaScript programnyelven íródott a \textbf{jQuery}\cite{JQ} library
 \textbf{1.3.2} verziójával. A dinamikusan létrehozott DOM elemek egyszerű
 kezelésére a \textbf{LiveQuery}\cite{JQ-LiveQuery} plugin \textbf{1.0.3}
 verzióját használja. Ezeken kívül mind a Builder, mind a Manager használja
-kis részben a \textbf{jQuery-UI}\cite{JQ-UI} Draggable, Dialog és Tabs
-komponenseit. A felhasználó letöltési idejének minimalizálása érdekében a
-JavaScript és CSS fájlok méretét a \textbf{YUI Compressor}\cite{YUI} segítségével
-csökkentettem.
+kis részben a \textbf{jQuery-UI}\cite{JQ-UI} Draggable, Dialog, Tabs és
+Resizable komponenseit. A felhasználó letöltési idejének minimalizálása
+érdekében a JavaScript és CSS fájlok méretét a \textbf{YUI Compressor}\cite{YUI}
+segítségével csökkentettem.
 
 \paragraph{Böngészők}
 Az alkalmazást a Firefox (és más XULRunner alapú) és az Opera böngészőkkel
@@ -251,7 +274,7 @@ teszteltem. Jelenlegi állapotában az Internet Explorer böngészők JavaScript
 értelmezőjével a Builder nem működik.
 
 \paragraph{Szakdolgozat}
-Jelen dokumentum a \textbf{LaTeX} rendszer TexLive disztribúcióból származó
+Jelen dokumentum a \LaTeX  rendszer TexLive disztribúcióból származó
 3.1415926 verziójával készült az \textbf{Emacs} szerkesztőben, az
 \textbf{AUCTeX} csomag segítségével. A diagrammok létrehozására a \textbf{Dia 0.97}
 szerkesztőt használtam.
@@ -355,6 +378,7 @@ nem, így ezt a nézetet csak olvasásra használjuk.
 
 \phantomsection
 \subsection{Modellek}
+\label{sec:modellek}
 
 A CodeIgniter a modelleket a \texttt{system/application/models} mappában
 tárolja. Az alkalmazás két modellt használ: egyet a felhasználók kezelésére
@@ -473,6 +497,26 @@ felhasználóbarát URL-ek használhatóvá tevő rendszer, a vezérlők alaposz
 \texttt{\$lang} paramétert, aminek az alapértelmezett értéke \texttt{null}. Ez a
 felhasználói felület kívánt nyelvét jelöli.
 
+A Managerhez tartozó fájlok:
+\begin{itemize}
+\fitem{css/style.css, css/login.css, css/my\_forms.css} a mindenhol
+  megjelenő elemekre, a bejelentkező oldalra, illetve az űrlapok listájára
+  érvényes stíluslapok
+\fitem{img mappa} a \texttt{famfamfam, famfamfam\_silk} és \texttt{tango}
+  mappák tartalma az adott projectből származik. A \texttt{header.jpg,
+    valid.jpg} és \texttt{error.jpg} fájlokat a GIMP képszerkesztővel
+  készítettem.
+\fitem{scripts/login.js} a bejelentkező és regisztráló oldalhoz tartozó
+  JavaScript kód (ld. \ref{sec:reg-client} Builder - Regisztráció, Kliensoldal)
+\fitem{scripts/forms\_table.js} az űrlapok listáihoz tartozó JavaScript kód
+\fitem{system/appliaction/controllers mappa} vezérlők
+\fitem{system/appliaction/models mappa} modellek (ld. \ref{sec:modellek}
+  Builder - Modellek)
+\fitem{system/application/views mappa} nézetek
+\fitem{system/application/languages mappa} nyelvi fájlok
+  (ld. \ref{sec:manager-i18n} Manager - Új fordítások hozzáadása és
+  \ref{sec:builder-i18} Builder - Új fordítások hozzáadása)
+\end{itemize}
 
 \phantomsection
 \subsection{Routing - felhasználóbarát URL-ek}
@@ -830,6 +874,7 @@ irányítja a felhasználót.
 
 
 \subsubsection{Kliensoldal}
+\label{sec:reg-client}
 
 A kliens feladata csupán annyi, hogy szerkesztéskor, illetve hibás űrlap küldése
 után elvégeztesse a szerverrel a megfelelő ellenőrzéseket, és megjelenítse az
@@ -1031,6 +1076,121 @@ rendelkezik. Az űrlapokon végezhető műveletek:
 \end{itemize}
 
 
+\phantomsection
+\section{Builder}
+
+Az alkalmazásnak ez a része teszi lehetővé az űrlapok szerkesztését.
+Az űrlap az XHTML1.1 szabványnak megfelelően közvetlenül csak \texttt{fieldset}
+elemeket tartalmazhat, tetszőleges számban. Ezekhez az elemekhez a felhasználó
+tetszőleges számú táblázatot adhat. A táblázat egyetlen cellával jön létre,
+amihez képest új cella hozható létre jobbra és balra, illetve új sor (megint
+egyetlen cellával) fel- vagy lefelé. A cellák vízszintes irányban tetszőleges
+módon egyesíthetőek és újra feloszthatóak.
+
+A Builderhez tartozó JavaScript fájlokat a kisebb méret elérése érdekében
+összekapcsoltam egy fájlba, majd ezt tömörítettem a YUI Compressor\cite{YUI}
+segítségével. Ez azért hasznos, mert a Compressornak így rendelkezésére állnak a
+függvények definíciói és hívásai is, tehát biztonságosan átnevezheti őket
+(általában egy karakter hosszúságú azonosítokra). A tömörítés során ezen kívül
+eltávolításra kerülnek a megjegyzések, illetve a szóköz, tabulátor és újsor
+karakterek. Ezzel az összefűzött fájl mérete 51 kilobyte-ról 21 kilobyte-ra
+csökkent, ezzel a letöltési időt 41 százalékkal megrövidítve.
+
+A tömörített \texttt{scripts/builder.min.js} fájl az alábbi listán
+szereplő JavaScript fájlokból jött létre, amik a \texttt{scripts\_dev/builder}
+mappában találhatóak. A \texttt{htmlize.js} fájlt nem csatoltam a nagy fájlhoz,
+mivel ezt a Manager is használja a HTML forrás megjelenítésekor. Ezt a
+folyamatot a \texttt{scripts\_dev} és \texttt{scripts\_dev/builder} mappákban
+találhato \texttt{Makefile}-ok automatizálják\cite{make}.
+
+\begin{itemize}
+\fitem{system/application/controllers/builder.php} a Builder megnyitása a kért
+azonosítóval, átadva a nézetnek a szükséges adatokat
+\fitem{system/application/views/builder.php} a Builder felhasználói felületének
+felépítése, az űrlap megjelenítése és a JavaScriptben használt adatok
+átadása
+\fitem{utils.js} segédfüggvények az űrlappal történő munkához
+\fitem{actions.js} az elemeken végezhető műveleteket leíró fájl
+\fitem{props.js} az elemekhez tartozó tulajdonságokat leíró fájl
+\fitem{builder.js} a Builder inicializálása, valamint a felhasználói felület
+kezeléséért felelős függvények
+\end{itemize}
+
+\clearpage
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=420px]{builder.png}
+  \caption{Builder felhasználói felület}\label{fig:builder}
+\end{figure}
+
+\paragraph{A felhasználói felület}
+A szerkesztés az űrlap elemein értelmezett \textit{műveletek} végrehajtásán és
+\textit{tulajdonságok} módosításán keresztük történik. Ha a kurzor alatti elemet
+ki lehet jelölni, akkor ezt a felhasználóval az elem színének megváltoztatásával
+tudatjuk. A kattintással kijelölt elemet egy másik háttérszínnel és a körvonal
+megvastagításával emeljük ki. Az űrlap beviteli mezőit önmagukban nem lehet
+kijelölni, csak az őket tartalmazó tábálzat-cellát. A mezőhöz tartozó
+tulajdonságok az őt tartalmazó táblázat-cella tulajdonságai alatt jelennek meg.
+
+A kijelölt elemen végezhető műveleteket az oldal alsó részén jelenítjük meg. Az
+egymással kapcsolatban álló műveletek egy sorba kerülnek, ezzel átláthatóbbá
+téve a felületet.
+
+A lap jobb oldalán található legfelül a menü. A felhasználónak ezen keresztül
+van lehetősége az űrlap HTML forrásának megtekintésére, az űrlap mentésére
+valamint a felület nyelvének megváltoztatására. Nyelv váltásakor a felület
+minden elemének felirata azonnal az új nyelvnek megfelelő szövegre változik.
+A menü alatt kaptak helyet az éppen kijelölt elem tulajdonságainak módosítására
+szolgáló gombok, szövegmezők. Ezeknek a hatása azonnal látszik az űrlapon,
+hasonlóan sok IDE grafikus felület szerkesztésére szolgáló felületéhez.
+
+A jQuery UI Resizable moduljának köszönhetően a menüt és a tulajdonságokat
+tartalmazó sáv - az operációs rendszerek grafikus felületéhez hasonlóan - az
+elválasztó mozgatásával átméretezhető. Ilyenkor az oldal többi része
+alkalmazkodik az átméretezéshez, a szabadon maradt helyet használják ki.
+
+Az oldal alján látható egy állapotsáv, ami az utolsó mentés időpnontját
+mutatja. Technikailag a szerkesztés során bármikor módosíthatjuk a
+feliratát. Hibák keresésekor is hasznos lehet, ha az éppen használt böngészőnek
+nincsen erre használható szolgáltatása.
+
+\clearpage
+\paragraph{Műveletek és tulajdonságok}
+Mivel a magához az űrlaphoz tartozó műveletek - a forrás megtekintése,
+mentés, mentés másként - a menün keresztül mindig elérhetőek, az egyetlen
+kivétel, az új fieldset hozzáadása mindig látható az oldal alján elhelyezkedő
+Műveletek fieldsetben. A másik lehetőség az lenne, hogy az űrlapot kijelölhetővé
+tesszük, és az egyetlen műveletként az új fieldset hozzáadását határozzuk meg.
+
+A kijelölhető elemekhez tartozó műveletek és tulajdonságok:
+
+\elem{fieldset}{Új táblázat, Fieldset eltávolítása}{Felirat}
+\elem{table}{Táblázat eltávolítása}{-}
+\elem{td}{
+  Új cella (balra és jobbra),
+  Új sor (fel és le),
+  Cellák egyesítése (balra és/vagy jobbra, ha van szomszédos cella),
+  Cella felosztása (balról és jobbról, ha a cella többoszlopost),
+  Cella törlése
+}{
+  Cella típusa (szöveges vagy beviteli mező,
+  Szöveg,
+  Beviteli mező típusa (ha a cella típusa ``beviteli mező''
+}
+\elem{select}{-}{Kiválasztható értékek}
+\vspace{1cm}
+
+Minden művelet végrehajtásakor és tulajdonság módosításakor \texttt{true}ra
+állítjuk a \texttt{dirty} változó értékét, amit az oldal \texttt{onBeforeUnload}
+eseményére ellenőrzünk. Ha \texttt{true}, akkor a mentetlen módosításokról szóló
+figyelmeztető szöveget adjuk vissza, amit a böngésző beilleszt a saját
+figyelmeztető párbeszédablakába, ami az oldal elhagyásáról szól. Ha a
+\texttt{dirty} változó értéke \texttt{false}, akkor az eseményre induló függvény
+\texttt{null}t ad vissza, így a párbeszédablak nem jelenik meg, az oldalat a
+felhasználó elhagyhatja. A \texttt{dirty} változó értékét a \texttt{remote.js}
+fájl \texttt{save} és \texttt{save\_as} függvényeiben állítjuk \texttt{false}-ra,
+értelemszerűen az űrlap mentésekor és új néven történő mentéskor.
+
 \clearpage
 \phantomsection
 \addcontentsline{toc}{section}{Hivatkozások}
@@ -1099,6 +1259,10 @@ rendelkezik. Az űrlapokon végezhető műveletek:
 \bibitem{comet}
   \emph{Wikipedia - Comet}\\
   \url{http://en.wikipedia.org/wiki/Comet_(programming)}
+
+\bibitem{make}
+  \emph{GNU 'make'}\\
+  \url{http://www.gnu.org/software/make/manual/make.html}
 
 \end{thebibliography}
 
