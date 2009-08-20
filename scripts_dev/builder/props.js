@@ -287,7 +287,6 @@ const props = {
             if ($options[0].innerHTML != '')
                 ret.add_prop('options', new Prop('option', PROPS.option($options.size(), '')), true);
         }
-        console.log(ret);
         return ret;
     },
 

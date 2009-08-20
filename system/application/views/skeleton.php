@@ -73,8 +73,9 @@ foreach($langs as $lang => $name): ?>
 <?php echo $content; ?>
 
     </div>
-    <div>
-      Page generated in {elapsed_time} seconds
+
+    <div id="footer">
+      <span id="generated">DEBUG: <?php echo sprintf($generated, $this->benchmark->elapsed_time());?></span><br />
     </div>
   </body>
 </html>

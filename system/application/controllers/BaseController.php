@@ -49,8 +49,8 @@ class BaseController extends Controller
         $this->load->model('User_model', 'user');
         $this->load->model('Forms_model', 'forms');
 
-        $this->lang_names = array('en' => 'English',
-                                  'hu' => 'Magyar'
+        $this->lang_names = array('hu' => 'Magyar',
+                                  'en' => 'English'
                                   );
         $this->langs = array_keys($this->lang_names); /**< Az elérhető nyelvek. Az első az alapértelmezett. */
     }
@@ -84,6 +84,8 @@ class BaseController extends Controller
                 $this->slots['js'] = $file;
         }
 
+        $tmp = $this->lang->line('menu');
+        $this->slots['generated'] = $tmp['generated'];
         return $this->load->view('skeleton', $this->slots, $return);
     }
 

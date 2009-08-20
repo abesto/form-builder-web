@@ -25,5 +25,6 @@ $lang['menu'] = array('home'   => 'Főoldal',
                       'welcome'=> 'Bejelentkezve, mint %s',
                       'logout' => 'Kijelentkezés',
                       'my_forms' => 'Űrlapjaim',
-                      'public_forms' => 'Nyilvános űrlapok'
+                      'public_forms' => 'Nyilvános űrlapok',
+                      'generated'    => 'Oldal létrehozva %s másodperc alatt'
                       );

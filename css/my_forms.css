@@ -4,7 +4,11 @@ html, body {
   padding: 0;
 }
 
-#content { font-family: sans; }
+#content {
+    font-family: sans;
+}
+
+h1 { margin-top: 0px; }
 
 #forms {
     width: 100%;

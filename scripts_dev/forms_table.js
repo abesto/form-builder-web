@@ -532,10 +532,9 @@ $(document).ready( function() {
                        // Értesítések stílusa
                        $.blockUI.defaults.css['padding']               = '15px';
                        $.blockUI.defaults.css['border']                = 'none';
-                       $.blockUI.defaults.css['backgroundColor']       = '#000';
+                       $.blockUI.defaults.css['backgroundColor']       = '#888';
                        $.blockUI.defaults.css['-webkit-border-radius'] = '10px';
                        $.blockUI.defaults.css['-moz-border-radius']    = '10px';
-                       $.blockUI.defaults.css['opacity']               = .5;
                        $.blockUI.defaults.css['color']                 = '#fff';
                        $.blockUI.defaults.css['font-family']           = 'sans';
 

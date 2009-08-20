@@ -162,7 +162,7 @@ function select_hovered()
 }
 
 /**
- * Kijelöli a kapott elemet
+ * Kijelöli az elemet
  */
 $.fn.select = function ()
 {

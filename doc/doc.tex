@@ -143,7 +143,7 @@ közötti kommunikációból áll:
 \item A gyors válaszidő biztosítása végett a kliensoldalon kell futnia az
   űrlapszerkesztő alkalmazásnak. Ezt az alkalmazást az egyszerűség kedvéért a
   továbbiakban hívjuk \textit{Builder}nek.
-\item A mentett űrlapok megtekintéséhez, módosítását és megnyitását egy
+\item A mentett űrlapok megtekintését, módosítását és megnyitását egy
   webes felületen keresztül tesszük lehetővé. Nevezzük ezt a programrészt
   \textit{Manager}nek.
 \item Biztosítani kell a Builder kapcsolatát a szerverrel az űrlap mentése és
@@ -167,20 +167,21 @@ A kliensoldali alkalmazásnak lehetőséget kell nyújtania tetszőleges elrende
 megvalósítására. Mivel a cél egy olyan megoldás, ahol a felhasználónak nem kell
 feltétlenül ismernie sem a \texttt{HTML}, sem a \texttt{CSS} leíró nyelveket,
 ennek legkézenfekvőbb módja a táblázatos elrendezés. Ilyen módon megvalósítandó
-a táblázat celláinak létrehozása, cellák vagy egész táblázatok törlése illetve
+a táblázat celláinak létrehozása, cellák vagy egész táblázatok törlése, illetve
 cellák összevonása, majd felosztása.
 
-Az űrlapra \texttt{fieldset}ek, szöveg valamint beviteli mezők elhelyezését
+Az űrlapra \texttt{fieldset}ek, szöveg, valamint beviteli mezők elhelyezését
 kell megoldani. Az egyes elemek következő tulajdonságait kell szerkeszthetővé
 tenni:
 
+%Tördeléskor, nem tartalmi szempont miatt
 \clearpage
 \desc
   \item[Táblázat cella:] Tartalom típusa (szöveg vagy beviteli mező); Szöveges
     mező esetén a szöveg, beviteli mező esetén a mező típusa és értéke/felirata
-  \item[Fieldset:] Cím (\texttt{legend} elem tartalma)
+  \item[\texttt{Fieldset}:] Cím (\texttt{legend} elem tartalma)
   \item[Beviteli mező:] Név (\texttt{name} tulajdonság)
-  \item[Select (lenyíló menü):] A kiválasztható elemek
+  \item[\texttt{Select} (lenyíló menü):] A kiválasztható elemek
 \ed
 
 A cella, illetve a beviteli mező típusának megváltoztatásakor célszerű elkerülni
@@ -191,9 +192,9 @@ tulajdonságának tekintjük, ami az egyes típusoknál a következőképpen les
 \desc
   \item[Szöveges cella:] A cella tartalma
   \item[Szöveges és jelszó beviteli mező:] Alapértelmezett érték
-  \item[Radiobox, checkbox:] A box mellett megjelenítendő szöveg
+  \item[\texttt{Radiobox}, \texttt{checkbox}:] A box mellett megjelenítendő szöveg
   \item[Nyomógomb:] A gomb felirata
-  \item[Select:] Az első opció
+  \item[\texttt{Select}:] Az első opció
 \ed
 
 Lehetőséget kell adni a felhasználónak, hogy bármikor megváltoztassa a
@@ -201,7 +202,7 @@ felület nyelvét, valamint hogy a szerverre tetszőleges néven menthesse
 munkáját. Ezen kívül a \texttt{HTML} kódnak bármikor megtekinthetőnek kell
 lennie.
 
-Ha szerkesztés közben megszűnne a felhasználó bejelnetkezése, lehetőséget kell
+Ha szerkesztés közben megszűnne a felhasználó bejelentkezése, lehetőséget kell
 nyújtani az újbóli bejelentkezésre adatvesztés nélkül. Ha szerkesztés közben
 megszűnik a szerveren az űrlap, vagy a bejelentkezett felhasználónak nincs
 írásjoga az éppen szerkesztett űrlapra, mentéskor új példányt hozunk létre a
@@ -270,18 +271,31 @@ Resizable komponenseit. A felhasználó letöltési idejének minimalizálása
 segítségével csökkentettem.
 
 \paragraph{Böngészők}
-Az alkalmazást a Firefox (és más XULRunner alapú) és az Opera böngészőkkel
+Az alkalmazást a Firefox (és más XULRunner alapú), illetve az Opera böngészőkkel
 teszteltem. Jelenlegi állapotában az Internet Explorer böngészők JavaScript
 értelmezőjével a Builder nem működik.
 
 \paragraph{Szakdolgozat}
 Jelen dokumentum a \LaTeX  rendszer TexLive disztribúcióból származó
-3.1415926 verziójával készült az \textbf{Emacs} szerkesztőben, az
+\texttt{3.1415926} verziójával készült az \textbf{Emacs} szerkesztőben, az
 \textbf{AUCTeX} csomag segítségével. A diagrammok létrehozására a \textbf{Dia 0.97}
 szerkesztőt használtam.
 
+\phantomsection
+\subsection{Telepítés}
+Az alkalmazás futtatásához három dologra van szükség:
 
-\clearpage
+\begin{itemize}
+\item Az adatbázist az alkalmazással mellékelt \texttt{db.sql} fájl futtatásával
+  hozható létre.
+\item A kapcsolódáshoz szükséges adatokat a fentieknek megfelelően
+  kell beállítani.
+\item A megfelelő hivatkozások létrehozásához a
+  \texttt{system/application/config/config.php} fájlban a 14. sorban a
+  \texttt{\$config['base\_url']} változó értékeként az alkalmazás elérési
+  útvonalát kell megadni.
+\end{itemize}
+
 \phantomsection
 \section{Adatbáziskezelés}
 
@@ -289,7 +303,7 @@ A karbantartás könnyítése és az átláthatóság megőrzése érdekében mi
 célszerű az adatbázis kezelését végző kódot elkülöníteni a felhasználói
 felülettől és a felhasználói bemenet kezelésétől. Erre egy bevett módszer az
 MVC\cite{MVC} minta implementálása, amit a CodeIgniter framework jelen esetben
-elvégez helyettünk. Ilyen módon az adatbázis-kezelés néhány modell megírásából
+elvégez helyettünk. Ilyen módon az adatbáziskezelés néhány modell megírásából
 áll. Az adatbázis-szerkezet leírása után a modellek által létrehozott
 absztrakciós szint ismertetése következik.
 
@@ -297,17 +311,17 @@ absztrakciós szint ismertetése következik.
 \subsection{Adatbázis-szerkezet}
 
 Az alkalmazás szempontjából kritikus adatok a felhasználó azonossága, a hozzájuk
-tartozó űrlapok és az egyes űrlapok tartalma. Ezek köré szerveződik az egyszerű
+tartozó űrlapok és az egyes űrlapok tartalma. Ezek köré szerveződik a következő egyszerű
 szerkezet: a felhasználók és az űrlapok számára létrehozunk két táblát, közöttük
 pedig $1..n$ kapcsolatot állítunk fel. A kapcsolómező a felhasználó
-azonosítója. Ezen a szinten feleslegesnek tűnik a az űrlapokat külön
+azonosítója. Ezen a szinten feleslegesnek tűnik az űrlapokat külön
 azonosítóval ellátni, de lehetőséget akarunk biztosítani az űrlapok
 átnevezésére; emiatt az űrlapok egyedi azonosítására ez a legegyszerűbb módszer.
 
 Az ábrán és a táblázatokban megadott adattípusok a MySQL adatbázis típusai.
 
 % Adatbázis diagramm
-\begin{figure}[htp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=328px]{db.png}
   \caption{Adatbázis-szerkezet}\label{fig:db}
@@ -352,16 +366,17 @@ listáján.
 \end{tabular*}
 \normalsize
 
+%Tördeléskor, nem tartalmi szempont miatt
+\clearpage
+
 % public_forms nézet
 \subsubsection{\texttt{public\_forms} nézet}
 
-Az adatbázis szerkezetének szempontjából lényegtelen, de megkönnyíti a nyilvános
-űrlapok kiválasztását, és lehetőséget ad az adatbázismotornak az
-optimalizálásra. A nyilvános űrlapokat listázza azonosítójukkal, nevükkel, a
-létrehozó felhasználó nevével és az űrlap tartalmával.
-
-A MySQL adatbázis-rendszer támogatja az írható nézeteket, de számos más rendszer
-nem, így ezt a nézetet csak olvasásra használjuk.
+Megkönnyíti a nyilvános űrlapok kiválasztását, és lehetőséget ad az
+adatbázismotornak az optimalizálásra. A nyilvános űrlapokat listázza
+azonosítójukkal, nevükkel, a létrehozó felhasználó nevével és az űrlap
+tartalmával. A MySQL adatbázis-rendszer támogatja az írható nézeteket, de számos
+más rendszer nem, így ezt a nézetet csak olvasásra használjuk.
 
 \small
 \vspace{.3cm}
@@ -420,12 +435,13 @@ function get_form_public($id)
   // TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
 }
 \end{lstlisting}
+\vspace{.8cm}
 
 \phantomsection
 \subsubsection{\texttt{user\_model}}
 
 \paragraph{Regisztráció}
-Itt történik a felhasználók regisztrálásához valamint ki- és bejelentkezéséhez
+Itt történik a felhasználók regisztrálásához, valamint ki- és bejelentkezéséhez
 szükséges adatbáziskezelés. Új felhasználó regisztrációjakor ellenőrizni
 kell, hogy a megadott felhasználónév és e-mail szerepel-e a már az
 adatbázisban. Az e-mail ellenőrzését a \texttt{check\_email}, a felhasználónév
@@ -438,13 +454,13 @@ Az e-mail címet jelenleg nem használjuk fel, de későbbi fejlesztéseknél sz
 lehet rá.
 
 A \texttt{get\_user} függvény a bejelentkezett felhasználó adatait, vagy ennek
-hiányában a \texttt{false} értéket adja vissza. Ha van bejelnetkezettt
+hiányában a \texttt{false} értéket adja vissza. Ha van bejelentkezettt
 felhasználó, akkor itt futtatjuk az \texttt{update\_last\_action} függvényt,
 ezzel biztosítva, hogy minden műveletnél frissítjük a felhasználó
 bejelentkezését.
 
 \paragraph{Bejelentkezés}
-Igaz ugyan, hogy ennél az alkalmazásnál a biztonság nem elsődleges szempont, de
+Ennél az alkalmazásnál a biztonság nem elsődleges szempont, de
 így is szükség van a felhasználók bizonyos szintű védelmére. A jelszavakat és
 a bejelentkezett felhasználó PHP-től kapott munkamenet-azonosítóját (session
 id\cite{PHP-SID}) egyirányű titkosítás után tároljuk - előbbit a
@@ -452,8 +468,8 @@ id\cite{PHP-SID}) egyirányű titkosítás után tároljuk - előbbit a
 
 A felhasználónév és jelszó ellenőrzése a \texttt{login} függvényben
 történik. Sikeres bejelentkezés esetén, tehát ha a megadott név/jelszó páros
-szerepel az adatbázisban, az adott rekordba eltároljuk az aktuális munkamenet
-azonosítóját (titkosítás után). A bejelentkezés sikerességérők a visszatérési
+szerepel az adatbázisban, az adott rekordban eltároljuk az aktuális munkamenet
+azonosítóját (titkosítás után). A bejelentkezés sikerességéről a visszatérési
 értékkel értesítjük a hívót.
 
 A modellben elvárjuk az alkalmazás többi részétől, hogy minden művelet
@@ -465,16 +481,18 @@ jelenlegi időpontra állítjuk. Sikeres bejelentkezéskor is frissítjuk a dát
 A felhasználót csak akkor tekintjük bejelentkezettnek, ha a
 munkamenet azonosítója szerepel az adatbázisban, és a hozzá tartozó utolsó
 művelet nem régebbi egy napnál. A felhasználó kézi kijelentkezése esetén a
-\texttt{logout} függvényben munkamenet-azonosítót töröljük (üres sztringre állítjuk).
+\texttt{logout} függvényben töröljük a munkamenet-azonosítót (üres sztringre
+állítjuk).
 
 
 \phantomsection
 \subsubsection{\texttt{forms\_model}}
 
-Az űrlapok létrehozását, mentését, törlését, átnevezését és listázását kezelő
-függvények. Az olvasás jellegű műveletek visszatérési értéke vagy a lekérdezés
-eredménye, vagy (eredménytelen lekérdezés esetén) \texttt{false}. Az írás
-jellegű műveletek eredménye mindig \texttt{true} vagy \texttt{false}.
+Ebben a modellben az űrlapok létrehozását, mentését, törlését, átnevezését és
+listázását kezelő függvények szerepelnek. Az olvasás jellegű műveletek
+visszatérési értéke vagy a lekérdezés eredménye, vagy (eredménytelen lekérdezés
+esetén) \texttt{false}. Az írás jellegű műveletek eredménye mindig \texttt{true}
+vagy \texttt{false}, a művelet sikerességétől függően.
 
 Másik szempontból csoportosítva beszélhetünk nyilvános és privát műveletekről. A
 privát műveletek csak bejelentkezett felhasználók számára elérhetőek - a
@@ -493,17 +511,18 @@ együttműködéséből áll össze. Ezért egy-egy fájl helyett több fájl bi
 részei alkotnak logikai egységet. Az egységek általában a felhasználó által
 végezhető művelet vagy műveletek kezelését és az eredmény megjelenítését foglalják
 magukban. Ezeken a művelet-központú egységeken kívül bemutatásra kerül a
-felhasználóbarát URL-ek használhatóvá tevő rendszer, a vezérlők alaposztálya
+felhasználóbarát URL-ek használatát lehetővé tevő rendszer, a vezérlők alaposztálya
 és az új fordítások hozzáadásának módja is. Sok függvény elfogad egy opcionális
 \texttt{\$lang} paramétert, aminek az alapértelmezett értéke \texttt{null}. Ez a
 felhasználói felület kívánt nyelvét jelöli.
 
 A Managerhez tartozó fájlok:
+
 \begin{itemize}
 \fitem{css/style.css, css/login.css, css/my\_forms.css} a mindenhol
   megjelenő elemekre, a bejelentkező oldalra, illetve az űrlapok listájára
   érvényes stíluslapok
-\fitem{img mappa} a \texttt{famfamfam, famfamfam\_silk} és \texttt{tango}
+\fitem{img} a \texttt{famfamfam, famfamfam\_silk} és \texttt{tango}
   mappák tartalma az adott projectből származik. A \texttt{header.jpg,
     valid.jpg} és \texttt{error.jpg} fájlokat a GIMP képszerkesztővel
   készítettem.
@@ -511,13 +530,13 @@ A Managerhez tartozó fájlok:
   JavaScript kód (ld. \ref{sec:reg-client} \textit{Builder - Regisztráció,
     Kliensoldal})
 \fitem{scripts/forms\_table.js} az űrlapok listáihoz tartozó JavaScript kód
-\fitem{system/appliaction/controllers mappa} vezérlők
-\fitem{system/appliaction/models mappa} modellek (ld. \ref{sec:modellek}
-  \textit{Builder - Modellek})
-\fitem{system/application/views mappa} nézetek
-\fitem{system/application/languages mappa} nyelvi fájlok
+\fitem{system/appliaction/controllers} a vezérlőket tartalmazó mappa
+\fitem{system/appliaction/models} a modelleket tartalmazó mappa
+(ld. \ref{sec:modellek} \textit{Builder - Modellek})
+\fitem{system/application/views} a nézeteket tartalmazó mappa
+\fitem{system/application/languages} a nyelvi fájlokat tartalmazó mappa
   (ld. \ref{sec:manager-i18n} \textit{Manager - Új fordítások hozzáadása} és
-  \ref{sec:builder-i18} \textit{\texttt{translations.js} - fordítások}
+  \ref{sec:builder-i18n} \textit{translations.js - fordítások})
 \end{itemize}
 
 \phantomsection
@@ -547,12 +566,13 @@ A 46. sorban egy reguláris kifejezés segítségével megadjuk azokat a
 nyelv-azonosítókat, amik szerepelhetnek érvényes címekben. Ezeknek az
 azonosítóknak meg kell egyezniük a nyelvi fájlokban használt azonosítókkal
 (ld. \ref{sec:manager-i18n} \textit{Manager - Új fordítások hozzáadása} és
-TODO \ref{sec:builder-i18n} \textit{\texttt{translations.js} - fordítások})
+\ref{sec:builder-i18n} \textit{translations.js - fordítások})
 
 Az alábbi táblázatban az átirányítási szabályokra szerepel egy-egy példa. A
 ``pelda.com'' a \texttt{system/application/config/config.php} fájlban megadott
 \texttt{base\_path} érték.
 
+\vspace{.4cm}
 \begin{tabular*}{\textwidth}{>{\tt}l|>{\tt}r>{$\rightarrow$}c>{\tt}l}
   \rm Sor & \rm Honnan           & & \rm Hova        \\
   \hline
@@ -567,29 +587,30 @@ Az alábbi táblázatban az átirányítási szabályokra szerepel egy-egy péld
 \subsection{BaseController - a vezérlők alaposztálya}
 
 A \texttt{system/application/controllers/BaseController.php} fájlban található
-osztályban összegyűjtöttem azokat a függvényeket és beállításokat, amikre
+osztályban összegyűjtöttem azokat a függvényeket és beállításokat, amelyekre
 bármelyik vezérlőben szükség lehet.
 
 \paragraph{\texttt{render(\$return=false)}}
-Mivel a Buildert alkalmazáson kívül minden oldalon megtalálhatóak bizonyos
+Mivel a Builderen kívül minden oldalon megtalálhatóak bizonyos
 elemek - a fejléc, a menü, a lábléc - logikus lépés volt ezeknek az állandó
 elemeknek egy nézetbe foglalása. A CodeIgniter lehetőséget ad rá, hogy a
 nézetet betöltő függvénynek átadjunk egy tömböt, aminek a tartalma elérhető lesz
 a nézetből - a kulcsok lesznek a változók nevei, az értékek pedig értelemszerűen
 a tömb értékei.
 
-Az állandó elemeket tartalmazó \texttt{skeleton} nézetnek a vezérlő
-\texttt{slots} nevű tulajdonságát adjuk át. Így a megjelenítendő elemeket a
-vezérlő futása során bármikor módosíthatjuk. Az aktuális oldal tartalmát a
-\texttt{slots} tulajdonság \texttt{content} kulcsához rendeljük. Ez általában
-egy másik nézet futtatásának eredménye, amit nem megjelenítettünk, hanem egy
-változóban tároltunk. A \texttt{render} függvény \texttt{\$return} paramétere is
-ezt a célt szolgálja - ha értéke \texttt{true}, akkor az eredményt megjelenítés
-helyett visszaadjuk a hívó függvénynek.
+Az állandó elemeket tartalmazó, \texttt{render} függvény által megjelenített
+\texttt{skeleton} nézetnek a vezérlő \texttt{slots} nevű tulajdonságát adjuk
+át. Így a megjelenítendő elemeket a vezérlő futása során bármikor
+módosíthatjuk. Az aktuális oldal tartalmát a \texttt{slots} tulajdonság
+\texttt{content} kulcsához rendeljük. Ez általában egy másik nézet futtatásának
+eredménye, amit nem megjelenítettünk, hanem egy változóban tároltunk. A
+\texttt{render} függvény \texttt{\$return} paramétere is ezt a célt szolgálja -
+ha értéke \texttt{true}, akkor az eredményt megjelenítés helyett visszaadjuk a
+hívó függvénynek.
 
-Még a tényleges megjelenítés előtt felépítjük a menüt a \texttt{builde\_menu}
+Még a tényleges megjelenítés előtt felépítjük a menüt a \texttt{build\_menu}
 függvény és a \texttt{menu} nézet segítségével, majd ha van a vezérlő nevével
-megegyező fájlnevű javascript, illetve css fájl, ezeket is átadjuk a
+megegyező nevű JavaScript, illetve CSS fájl, ezeket is átadjuk a
 \texttt{skeleton} nézetnek.
 
 \paragraph{\texttt{check\_login(\$redirect='my\_forms')}}
@@ -645,7 +666,8 @@ paraméter a vezérlőkben megjelenő \texttt{\$lang} opcionális paraméter ér
 kapja. Ha tehát az URL-ben szerepel egy nyelv, akkor itt töltjük be az annak
 megfelelő sztringeket. Ezen kívül elmentjük a munkamenetbe a nyelvet, amit akkor
 használunk, ha az URL-ből nem kaptunk nyelvet. Ha még a munkamenetben sincs
-mentett nyelv, akkor a konstruktorban megadott első nyelvet használjuk.
+mentett nyelv, akkor a konstruktorban megadott első nyelvet használjuk, és
+mentjük is a munkamenetbe.
 
 
 \phantomsection
@@ -654,17 +676,17 @@ mentett nyelv, akkor a konstruktorban megadott első nyelvet használjuk.
 
 A felhasználói felület nyelvi fájljait a Manager és a Builder külön tárolja: a
 Manager a \texttt{system/application/language} mappában, a Builder pedig a
-\texttt{scripts/builder/translations.js} fájlban. Egy új nyelv hozzáadása négy
-lépésből áll:
+\texttt{scripts/builder/translations.js} fájlban. Egy új nyelv hozzáadása a
+Managerhez négy lépésből áll:
 
 \begin{itemize}
-  \item A nyelv azonosítójának kiválasztása. Általában a legegyszerűbb az
+  \item \textbf{A nyelv azonosítójának kiválasztása.} Általában a legegyszerűbb az
     \texttt{img/famfamfam/png} mappában található zászló nevével megegyező
     azonosítót választani. Ez a spanyol nyelv esetén például
     \texttt{es}. Ellenkező esetben a zászlóról készíteni kell egy
     másolatot, aminek a neve megegyezik az azonosítóval, hiszen a nyelvek
     kiválasztását lehetővé tevő menü ezt a képet fogja használni.
-  \item A Manager felületének lefordítása. Egy már létező fordítás fájljait
+  \item \textbf{A Manager felületének lefordítása.} Egy már létező fordítás fájljait
     (például a \texttt{system/application/language/hu} mappa tartalmát)
     lemásoljuk az új nyelv azonosítójával megegyező nevű mappába, majd
     elvégezzük a fordítást.
@@ -687,44 +709,44 @@ $this->lang_names = array('en' => 'English',
 $langs = '(en|hu|es)';
 // TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
     \end{lstlisting}
-    Így a \texttt{*/es} alakú oldalak megnyitásakor ``Az oldal nem található''
+    Így a \texttt{``*/es''} alakú oldalak megnyitásakor ``Az oldal nem található''
     hiba helyett spanyol nyelven nyílik meg a kért oldal.
 
 \end{itemize}
 
 Ezen kívül még le kell fordítani a Builder felületének üzeneteit is (ld.
-\ref{sec:builder-i18n} \textit{Builder - Új fordítások hozzáadása}).
+\ref{sec:builder-i18n} \textit{translations.js - fordítások}).
 
 \phantomsection
 \subsection{Regisztráció}
 \label{sec:reg_check}
 
-A tényleges regisztrációt a \texttt{users\_model} hajtja végre. A feladatunk itt
+Az adatbázis módosítását a \texttt{users\_model} hajtja végre. A feladatunk itt
 a felhasználó által megadott adatok ellenőrzése. Ellenőrizni
 kell a megadott felhasználónév és e-mail cím létezését. Figyelni kell az e-mail
-cím helyességére, a két jelszó mező egyezésére, valamint a kapott adatok
-hosszára - egy megadott minimum hossz és az adatbázisban meghatározott
-maximális hosszúság közé kell esnie.
+cím helyességére, a két jelszó-mező tartalmának megegyezésére, valamint a kapott
+adatok hosszára - ennek egy megadott minimum hossz és az adatbázisban
+meghatározott maximális hosszúság közé kell esnie.
 
 Az adatok ellenőrzésére, illetve ezekről visszajelzés küldésére négy
 lehetőségünk van:
 
 \paragraph{Csak szerveroldali ellenőrzés}
 Az űrlap kitöltése után közvetlenül a szervernek küldjük az adatokat, majd egy
-újragenerált lapon értesítjük a felhasználót a regisztráció sikerességéről, vagy
-a hibaüzenetekről. Utóbbi esetben a kapott adatokkal feltöltve adjuk vissza az
+újragenerált lapon értesítjük a felhasználót a regisztráció sikerességéről.
+Hibásan küldött űrlap esetén a kapott adatokkal feltöltve írjuk ki újra az
 űrlapot. Ennek a megoldásnak a megvalósítását jelentősen megkönnyíti a
-CodeIgniter framework Validation osztálya\cite{CI-Val}. A felhasználónak meg kell várnia az új lap
-letöltését és kitöltés közben nem kap visszajelzést a megadott adatok
-helyességéről.
+CodeIgniter framework Validation osztálya\cite{CI-Val}. A felhasználónak meg
+kell várnia az új lap letöltését, és kitöltés közben nem kap visszajelzést a
+megadott adatok helyességéről.
 
 \paragraph{Csak kliensoldali ellenőrzés}
 A felhasználó szempontjából kényelmes, hiszen azonnali visszajelzést kap a
 megadott adatokról, ráadásul a lap újratöltésére sem kell várnia hiba
 esetén. Biztonsági szempontból azonban elfogadhatatlan megoldás, hiszen egy
-esetleges támadónak elég egy hibás kérést küldenie a szervernek. Ráadásul a
-kliensoldali ellenőrzés visszajelzéseiből megtudja, hogy milyen adatokkal tud
-hibát okozni.
+esetleges támadónak elég egy hibás kérést küldenie az adatbázis közvetlen
+eléréséhez. Ráadásul a kliensoldali ellenőrzés visszajelzéseiből megtudja, hogy
+milyen adatokkal tud hibát okozni.
 
 \paragraph{Önálló ellenőrzés a szerveren és a kliensen}
 A fenti módszerek előnyeit egyesíti, hátrányaikat kiküszöböli. A kliensoldali
@@ -756,19 +778,19 @@ A tényleges ellenőrzést ennél a megoldásnál a szerveren végezzük, és le
 tesszük, hogy a felhasználói felület szerkesztés közben a szervert megkérje
 egyes adatok ellenőrzésére. Így az előző megoldás redundanciáját kiküszöböltük
 néhány bájt hálózat-forgalom ellenében. A szerver terhelése így valamivel nő, de
-ennél az alkalmazásnál méreténél fogva valószínűsíthető, hogy nem fognak
+az alkalmazás méreténél fogva valószínűsíthető, hogy nem fognak
 skálázhatósági problémák fellépni.
 
 Kérdés viszont, hogy az űrlap elküldését hogyan valósítsuk meg.
 A kliensoldali ellenőrzések aszinkron volta miatt a legegyszerűbb módszer, az
-űrlap \texttt{onsubmit} eseményének használata nem megoldható: itt visszatérési
-értékre van szükség, amit átlagos AJAJ hívásnál nem kapunk. Az eredmények
+űrlap \texttt{onsubmit} eseményének használata nem megoldható: visszatérési
+értékre volna szükség, amit AJAJ hívásnál nem kapunk. Az eredmények
 összegyűjtése utáni küldés nem megoldás, hiszen előfordulhat, hogy közben a
 felhasználó még módosít az űrlapon. Lehetőség van szinkron, blokkoló módon
-futtatni az ellenőrzéseket, de a mai böngészőkben ilyenkor a felhasználó a kérés
-teljesítéséig semmit sem tud tenni.
+futtatni az ellenőrzéseket, de a mai böngészők ilyenkor a kérés teljesítéséig
+nem fogadnak semmilyen felhasználói utasítást.
 
-Ezt a problémát a csak szerveroldali ellenőrzésnél hátrányként említett módon
+Ezt a problémát a csak szerveroldali ellenőrzésnél hátrányosként említett módon
 oldottam meg: hiba esetén a regisztrációs oldal újra letöltődik. Mivel a
 beviteli mezők szerkesztésekor az \texttt{onchange} eseményre induló ellenőrzés
 jelzi a felhasználónak a megadott adatok helyességét, ez ritkán fog előfordulni.
@@ -782,6 +804,8 @@ jelzi a felhasználónak a megadott adatok helyességét, ez ritkán fog előfor
   \includegraphics[width=328px]{reg_check.png}
   \caption{Regisztrációs adatok ellenőrzése}\label{fig:reg_check}
 \end{figure}
+
+%TODO: idáig van ellenőrizve
 
 Az regisztrációnál megadott adatok ellenőrzése két helyről indulhat. Ha a kliens
 kérte az ellenőrzést, akkor a \texttt{check\_remote} függvényen keresztül hívjuk
@@ -833,7 +857,7 @@ Az \texttt{check\_} prefixumú függvények egyetlen paraméterükként az
 ellenőrzendő értéket várják. Még a \texttt{check\_pass\_match} függvény is, ami
 a megadott jelszavak ellenőrzését végzi - itt az egyik jelszót a POST adatokból
 olvassuk ki. Mivel az ellenőrzendő és a hiba esetén újra kitöltendő mezők neve
-ugyanazon tömbben szerepel, és a bejelnetkezési űrlap nevét nem ellenőrizzük
+ugyanazon tömbben szerepel, és a bejelentkezési űrlap nevét nem ellenőrizzük
 változtatásakor, a \texttt{check\_login\_user} függvény mindig egy üres tömböt
 ad vissza - ezzel jelezve, hogy nincsenek hibák.
 
@@ -958,7 +982,7 @@ illetve az űrlapokon végezhető műveletek kezelését a
 Az új sor hozzáadását két függvény végezheti: az \texttt{add\_row} saját űrlap
 hozzáadását, az \texttt{add\_row\_public} pedig más felhasználók nyilvános
 űrlapjainak hozzáadását teszi lehetővé. A vezérlőtől kapott, JavaScriptnek
-átadott \texttt{public} változó értékétől függ, hogy melyiket használjuk.
+átadott \texttt{public} változó értékétől függ, hogy melyiket használjuk.i
 
 Az űrlapok táblázata a fejlécből, a létező űrlapok listájából, és a saját
 űrlapok listájának esetén egy ``Új űrlap'' sorból áll. Minden űrlapnál szerepel
@@ -1354,7 +1378,102 @@ alapján három lépésből áll:
 
 \phantomsection
 \subsection{\texttt{builder.js}}
-Ez a
+Itt történik a felhasználói felület inicializálása, nyelvének változtatása,
+illetve a felhasználó kéréseinek teljesítése az előző fájlok és a
+\texttt{htmlize.js} segítségével. A kurzor alá kerülő és a kiválasztott elemek
+kezelését is itt végezzük.  Az \texttt{update\_actions} és
+\texttt{update\_props} függvényeket hívjuk, mikor a műveleteket vagy
+tulajdonságokat megjelenítő elemek frissítésére van szükség. Ezek az előző
+részekben tárgyalt \texttt{props} illetve \texttt{actions} függvények eredményei
+alapján töltik fel a felület megfelelő részeit.
+
+
+\paragraph{Elemek kiválasztása}
+Mivel az alkalmazás természeténél fogva gyakran keletkeznek új elemek, meg kell
+oldani ezek egységes eseménykezelését. Erre a jQuery livequery pluginját
+használtam, ami a megadott selectornak megfelelő minden elem módosítására módot
+ad, akkor is, ha az a livequery hívás után jön létre. Ezt a lehetőséget
+használjuk ki a kijelölhető elemek kezelésénél.
+
+A kijelölhető elemek a táblázat, a táblázat cellái, illetve a fieldsetek. Mikor
+az egérkurzor ezek fölé kerül, a \texttt{hover} függvényt hívjuk meg, mikor
+pedig az egérkurzor elhagyja őket, az \texttt{unhover} függvényt. Némileg
+bonyolítja a helyzetet, hogy nem feltétlenül azt az elemet akarjuk kiemelni, ami
+ténylegesen a kurzor alatt van. Például ha az onmouseover esemény a
+\texttt{tbody} elemből indul, akkor is az azt tartalmazó \texttt{table} elemmel
+kell dolgoznunk. Ezt a problémát oldják meg az \texttt{unhover} függvényben
+implementált ellenőrzések.
+
+Hogy ezt az ellenőrzést ne kelljen az elemek kattintásra történő kijelölésénél is
+elvégezni, a kijelölést az az elem kapja, amit legutóbb egér alattiként
+jelöltünk meg a \texttt{hover} és \texttt{unhover} valamelyikével.
+
+
+\paragraph{Az aktuális nyelv kezelése}
+A Builder megnyitásakor használt nyelv a Managerben kiválasztott nyelv, amit az
+oldal PHP-vel történő generálása során adunk át a JavaScriptnek. A
+\texttt{trans} változó egy referencia a \texttt{TRANS} objektum aktuális nyelvre
+érvényes fordításait tartalmazó tulajdonságára, ami egy újabb objektum. Az
+alkalmazásban mindenhol ezen a változón keresztül érjük el a lefordított
+szövegeket. Értékét a \texttt{set\_lang} függvény segítségével változtatjuk, az
+új nyelv azonosítójának átadásával. Ilyenkor a \texttt{trans} változó értékének
+frissítése után a felület minden elemének feliratát frissítjük. Itt hívjuk meg
+az állapotsor szövegének frissítéséért felelős \texttt{status.update\_lang}
+függvényt is.
+
+
+\section{Konklúzió}
+A leírt alkalmazással megvalósítottam a feladatmeghatározásban kitűzött kötelező
+célokat. Könnyen karbantartható és kiegészíthető, moduláris kódot hoztam létre
+vigyelembe véve a későbbre tervezett fejlesztéseket: az automatikus mentést és a
+szerkesztőben végzett műveletek visszavonását. Ezt a két célt akár egyesíteni is
+lehet: ha a tényleges visszavonási funkció technikailag nem megvalósítható,
+akkor gyakori (2-3 műveletenkénti) automatikus mentéssel, és a verziók közötti
+könnyű navigációval helyettesíthető. Ezeket a verziókat akár a szerveren is
+tárolhatjuk az adatbázisszerkezet módosításával, létrehozva bizonyos szintű
+verziókezelést az alkalmazásban létrehozott űrlapok számára.
+
+A Managerben könnyen használható, modern felületet biztosítottam új űrlapok
+létrehozására, megtekintésére, módosítására és törlésére. A nyilvános űrlapok,
+illetve bizonyos esetekben a saját űrlapok listája is kezelhetetlenül hosszúvá
+válhat. Ezt a problémát bizonyos mértékben orvosolja, hogy az űrlapok tartalmát
+csak kijelöléskor töltjük le. Tényleges megoldást az űrlapok listájának
+lapozhatóvá vagy görgethetővé tétele tenné. Ennek a megvalósítását segítheti
+majd a CodeIgniter Pagination osztálya is.
+
+A Builder logikusan felépített, átlátható és interaktív felhasználói felületének
+segítségével előismeretek nélkül alakítható ki tetszőleges űrlap. Az alkalmazás
+technikai korlátai miatt bizonyos mértékben korlátoznunk kell a felhasználót -
+például egy korai prototípusban szerepelt cellák függőleges egyesítése, de
+néhány egyesítés és törlés után a táblázat nem működésképtelen, de javíthatatlan
+állapotba került. Olyan felhasználók számára is hasznos lehet az alkalmazás,
+akik ezeket a korlátozásokat észlelik: az űrlap alapszerkezetének gyors,
+visszajelzésben gazdag létrehozását teszi lehetővé, amit aztán a létrehozott
+forrásról másolatot készítve testreszabhat. A korlátozások mellett azonban a
+feladatmeghatározásban kitűzött célokat itt is elértem.
+
+A szabványos \texttt{XHTML 1.1} kód generálását a jQuery framework használatával
+biztosítottam. A kód emberi olvasásra alkalmas formába rendező \texttt{htmlize}
+függvény az alkalmazás legkevésbé robosztus modulja, de mivel a szabvány
+jelentős változása gyakorlatilag kizárt, ez nem jelent problémát. Az új
+szabványra, például \texttt{HTML 5}-re való átálláskor az alkalmazásnak csak az
+elemekkel közvetlenül dolgozó részeit kell újraírni: a \texttt{utils.js} fájl
+nagyrészét, szükség szerint a \texttt{props.js} bizonyos részeit és a
+\texttt{builder.js} kijelölésekkel foglalkozó részét.
+
+A felhasználói felület jelenleg magyar és angol nyelven elérhető. Az új fordítások
+hozzáadása néhány egyértelmű, akár automatizálható lépésből áll. Itt is van
+lehetőség a további fejlesztésre: a Builder JavaScript, a Manager PHP nyelvi
+fájlokat használ, így a mindkét programrész által használt sztringeket kétszer
+kell meghatározni. Lehetséges őket tisztán PHP-ben tárolni, majd kérésre átadni
+a JavaScriptnek. Szintén lehetséges külső, JavaScriptből és PHP-ből is elérhető
+fájlokban tárolni a fordításokat. Ezeknek választhatunk akár olyan létező
+formátumot, amire léteznek fordítások létrehozását segítő eszközök.
+
+A jelenlegi verzió nem tekinthető komoly, kiforrott alkalmazásnak, de
+mindenképpen már használható, hasznos állapotban van a szoftver. Mindezek
+fényében a projektet sikeresnek tekintem. Az alkalmazás hamarosan elérhető lesz
+a \url{http://abesto.host22.com/formbuilder} címen.
 
 \clearpage
 \phantomsection

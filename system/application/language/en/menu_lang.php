@@ -25,5 +25,6 @@ $lang['menu'] = array('home'   => 'Home',
                       'welcome'=> 'Welcome back, %s',
                       'my_forms' => 'My forms',
                       'logout' => 'Log out',
-                      'public_forms' => 'Public forms'
+                      'public_forms' => 'Public forms',
+                      'generated'    => 'Page generated in %s seconds'
                       );
