@@ -11,8 +11,8 @@
 |	http://example.com/
 |
 */
-//$config['base_url']	= "http://form/";
-$config['base_url']	= "http://formbuilder.homelinux.com";
+$config['base_url']	= "http://form/";
+//$config['base_url']	= "http://formbuilder.homelinux.com";
 
 /*
 |--------------------------------------------------------------------------
