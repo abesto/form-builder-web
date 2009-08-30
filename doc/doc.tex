@@ -131,7 +131,7 @@ Készítette: Nagy Zoltán
 
 A kitűzött cél egy olyan rendszer kialakítása, amely lehetővé teszi
 \texttt{HTML} űrlapok létrehozását egy point-and-click felület
-segítségével. Elvárás az \texttt{HTML 4.01} szabványban meghatározott minden
+segítségével. Elvárás a \texttt{HTML 4.01} szabványban meghatározott minden
 \texttt{form} tagen belül legális elem támogatása. Törekedni kell a szabványos
 \texttt{XHTML 1.1} kód generálására. Ezen kívül biztosítani kell
 az űrlapok mentését, visszatöltését és letöltését. Opcionális cél a szerkesztés
@@ -237,7 +237,7 @@ egyenértékű modul) nem elérhető.
 \paragraph{PHP értelmező}
 A Manager PHP programnyelven íródott, így mindenképpen PHP értelmező futtatására
 képes webszerverre van szükség. Gyorsabb fejlesztés, jobb karbantarthatóság és
-logikusabb felépítés elérése végett a \textbf{CodeIgniter}\cite{CI} framework
+logikusabb felépítés elérése érdekében a \textbf{CodeIgniter}\cite{CI} framework
 \textbf{1.7.1}-es verzióját használtam. A frameworknek 4.3.2-es verziójú
 PHP értelmezőre van szüksége, de az alkalmazás működéséhez minimum \textbf{PHP
   5.2.0} kell. A \texttt{php.ini}-ben engedélyezni kell a json, mysql
@@ -246,7 +246,7 @@ PHP értelmezőre van szüksége, de az alkalmazás működéséhez minimum \tex
 \paragraph{Adatbázis szerver}
 Az adatbáziskezelés csak \textbf{MySQL 5.1.37} adatbázison volt tesztelve, de a
 CI ActiveRecord\cite{CI-ActiveRecord} szolgáltatás használata miatt az
-alkalmazás módosítás nélkül működik az CI által támogatott SQL
+alkalmazás módosítás nélkül működik a CI által támogatott SQL
 szervereken\cite{CI-Req}. Az adatbázis-szerver típusát és a kapcsolódáshoz
 szükséges adatokat a \texttt{system/application/config/database.php} fájlban
 kell beállítani, legalább az alábbi sorok szerkesztésével:
@@ -270,9 +270,13 @@ Resizable komponenseit. A felhasználó letöltési idejének minimalizálása
 érdekében a JavaScript és CSS fájlok méretét a \textbf{YUI Compressor}\cite{YUI}
 segítségével csökkentettem.
 
-\paragraph{Böngészők}
-Az alkalmazást a Firefox (és más XULRunner alapú), illetve az Opera böngészőkkel
-teszteltem. Jelenlegi állapotában az Internet Explorer böngészők JavaScript
+\paragraph{A tesztelésre használt böngészők}
+\begin{itemize}
+\item Firefox 3.5
+\item a XULRunner alapú Conkeror GIT repository-ból 2009. 08. 25-én elérhető változata
+\item Opera 9.64
+\end{itemize}
+Jelenlegi állapotában az Internet Explorer böngészők JavaScript
 értelmezőjével a Builder nem működik.
 
 \paragraph{Szakdolgozat}
@@ -280,6 +284,16 @@ Jelen dokumentum a \LaTeX  rendszer TexLive disztribúcióból származó
 \texttt{3.1415926} verziójával készült az \textbf{Emacs} szerkesztőben, az
 \textbf{AUCTeX} csomag segítségével. A diagrammok létrehozására a \textbf{Dia 0.97}
 szerkesztőt használtam.
+
+\phantomsection
+\subsection{Fejlesztői gép}
+\begin{tabular*}{\textwidth}{>{\bf}r|l}
+  Típus       & ASUS F5SLseries notebook\\
+  Merevlemez  & 250GB\\
+  Processzor  & Intel Pentium Dual CPU T2390\\
+  Videókártya & ATI Radeon HD 3400\\
+  Memória     & 2GB\\
+\end{tabular*}
 
 \phantomsection
 \subsection{Telepítés}
@@ -320,6 +334,7 @@ azonosítóval ellátni, de lehetőséget akarunk biztosítani az űrlapok
 
 Az ábrán és a táblázatokban megadott adattípusok a MySQL adatbázis típusai.
 
+\clearpage
 % Adatbázis diagramm
 \begin{figure}[H]
   \centering
@@ -805,9 +820,7 @@ jelzi a felhasználónak a megadott adatok helyességét, ez ritkán fog előfor
   \caption{Regisztrációs adatok ellenőrzése}\label{fig:reg_check}
 \end{figure}
 
-%TODO: idáig van ellenőrizve
-
-Az regisztrációnál megadott adatok ellenőrzése két helyről indulhat. Ha a kliens
+A regisztrációnál megadott adatok ellenőrzése két helyről indulhat. Ha a kliens
 kérte az ellenőrzést, akkor a \texttt{check\_remote} függvényen keresztül hívjuk
 meg a kért ellenőrzést (\emph{1/a}). Ha a felhasználó már elküldte az űrlapot,
 akkor a \texttt{register} függvény lefuttatja az összes ellenőrzést
@@ -818,22 +831,21 @@ akkor a \texttt{register} függvény lefuttatja az összes ellenőrzést
 
 \paragraph{\texttt{check(\$checks)}}
 Ez a függvény megkönnyíti az ellenőrzések elvégzését, a hozzájuk szükséges kódot
-lerövidíti. A \texttt{check\_*} függvények előkészítik számára az ellenőrzéseket
-egy-egy sztring formájában, ami a futtatandó ellenőrzést tartalmazza PHP kód
-formájában. Ezekben az ellenőrző kódokban a vezérlőt (controller) a
+lerövidíti. A \texttt{check\_*} függvények előkészítik az ellenőrzéseket
+egy-egy sztring formájában, amik a futtatandó PHP kódot tartalmazzák.
+Ezekben az ellenőrző kódokban a vezérlőt (controller) a
 \texttt{\$controller} változón keresztül lehet elérni. Erre például a
 felhasználónév létezésének ellenőrzésénél van szükség.
 
-A kapott paraméter egy asszociatív tömb, ahol a kulcs a futtatandó ellenőrzés,
-az érték pedig egy vektor: a hiba esetén megjelenítendó üzenet azonosítója és
-az abba behelyettesítendő értékek. Az üzenet tényleges szövegét az aktuális
-nyelvnek megfelelő nyelvi fájlból fogjuk kiolvasni. A behelyettesítendő érték
-lehet például nem megfelelő hosszúságú adatnál a minimális vagy maximális
-megengedett hosszúság.
+A \texttt{check} függvénynek átadott paraméter egy asszociatív tömb. Az
+ellenőrzés futtatandó kódjához rendelünk egy vektort, ami a hiba esetén
+megjelenítendó üzenet azonosítója és az abba behelyettesítendő értékeket
+tartalmazza. Az üzenet tényleges szövegét az aktuális nyelvnek megfelelő nyelvi
+fájlból fogjuk kiolvasni. A behelyettesítendő érték lehet például nem megfelelő
+hosszúságú adatnál a minimális vagy maximális megengedett hosszúság.
 
-A ténylegesen futtatott
-ellenőrző-függvényt a \texttt{create\_function} függvénnyel hozzuk létre. Ha
-például a kapott ellenőrző kód:
+A ténylegesen futtatott ellenőrző-függvényt a \texttt{create\_function}
+beépített PHP függvénnyel hozzuk létre. Ha például a kapott ellenőrző kód:
 \texttt{"\$controller->user->not\_available('foo')"}, akkor a létrehozott
 függvény a következő:
 
@@ -844,40 +856,41 @@ function lambda($controller)
 }
 \end{lstlisting}
 
-A függvénynek a \texttt{\$controller} paraméterbe a \texttt{\$this} értékét
-adjuk át, ezzel biztosítva a hívó vezérlő elérhetőségét az ellenőrzésen
-belül. Ha az így létrehozott és futtatott függvény visszatérési értéke
-\texttt{false}, akkor az ellenőrzéshez tartozó üzenetleíró vektort hozzáadjuk a
-hibák listájához, amit aztán az összes ellenőrzés lefuttatása után visszaadunk a
-hívó függvénynek.
+A függvénynek a \texttt{\$controller} paraméterbe a hívó függvény
+\texttt{\$this} értékét adjuk át, ezzel biztosítva a hívó vezérlő elérhetőségét
+az ellenőrzésen belül. Ha az így létrehozott és futtatott függvény visszatérési
+értéke \texttt{false}, akkor az ellenőrzéshez tartozó üzenetleíró vektort
+hozzáadjuk a hibák listájához. Az összes kapott ellenőrzés lefuttatása után
+ezt a listát adjuk vissza a hívó függvénynek.
 
 
 \paragraph{\texttt{Ellenőrzések}}
 Az \texttt{check\_} prefixumú függvények egyetlen paraméterükként az
 ellenőrzendő értéket várják. Még a \texttt{check\_pass\_match} függvény is, ami
-a megadott jelszavak ellenőrzését végzi - itt az egyik jelszót a POST adatokból
-olvassuk ki. Mivel az ellenőrzendő és a hiba esetén újra kitöltendő mezők neve
-ugyanazon tömbben szerepel, és a bejelentkezési űrlap nevét nem ellenőrizzük
-változtatásakor, a \texttt{check\_login\_user} függvény mindig egy üres tömböt
+a megadott jelszavak egyezésének ellenőrzését végzi - itt az egyik jelszót a POST adatokból
+olvassuk ki. Ugyanazon tömbben tároljuk azokat a mezőket, amiket regisztrációkor
+ellenőrizni kell, és amiket hibás űrlap visszaadásakor fel kell tölteni e
+felhasználó által megadott adatokkal. Mivel a bejelentkező űrlap csak a második
+csoportba tartozik, a \texttt{check\_login\_user} függvény mindig egy üres tömböt
 ad vissza - ezzel jelezve, hogy nincsenek hibák.
 
-Az adott ellenőrzésekre jellemző adatok (például minimum és maximum hosszúság)
+Az adott ellenőrzésekre jellemző értékek (például minimum és maximum hosszúság)
 beállítása után a vizsgálni kívánt adatokban a \texttt{'} karaktereket
 \texttt{\textbackslash'}-re cseréljük, mivel az ellenőrzéseket először sztringekként állítjuk
 össze. A cserével kivédjük a SQL injectionhöz hasonló támadásokat.
 
 Végül a szükséges ellenőrzéseket és hozzájuk tartozó hibaüzeneteket átadjuk a
-\texttt{check} függvénynek, aminek az eredményét feldolgozás nélkül visszaadjuk
-a hívónak. Itt nem dolgozzuk fel a hibaüzeneteket, hiszen nem tudhatjuk, hogy a
-hívó függvény hogyan kívánja értesíteni a felhasználót, vagy az őt hívó
-függvényt.
+\texttt{check} függvénynek, aminek az eredményét visszaadjuk a hívónak. Nem
+tudhatjuk, hogy a hívó függvény hogyan kívánja értesíteni az eredményről a
+felhasználót vagy az őt hívó függvényt, ezért itt a hibák listáját nem dolgozzuk
+fel.
 
 
 \paragraph{\texttt{check\_remote}}
 Ezt a függvényt érik el a kliens ellenőrzési kérései egy POST hívás
 segítségével. Egy hívás pontosan egy mező ellenőrzését kéri, tehát pontosan egy
-\texttt{check\_*} függvény futását fogja eredményezni. Ha visszakapott, hibákat
-tartalmazó tömb üres, akkor a \texttt{true} sztringet írjuk ki, ami JSON-ként
+\texttt{check\_*} függvény futását fogja eredményezni. Ha a hibákat leíró
+visszakapott tömb üres, akkor a \texttt{true} sztringet írjuk ki, ami JSON-ként
 való értelmezés után a \texttt{true} bináris értéket fogja képviselni a
 kliensoldalon.
 
@@ -891,11 +904,11 @@ kitöltendő mező üres, akkor elég csak a ``Kitöltés kötelező'' üzenetet
 \paragraph{\texttt{register(\$lang=null)}}
 Ez a függvény kezeli az elküldött regisztrációs űrlapot. Lefuttatja az összes
 ellenőrzést, és ha bármelyik hibával tér vissza, visszaküldi a felhasználót a
-regisztrációs oldalra a felhasználónév és e-mail mezők értékét feltöltve a
+regisztrációs oldalra. A felhasználónév és e-mail mezők értékét feltölti a
 felhasználó által megadottakkal.
 
-Ha nincs hiba, \texttt{user\_model} \texttt{register} függvényén keresztül
-elvégzi az ellenőrzést, és a POST adatok között kapott \texttt{redirect} oldalra
+Ha nincs hiba, akkor a \texttt{user\_model} modell \texttt{register} függvényén keresztül
+elvégzi a regisztrációt, és a POST adatok között kapott \texttt{redirect} oldalra
 irányítja a felhasználót.
 
 
@@ -917,9 +930,9 @@ megjelenítjük a hibaüzeneteket. Ez csak közvetlenül az oldal betöltődése
 fordul elő, és az üresen elküldött mezők jelölésére szolgál.
 
 A \texttt{check} függvény a \texttt{name} paraméterben átadott mező értékének
-ellenőrzésére szolgál. Eltávolítja az előző ellenőrzések eredményeit az
+ellenőrzésére szolgál. Eltávolítja az előző ellenőrzés eredményét az
 űrlapról, majd a mező értékéből és a \texttt{name} paraméterből összeállított
-\texttt{data} paraméterrel meghívja a \texttt{check\_ajaj} függvényt. Az
+\texttt{data} tömbbel meghívja a \texttt{check\_ajaj} függvényt. Az
 \texttt{\$input} paraméterbe értelemszerűen az ellenőrzött beviteli mező kerül,
 az \texttt{initial} értéket pedig egyszerűen továbbadja. A
 \texttt{check\_pass\_match} függvény hasonló módon működik, de \texttt{data}
@@ -927,7 +940,8 @@ az \texttt{initial} értéket pedig egyszerűen továbbadja. A
 formában állítja össze.
 
 Mindkét függvényt a beviteli mezők \texttt{onchange} eseményének futásakor és az
-oldal betöltődésekor hívjuk meg.
+oldal betöltődésekor hívjuk meg - utóbbi esetben csak akkor, ha hibás űrlap
+újratöltése történik.
 
 
 \clearpage
@@ -946,7 +960,7 @@ oldal betöltődésekor hívjuk meg.
 \clearpage
 
 Az ``Űrlapjaim'' és ``Nyilvános űrlapok'' menüpontból elérhető lista két részből
-áll: az űrlapokat  és rajtuk végezhető műveleteket tartalmazó táblázatból,
+áll: az űrlapokat és rajtuk végezhető műveleteket tartalmazó táblázatból,
 illetve a kiválasztott űrlap előnézetéből. Az előnézet két fület tartalmaz: az
 ``Előnézet'' az űrlapot úgy mutatja meg, ahogyan a felhasználó böngészőjében
 megjelenik; a ``HTML'' nézet pedig az űrlap forrását teszi elérhetővé.
@@ -955,10 +969,11 @@ A lista felépítése két lépésből áll. Először a \texttt{My\_forms} vagy
 \texttt{Public\_forms} vezérlő
 segítségével betöltjük a \texttt{form\_table} nézetet, és átadjuk neki
 \begin{itemize}
-\item A \texttt{public = false} értéket. Ez a nézet kezeli a nyilvános és a
-  saját űrlapok megjelenítését is - így tudatjuk vele, hogy most saját
-  űrlapokról van szó. Ha a változó értékét futásidőben megváltoztatják, az
-  állandó jog-ellenőrzés miatt akkor sem lehet kihasználni ezt a tényt.
+\item A \texttt{public} értéket. Ez a nézet kezeli a nyilvános és a saját
+  űrlapok megjelenítését is - ezzel a változóval tudatjuk vele, hogy most saját
+  űrlapok listáját, vagy nyilvános űrlapokat jelenítünk meg. Ha a változó
+  értékét futásidőben megváltoztatják, az állandó jog-ellenőrzés miatt akkor sem
+  lehet kihasználni ezt a tényt.
 \item A \texttt{forms\_lang.php} nyelvi fájl \texttt{js} és \texttt{php} nevű
   tömbjeit. A tömbök neve azt jelzi, hogy melyik programnyelv fogja felhasználni
   az adott szövegrészleteket.
@@ -968,16 +983,16 @@ segítségével betöltjük a \texttt{form\_table} nézetet, és átadjuk neki
 
 Ezután a \texttt{form\_table.php} nézetben a \texttt{js} tömb, a
 \texttt{base\_url} és \texttt{public} változók értékét átadjuk a
-JavaScriptnek. Végül a \texttt{php} tömb lefordított sztringjeit felhasználva
-létrehozzuk a felhasználói felület részeit.
+JavaScriptnek. Végül az aktuális nyelv sztringjeivel feltöltött \texttt{php}
+tömb segítségével létrehozzuk a felhasználói felület részeit.
 
 \vspace{1cm}
 
 A második lépésben AJAJ-al lekérdezzük a felhasználó űrlapjainak
-a listáját, amiket JavaScripttel megjelenítünk. Az űrlap táblázathoz adására
-itt is ugyanazt a függvényt használjuk, mint új űrlap létrehozásakor. Ezt,
+a listáját, amiket JavaScripttel megjelenítünk. Az űrlap táblázathoz adását
+ugyanaz a függvény végzi, mint új űrlap létrehozásakor. Ezt,
 illetve az űrlapokon végezhető műveletek kezelését a
-\texttt{scripts/forms\_table.js} végzi.
+\texttt{forms\_table.js} végzi.
 
 Az új sor hozzáadását két függvény végezheti: az \texttt{add\_row} saját űrlap
 hozzáadását, az \texttt{add\_row\_public} pedig más felhasználók nyilvános
@@ -989,8 +1004,8 @@ Az űrlapok táblázata a fejlécből, a létező űrlapok listájából, és a 
 az űrlap neve, nyilvános űrlaplista esetén az űrlap tulajdonosának neve, és az
 adott űrlapon végezhető műveletek. Ha a felhasználó nincs bejelentkezve, akkor
 nincsenek műveletek. Bejelentkezett felhasználó más felhasználó nyilvános űrlapjait
-szerkesztésre nyithatja meg, amit később mentés esetén sajátjaként mentünk, új
-űrlapként. Saját űrlapoknál a nyilvános űrlapok listázásakor a szerkesztés,
+megnyithatja szerkesztésre, amit mentéskor új űrlapként kezelünk.
+Saját űrlapoknál a nyilvános űrlapok listázásakor a szerkesztés,
 átnevezés és törlés műveletek elérhetőek. Ezeken kívül a saját űrlapok listáján
 az űrlap nyilvánosságának megváltoztatására is van lehetőség.
 
@@ -1472,8 +1487,8 @@ formátumot, amire léteznek fordítások létrehozását segítő eszközök.
 
 A jelenlegi verzió nem tekinthető komoly, kiforrott alkalmazásnak, de
 mindenképpen már használható, hasznos állapotban van a szoftver. Mindezek
-fényében a projektet sikeresnek tekintem. Az alkalmazás hamarosan elérhető lesz
-a \url{http://abesto.host22.com/formbuilder} címen.
+fényében a projektet sikeresnek tekintem. Az alkalmazás elérhető a
+\url{http://abesto.host22.com/formbuilder} címen.
 
 \clearpage
 \phantomsection

@@ -40,12 +40,12 @@
 |
 */
 
-$route['default_controller'] = "home";
+$route['default_controller'] = "my_forms";
 $route['scaffolding_trigger'] = "";
 
 $langs = '(en|hu)';
 
-$route[$langs]           = 'home/index/$1';
+$route[$langs]           = 'my_forms/index/$1';
 $route['(:any)/'.$langs] = '$1/index/$2';
 $route['logout']         = 'login/logout';
 $route['builder/(:num)'] = 'builder/open/$1';

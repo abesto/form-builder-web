@@ -73,9 +73,10 @@ foreach($langs as $lang => $name): ?>
 <?php echo $content; ?>
 
     </div>
-
+<?php /*
     <div id="footer">
       <span id="generated">DEBUG: <?php echo sprintf($generated, $this->benchmark->elapsed_time());?></span><br />
     </div>
+    */ ?>
   </body>
 </html>

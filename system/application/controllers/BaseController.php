@@ -153,8 +153,8 @@ class BaseController extends Controller
     {
         $this->load_lang('menu');
         $trans = $this->lang->line('menu');
-        $items = array('home'   => $trans['home'],
-                       'manual' => $trans['manual'],
+        $items = array(//'home'   => $trans['home'],
+                       //'manual' => $trans['manual'],
                        'public_forms' => $trans['public_forms']
                        );
 
