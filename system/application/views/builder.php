@@ -28,6 +28,8 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery-ui-1.7.2.custom.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery.livequery.min.js"></script>
 
+    <script type="text/javascript" src="<?php echo base_url(); ?>scripts/htmlize.min.js"></script>
+
     <script type="text/javascript" src="<?php echo base_url(); ?>scripts/builder.min.js"></script>
 
     <script type="text/javascript">

@@ -22,7 +22,7 @@
 <?php echo doctype('xhtml11'); ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="hu">
   <head>
-    <title>Form builder, he</title>
+    <title>Form Builder</title>
     <meta name="Content-Type" content="text/html; charset=UTF-8" />
     <!--meta name="description" content="" /-->
 
@@ -31,6 +31,7 @@
     if (isset($css)) echo link_tag($css)."\n";
     echo '<script type="text/javascript" src="'.base_url().'scripts/jquery-1.3.2.min.js"></script>'."\n";
     echo '<script type="text/javascript" src="'.base_url().'scripts/jquery.blockUI.min.js"></script>'."\n";
+    echo '<script type="text/javascript">var base_url = "'.base_url().'";</script>'."\n";
     if (isset($js)) echo '<script type="text/javascript" src="'.base_url().$js.'"></script>'."\n";
 ?>
 

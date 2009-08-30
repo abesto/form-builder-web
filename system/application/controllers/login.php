@@ -105,7 +105,7 @@ class Login extends BaseController {
     public function logout($lang=null)
     {
         $this->user->logout();
-        redirect('home/'.$lang);
+        redirect('/'.$lang);
     }
 
 

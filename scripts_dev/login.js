@@ -35,15 +35,15 @@
  */
 function check_ajaj(data, $input, initial)
 {
-    $.post('/login/check_remote',
+    $.post(base_url+'login/check_remote',
            data,
            function (response) {
                if (response == true) {
-                   $input.after('<img src="/img/valid.jpg" alt="valid" />');
+                   $input.after('<img src="'+base_url+'/img/valid.jpg" alt="valid" />');
                } else if ((data['value'].length > 0) || (initial == true)) {
                    if ((data['value'] != '') || (errors == true))
                        $input.after('<div class="error">'+response+'</div>').
-                              after('<img src="/img/error.jpg" alt="error" />');
+                              after('<img src="'+base_url+'img/error.jpg" alt="error" />');
                }
            },
           'json'
