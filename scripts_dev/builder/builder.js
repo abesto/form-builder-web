@@ -80,7 +80,9 @@ function update_props(type)
     var current = props[type];
     if (!current) {
         // Ha nincs beállítható tulajdonság, ezt tudatjuk a felhasználóval, és végeztünk
-        $('#props_form').append(node_with_text('span', trans.no_props('<strong>'+type+'</strong>')));
+        $('#props_form').append(
+            node_with_text('span', trans.no_props('<strong>'+type+'</strong>'))
+        );
         return;
     }
     current = current();
@@ -151,9 +153,11 @@ function unhover()
 
 /**
  * A hover és unhover eseménykezelők csak az éppen aktuálisan hovered
- * elem click eseménykezelőjeként állítják be ezt, tehát 'this' a kattintást kapott elem
+ * elem click eseménykezelőjeként állítják be ezt,
+ * tehát 'this' a kattintást kapott elem
  *
- * Az ezzel megoldott probléma: ha table-nek és td-nek is van regisztrált click eseménykezelője,
+ * Az ezzel megoldott probléma: ha table-nek és td-nek
+ * is van regisztrált click eseménykezelője,
  * akkor table kezelője indul el, nem td-é.
  */
 function select_hovered()
@@ -239,7 +243,8 @@ function make_html()
     text = text.replace(/>/g, '&gt;');
     // megmutatjuk
     var $html = $('#html');
-    $html.html('<pre>' + text + '</pre>').dialog('option', 'title', $('#title').html()+' HTML');
+    $html.html('<pre>' + text + '</pre>')
+         .dialog('option', 'title', $('#title').html()+' HTML');
     $html.dialog('open');;
     if ($html.width() < 300) $html.css({'width': '300px'});
 }
@@ -259,8 +264,10 @@ $(document).ready(function (){
                            }});
 
     // A kijelölhető elemek eseménykezelése
-    $('#main td, #main table, #main fieldset').livequery(function() {$(this).hover(hover, unhover);})
-                                              .livequery(function() {if ($(this).hasClass('hovered')) $(this).select(); });
+    $('#main td, #main table, #main fieldset').livequery(
+        function() {$(this).hover(hover, unhover);}
+                                             ).livequery(
+        function() {if ($(this).hasClass('hovered')) $(this).select(); });
 
     // A felesleges szóközöket mindig levágjuk
     $('body input').livequery('change', function() { this.value = trim(this.value); });
@@ -298,15 +305,16 @@ $(document).ready(function (){
     $('#login_form').submit(function() { login(); return false; });
 
     // Átnevezés párbeszédablak inicializálása
-    $('#save_as_dialog').dialog({autoOpen : false,
-                                width    : 'auto',
-                                modal    : true,
-                                open     : function()
-                                           {
-                                               $(this).find('#old_name').html(get_title());
-                                               $(this).find('input[name=new_name]').html('').focus();
-                                           }
-                               });
+    $('#save_as_dialog').dialog(
+        {
+            autoOpen : false,
+            width    : 'auto',
+            modal    : true,
+            open     : function()
+            {
+                $(this).find('#old_name').html(get_title());
+                $(this).find('input[name=new_name]').html('').focus();
+            }});
     $('#save_as_form').submit(function () { save_as(this); return false; });
 
     // Az alapértelmezett nyelv alkalmazása
@@ -314,11 +322,16 @@ $(document).ready(function (){
     status.set('loaded');
 
     // HTML párbeszédablak inicializálása
-    $('#html').dialog({autoOpen : false,
-                       width    : 'auto',
-                       modal    : true,
-                       // Tulajdonság-mező fókuszának visszaállítására
-                       close    : function() { update_props($('.selected')[0].nodeName.toLowerCase()); }});
+    $('#html').dialog(
+        {
+            autoOpen : false,
+            width    : 'auto',
+            modal    : true,
+            // Tulajdonság-mező fókuszának visszaállítására
+            close    : function()
+            {
+                update_props($('.selected')[0].nodeName.toLowerCase());
+            }});
 
     $('#main form').select();
 

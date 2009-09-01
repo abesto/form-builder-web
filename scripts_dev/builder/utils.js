@@ -44,8 +44,9 @@ $.fn.value = function(text) {
 $.fn.html = function( value ) {
 		return value === undefined ?
 			(this[0] ?
-				this[0].innerHTML.replace(/ jQuery\d+="(?:\d+|null)"/g, "") :
-				null) :
+				this[0].innerHTML.replace(
+                        / jQuery\d+="(?:\d+|null)"/g, ""
+                ) : null) :
 			this.empty().append( trim(value) );
 };
 
@@ -165,10 +166,12 @@ function set_input_type(type)
 
     if ((old_type != 'select') && (type != 'select')) {
         $input = $td.firstChild();
-        $input.get(0).setAttribute('type', type);  // JQuery nem szereti átállítani a type tulajdonságot
+        // JQuery nem szereti átállítani a type tulajdonságot
+        $input.get(0).setAttribute('type', type);
     } else {
         var $old_input = $td.firstChild();
-        $input.attr('name', $old_input.attr('name')).attr('id', $old_input.attr('id'));  // id és name tulajdonságokat átvesszük
+        // id és name tulajdonságokat átvesszük
+        $input.attr('name', $old_input.attr('name')).attr('id', $old_input.attr('id'));
         $td.children().remove();
         $td.append($input);
     }
@@ -179,7 +182,10 @@ function set_input_type(type)
     set_td_text($td, text);
     // Fájl input esetén nincs felirat, ezért frissíteni kell a tulajdonságokat
     // Selectnél pedig borul a szokásos felépítés
-    if ((type == 'file') || (old_type == 'file') || (old_type == 'select') || (type == 'select'))
+    if ((type == 'file')
+    || (old_type == 'file')
+    || (old_type == 'select')
+    || (type == 'select'))
         update_props('td');
 }
 
@@ -197,7 +203,10 @@ function get_td_text($td)
         // Input mező
     } else if (type == 'input') {
         var intype = $td.firstChild().attr('type');
-        if ((intype == 'text') || (intype == 'button') || (intype == 'password')) text = $td.firstChild().value();
+        if ((intype == 'text')
+        || (intype == 'button')
+        || (intype == 'password'))
+            text = $td.firstChild().value();
         else if ((intype == 'radio') || (intype == 'checkbox')) text = $td.text();
         // Select mező
     } else if (type == 'select') {
@@ -223,7 +232,10 @@ function set_td_text($td, _text)
     } else if (type == 'input') {
         type = $td.firstChild().attr('type');
         if ($td.children().size() == 2) $td.children(':last-child').remove();
-        if      ((type == 'text') || (type == 'button') || (type == 'password')) $td.firstChild().value(_text);
+        if ((type == 'text')
+        || (type == 'button')
+        || (type == 'password'))
+            $td.firstChild().value(_text);
         else if ((type == 'radio') || (type == 'checkbox')) {
             var label = node_with_text('label', _text);
             label.attr('for', $td.firstChild().attr('id'));

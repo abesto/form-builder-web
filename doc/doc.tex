@@ -25,6 +25,15 @@
   numberstyle=\tiny,
   basicstyle=\ttfamily\small
 }
+\usepackage{fancyvrb}
+\input{xstring}
+\newcommand{\src}[1]{
+  \fancyhead[RO,LE]{\texttt{\StrSubstitute{#1}{_}{\_}}}
+  \phantomsection
+  \subsection*{\texttt{\StrSubstitute{#1}{_}{\_}}}
+  \VerbatimInput[baselinestretch=1,fontsize=\footnotesize,numbers=left]{../#1}
+  \clearpage
+  }
 
 % Definíciós lista kis whitespace-el
 \newcommand{\desc}{
@@ -1489,6 +1498,19 @@ A jelenlegi verzió nem tekinthető komoly, kiforrott alkalmazásnak, de
 mindenképpen már használható, hasznos állapotban van a szoftver. Mindezek
 fényében a projektet sikeresnek tekintem. Az alkalmazás elérhető a
 \url{http://abesto.host22.com/formbuilder} címen.
+
+\clearpage
+\phantomsection
+\section{Forráskód}
+\src{scripts_dev/forms_table.js}
+\src{scripts_dev/login.js}
+\src{scripts_dev/builder/actions.js}
+\src{scripts_dev/builder/builder.js}
+\src{scripts_dev/builder/htmlize.js}
+\src{scripts_dev/builder/props.js}
+\src{scripts_dev/builder/remote.js}
+\src{scripts_dev/builder/translation.js}
+\src{scripts_dev/builder/utils.js}
 
 \clearpage
 \phantomsection

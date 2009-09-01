@@ -62,7 +62,9 @@ var cache = {
                                           {
                                               cache.forms[id] = {html: response,
                                                                  name: name};
-                                              $('#preview-html-inner').html(make_html(cache.forms[id].html));
+                                              $('#preview-html-inner').html(
+                                                  make_html(cache.forms[id].html)
+                                              );
                                           }
                           });
                       },
@@ -183,7 +185,8 @@ function toggle_public_icon(id, form_is_public)
  *
  * @param name  A megjelenítendő kép neve
  * @param label A kép alt tulajdonsága. Ez jelenik meg hovernél
- * @param fun   Az ellenőrzés után végrehajtandó programkód stringként. Az {id} helyére az id paraméter értéke kerül
+ * @param fun   Az ellenőrzés után végrehajtandó programkód stringként.
+ *              Az {id} helyére az id paraméter értéke kerül
  * @param id    Az űrlap azonosítója, amin a műveleteket végezzük
  * @param write bool; true, írás jellegű művelethez ellenőrizzük a jogokat
  */
@@ -208,23 +211,23 @@ function add_row(id, name, is_form_public)
     var $row = $('<tr>').attr('id', id)
                         .append($('<td>').append(name))
                         .append($('<td>').addClass('actions')
-                                        .append(action_icon('tango/document-properties',
-                                                            edit,
-                                                            'open_editor({id})',
-                                                            id, false
-                                                            ))
-                                        .append(action_icon('tango/accessories-text-editor',
-                                                             rename,
-                                                             'rename_dialog({id})',
-                                                             id, true
-                                                            ))
-                                        .append(toggle_public_icon(id, is_form_public))
-                                        .append(action_icon('tango/emblem-unreadable',
-                                                            remove,
-                                                            'remove_dialog({id})',
-                                                            id, true
-                                                            ))
-                                        .append($('<div>').append('&nbsp;'))
+                                 .append(action_icon('tango/document-properties',
+                                                     edit,
+                                                     'open_editor({id})',
+                                                     id, false
+                                                     ))
+                                 .append(action_icon('tango/accessories-text-editor',
+                                                      rename,
+                                                      'rename_dialog({id})',
+                                                      id, true
+                                                     ))
+                                 .append(toggle_public_icon(id, is_form_public))
+                                 .append(action_icon('tango/emblem-unreadable',
+                                                     remove,
+                                                     'remove_dialog({id})',
+                                                     id, true
+                                                     ))
+                                 .append($('<div>').append('&nbsp;'))
                                );
 
     var rows = $('#forms tr');
@@ -440,102 +443,138 @@ function select($row)
 function select_id(id) { select($('#'+id)); }
 
 // Inicializálás
-$(document).ready( function() {
-                       $.ajaxSetup({cache: false});
+$(document).ready( function()
+{
+    $.ajaxSetup({cache: false});
 
-                       // Táblázat-sorok kiemelése hovernél és kijelölése kattintásra
-                       $('#forms tr:gt(0)').livequery(
-                           function()
-                           {
-                               $(this).hover(
-                                   function() { $(this).addClass('hovered');    },
-                                   function() { $(this).removeClass('hovered'); }
-                               ).click(
-                                   function(event) {
-                                       // Ha a művelet-ikonokra kattintottak, nem jelöljük ki a sort
-                                       if (event.target.parentNode == this)
-                                           select($(this));
-                                   }
-                               );
-                           }
-                       );
+    // Táblázat-sorok kiemelése hovernél és kijelölése kattintásra
+    $('#forms tr:gt(0)').livequery(
+        function()
+        {
+            $(this).hover(
+                function() { $(this).addClass('hovered');    },
+                function() { $(this).removeClass('hovered'); }
+            ).click(
+                function(event) {
+                    // Ha a művelet-ikonokra kattintottak, nem jelöljük ki a sort
+                    if (event.target.parentNode == this)
+                        select($(this));
+                }
+            );
+        }
+    );
 
-                       // Ez ideális esetben tisztán CSS lenne
-                       $('#forms tr:gt(0):odd'). livequery( function() { $(this).removeClass('even').addClass('odd'); });
-                       $('#forms tr:gt(0):even').livequery( function() { $(this).removeClass('odd').addClass('even'); });
+    // Ez ideális esetben tisztán CSS lenne
+    $('#forms tr:gt(0):odd'). livequery(
+        function() {
+            $(this).removeClass('even').addClass('odd');
+        });
+    $('#forms tr:gt(0):even').livequery(
+        function() {
+            $(this).removeClass('odd').addClass('even');
+        });
 
-                       // Művelet-ikonok alá hovernél kiírjuk a művelet nevét
-                       $('#forms td.actions img').livequery(
-                           function()
-                           {
-                               $(this).hover(
-                                   function() { $(this).parent().find('div').html($(this).attr('alt')).css('color', 'inherit'); },
-                                   function() { $(this).parent().find('div').css('color', 'transparent');            }
-                               );
-                           }
-                       );
+    // Művelet-ikonok alá hovernél kiírjuk a művelet nevét
+    $('#forms td.actions img').livequery(
+        function()
+        {
+            $(this).hover(
+                function()
+                {
+                    $(this).parent().find('div')
+                        .html($(this).attr('alt'))
+                        .css('color', 'inherit');
+                },
+                function()
+                {
+                    $(this).parent().find('div')
+                        .css('color', 'transparent');
+                }
+            );
+        }
+    );
 
-                       // Form-lista letöltése a szerverről
-                       $.post(forms_url+'list_forms',
-                              Array(),
-                              function (forms)
-                              {
-                                  if (is_public)
-                                      for (var i in forms['forms']) {
-                                          var form = forms['forms'][i];
-                                          add_row_public(form['id'], form['name'], form['user_name'], form['owner'], forms['logged_in']);
-                                          }
-                                  else
-                                      for (var i in forms)
-                                          add_row(forms[i]['id'], forms[i]['name'], forms[i]['public']=='1');
+    // Form-lista letöltése a szerverről
+    $.post(forms_url+'list_forms',
+           Array(),
+           function (forms)
+           {
+               if (is_public)
+                   for (var i in forms['forms']) {
+                       var form = forms['forms'][i];
+                       add_row_public(form['id'],
+                                      form['name'],
+                                      form['user_name'],
+                                      form['owner'],
+                                      forms['logged_in']);
+                   }
+               else
+                   for (var i in forms)
+                       add_row(forms[i]['id'],
+                               forms[i]['name'],
+                               forms[i]['public']=='1');
 
-                              },
-                              'json'
-                             );
+           },
+           'json'
+          );
 
-                       // Új űrlap párbeszédablak inicializálása
-                       var new_buttons = {};
-                       new_buttons[cancel] = function() { $(this).dialog('close'); };
-                       new_buttons[create] = function() { $(this).find('form').submit(); };
-                       $('#new_dialog').dialog({autoOpen: false,
-                                                modal   : true,
-                                                width   : 'auto',
-                                                buttons : new_buttons
-                       });
-                       $('#new_form').submit(function() { check_rights('new_form()', true, false); return false; });
+    // Új űrlap párbeszédablak inicializálása
+    var new_buttons = {};
+    new_buttons[cancel] = function() { $(this).dialog('close'); };
+    new_buttons[create] = function() { $(this).find('form').submit(); };
+    $('#new_dialog').dialog({autoOpen: false,
+                             modal   : true,
+                             width   : 'auto',
+                             buttons : new_buttons
+                            });
 
-                       // Átnevezés párbeszédablak inicializálása
-                       var rename_buttons = {};
-                       rename_buttons[cancel] = function() { $(this).dialog('close'); };
-                       rename_buttons[rename] = function() { $(this).find('form').submit(); };
-                       $('#rename_dialog').dialog({autoOpen: false,
-                                                   modal   : true,
-                                                   width   : 'auto',
-                                                   buttons : rename_buttons
-                       });
-                       $('#rename_form').submit(function() { check_rights('rename_form()', true, this.id.value); return false; });
+    $('#new_form').submit(
+        function()
+        { check_rights('new_form()', true, false); return false; });
 
-                       // Törlés párbeszédablak inicializálása
-                       var remove_buttons = {};
-                       remove_buttons[cancel] = function() { $(this).dialog('close'); };
-                       remove_buttons[remove] = function() { $(this).find('form').submit(); };
-                       $('#remove_dialog').dialog({autoOpen: false,
-                                                   modal   : true,
-                                                   buttons: remove_buttons
-                       });
-                       $('#remove_form').submit(function() { check_rights('remove_form()', true, this.id.value); return false; });
+    // Átnevezés párbeszédablak inicializálása
+    var rename_buttons = {};
+    rename_buttons[cancel] = function() { $(this).dialog('close'); };
+    rename_buttons[rename] = function() { $(this).find('form').submit(); };
+    $('#rename_dialog').dialog({autoOpen: false,
+                                modal   : true,
+                                width   : 'auto',
+                                buttons : rename_buttons
+                               });
+    $('#rename_form').submit(
+        function()
+        {
+            check_rights('rename_form()', true, this.id.value);
+            return false;
+        }
+    );
 
-                       // Az előnézet-fülek inicializálása
-                       $('#preview').tabs();
-                       $('#preview').tabs('select', '#preview-form');
+    // Törlés párbeszédablak inicializálása
+    var remove_buttons = {};
+    remove_buttons[cancel] = function() { $(this).dialog('close'); };
+    remove_buttons[remove] = function() { $(this).find('form').submit(); };
+    $('#remove_dialog').dialog({autoOpen: false,
+                                modal   : true,
+                                buttons: remove_buttons
+                               });
+    $('#remove_form').submit(
+        function()
+        {
+            check_rights('remove_form()', true, this.id.value);
+            return false;
+        }
+    );
 
-                       // Értesítések stílusa
-                       $.blockUI.defaults.css['padding']               = '15px';
-                       $.blockUI.defaults.css['border']                = 'none';
-                       $.blockUI.defaults.css['backgroundColor']       = '#888';
-                       $.blockUI.defaults.css['-webkit-border-radius'] = '10px';
-                       $.blockUI.defaults.css['-moz-border-radius']    = '10px';
-                       $.blockUI.defaults.css['color']                 = '#fff';
-                       $.blockUI.defaults.css['font-family']           = 'sans';
+    // Az előnézet-fülek inicializálása
+    $('#preview').tabs();
+    $('#preview').tabs('select', '#preview-form');
 
-                   });
+    // Értesítések stílusa
+    $.blockUI.defaults.css['padding']               = '15px';
+    $.blockUI.defaults.css['border']                = 'none';
+    $.blockUI.defaults.css['backgroundColor']       = '#888';
+    $.blockUI.defaults.css['-webkit-border-radius'] = '10px';
+    $.blockUI.defaults.css['-moz-border-radius']    = '10px';
+    $.blockUI.defaults.css['color']                 = '#fff';
+    $.blockUI.defaults.css['font-family']           = 'sans';
+});

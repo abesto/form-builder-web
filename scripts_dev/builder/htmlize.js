@@ -45,7 +45,7 @@ function htmlize(el, level)
       ret += '  ';
     ret += "<" + name;
     var $el = $(el);
-    var attrs = {'input': Array('type', 'name', 'id', 'checked'),  // Amiket át kell másolni, ha van
+    var attrs = {'input': Array('type', 'name', 'id', 'checked'),
                  'td': Array('colspan'),
                  'label': Array('for')};
     if (attrs[name] != undefined)
@@ -54,7 +54,10 @@ function htmlize(el, level)
         if (($el.attr(attr) != undefined) && ($el.attr(attr) != ''))
           ret += ' ' + attr  + '="' + $el.attr(attr) + '"';
       }
-    if ((name == 'input') && ($el.attr('type') != 'radio') && ($el.attr('type') != 'checkbox') && ($el.attr('value') != ""))
+    if ((name == 'input')
+    && ($el.attr('type') != 'radio')
+    && ($el.attr('type') != 'checkbox')
+    && ($el.attr('value') != ""))
       ret += ' value="' + $el.attr('value') + '"';
     if (name == "input") {
       return ret + " />\n";
@@ -62,17 +65,21 @@ function htmlize(el, level)
     ret += ">";
   }
 
-  if ((el.childNodes != undefined) && (el.childNodes.length > 0) && (el.childNodes[0].nodeName != '#text'))
+  if ((el.childNodes != undefined)
+  && (el.childNodes.length > 0)
+  && (el.childNodes[0].nodeName != '#text'))
     ret += "\n";
 
   for (var i = 0; i < el.childNodes.length; i++)
     ret += htmlize(el.childNodes[i], level+1);
 
   if (name != "#text") {
-    if ((el.childNodes != undefined) && (el.childNodes.length > 0) && (el.childNodes[0].nodeName != '#text'))
+    if ((el.childNodes != undefined)
+    && (el.childNodes.length > 0)
+    && (el.childNodes[0].nodeName != '#text'))
       for (i = 0; i < level; i++)
         ret += '  ';
-    ret += "</" + name + ">\n";
+      ret += "</" + name + ">\n";
   }
   return ret;
 }

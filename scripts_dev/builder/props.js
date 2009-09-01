@@ -60,7 +60,10 @@ function PropsCollection()
 {
     /** A tulajdonság-csoportok neveinek listája */
     this.groups = Array();
-    /** A tulajdonság-csoportok [csoportnév: [{@link Prop}1, {@link Prop}2, ...], ...] asszociatív tömbje */
+    /**
+     * A tulajdonság-csoportok
+     * [csoportnév: [{@link Prop}1, {@link Prop}2, ...], ...] asszociatív tömbje
+     */
     this.props = new Object();
 
     /**
@@ -104,12 +107,14 @@ function PropsCollection()
 
 
 /**
- * @namespace Az elemek beállítható tulajdonságaihoz tartozó input elemeket létrehozó függvények<br />
+ * @namespace Az elemek beállítható tulajdonságaihoz tartozó
+ * input elemeket létrehozó függvények<br />
  */
 const PROPS = {
     /**
      * td elem típusa
-     * @return Radio inputokat tartalmazó span; lehetséges értékei: text (szöveg) és input (beviteli mező)
+     * @return Radio inputokat tartalmazó span
+     * lehetséges értékei: text (szöveg) és input (beviteli mező)
      */
     td_type: function()
     {
@@ -118,18 +123,20 @@ const PROPS = {
         var types = Array('text', 'input|select');
         var $child = $selected.children(':first-child');
         var child_type = '';
-        if ($child.size() > 0) child_type = $child.get(0).nodeName.toLowerCase().replace('#', '');
+        if ($child.size() > 0)
+            child_type = $child.get(0).nodeName.toLowerCase()
+                                               .replace('#', '');
         else child_type = 'text';
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
-            //var radio = $('<input type="radio" name="td_type" />').attr({'value': types[i], 'onchange': 'set_td_type(this.value)', 'id': type});
-            var $radio = $('<input type="radio" name="td_type" id="td_type_'+type+'" />').value(types[i]).change(
-                function()
-                {
-                    set_td_type($(this).value());
-                    handle_prop_change();
-                }
-            );
+            var $radio = $('<input type="radio" name="td_type" id="td_type_'+type+'" />')
+                .value(types[i]).change(
+                    function()
+                    {
+                        set_td_type($(this).value());
+                        handle_prop_change();
+                    }
+                );
             var label = trans.td_types[types[i]];
             if (types[i].match(child_type)) $radio.attr('checked', 'true');
             $span.append($radio).append(
@@ -148,7 +155,13 @@ const PROPS = {
     {
         var $select = $('<select>').attr('name', 'input_type');
         var $selected = check_selected_type('td');
-        var types = Array('text', 'password', 'button', 'checkbox', 'radio', 'file', 'select');
+        var types = Array('text',
+                          'password',
+                          'button',
+                          'checkbox',
+                          'radio',
+                          'file',
+                          'select');
         var type = get_input_type($selected);
         for (var i = 0; i < types.length; i++) {
             var $option = $('<option>').value(types[i])
@@ -226,7 +239,8 @@ const PROPS = {
                                    if ($('.selected option').size() == 1)
                                        $('.selected option').html('');
                                    else {
-                                       $('.selected option[builder_id='+num+']').remove();
+                                       $('.selected option[builder_id='+num+']')
+                                           .remove();
                                        // builder_id-kat frissítjük
                                        var $options = $('.selected option');
                                        for (var i = 0; i < $options.size(); i++) {
@@ -281,11 +295,15 @@ const props = {
             var $options = $selected.firstChild().children();
             $options.each(
                 function(i) {
-                    ret.add_prop('options', new Prop('option', PROPS.option(i, $(this).html())), true);
+                    ret.add_prop('options', new Prop('option',
+                                                     PROPS.option(i, $(this).html())),
+                                                     true);
                 }
             );
             if ($options[0].innerHTML != '')
-                ret.add_prop('options', new Prop('option', PROPS.option($options.size(), '')), true);
+                ret.add_prop('options', new Prop('option',
+                                                 PROPS.option($options.size(), '')),
+                                                 true);
         }
         return ret;
     },

@@ -34,7 +34,8 @@ var dirty = false;
  * és van rá írásjoga a bejelentkezett felhasználónak, futtatja a callback-et.
  *
  * Ha nem létezik az űrlap, vagy nincs rá a bejelnetkezett felhasználónak írásjoga,
- * egy új azonosítót kap a szervertől. Átirányítja a böngészőt az új űrlap szerkesztő-oldalára.
+ * egy új azonosítót kap a szervertől. Átirányítja a böngészőt az
+ * új űrlap szerkesztő-oldalára.
  */
 function update_or_create(callback)
 {

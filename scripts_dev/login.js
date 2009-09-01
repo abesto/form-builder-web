@@ -39,11 +39,16 @@ function check_ajaj(data, $input, initial)
            data,
            function (response) {
                if (response == true) {
-                   $input.after('<img src="'+base_url+'/img/valid.jpg" alt="valid" />');
+                   $input.after(
+                       '<img src="'+base_url+'/img/valid.jpg" alt="valid" />'
+                   );
                } else if ((data['value'].length > 0) || (initial == true)) {
                    if ((data['value'] != '') || (errors == true))
-                       $input.after('<div class="error">'+response+'</div>').
-                              after('<img src="'+base_url+'img/error.jpg" alt="error" />');
+                       $input.after(
+                           '<div class="error">'+response+'</div>'
+                       ).after(
+                           '<img src="'+base_url+'img/error.jpg" alt="error" />'
+                       );
                }
            },
           'json'
@@ -109,8 +114,9 @@ $(document).ready( function() {
 
     // Ez ideális esetben CSS lenne, de a böngészők még nem támogatják a
     // :first-child selectort
-    $('#login td:first-child, #register td:first-child').css({'vertical-align': 'top',
-                                                              'text-align'    : 'right'});
+    $('#login td:first-child, #register td:first-child').css(
+        {'vertical-align': 'top',
+        'text-align'    : 'right'});
 
     // Ha a szerver visszaküldött erre az oldalra, mert hibás formot küldtünk
     check('user', true);

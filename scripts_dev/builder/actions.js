@@ -201,13 +201,18 @@ const actions = {
     /**
      * td elemen végrehajtható műveletek<br />
      * Mindig: cella létrehozása (jobbra, balra), új sor létrehozása (fel, le)<br />
-     * Ha van azonos magasságú szomszédos cella: cellák egyesítése (balra és/vagy jobbra)<br />
+     * Ha van azonos magasságú szomszédos cella:
+     *      cellák egyesítése (balra és/vagy jobbra)<br />
      * Ha a cella több oszlopos: cella felosztása (balra, jobbra)
      */
     td: function()
     {
         var $sel = $(check_selected_type('td'));
-        var ret = Array('create_cell(LEFT)', 'create_cell(RIGHT)', 'create_row(UP)', 'create_row(DOWN)', 'br');
+        var ret = Array('create_cell(LEFT)',
+                        'create_cell(RIGHT)',
+                        'create_row(UP)',
+                        'create_row(DOWN)',
+                        'br');
 
         if ($sel.prev().attr('rowspan') == $sel.attr('rowspan'))
             ret.push('merge_cells(LEFT)');

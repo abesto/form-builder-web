@@ -40,7 +40,8 @@ const TRANS = {
         actions_label : "Actions",
         props         : "Properties",
         no_file_label : "No label",
-        leave_confirm : 'There are unsaved changes on this form. Are you sure you want to leave?',
+        leave_confirm : 'There are unsaved changes on this form.'+
+                        'Are you sure you want to leave?',
         menu: {
             cancel : 'Cancel',
             menu   : 'Menu',
@@ -109,11 +110,13 @@ const TRANS = {
         code: 'hu',
         wrong_node: function(name) {return 'A kiválasztott elem nem ' + name;},
         no_actions: function(name) {return 'Nincs művelet a(z) ' + name + ' elemhez';},
-        no_props:   function(name) {return 'A(z) ' + name + ' elemnek nincsenek beállítható tulajdonságai';},
+        no_props:   function(name) {return 'A(z) ' + name + ' elemnek'+
+                                           'nincsenek beállítható tulajdonságai';},
         actions_label : "Műveletek",
         props         : "Tulajdonságok",
         no_file_label : "Nincs felirat",
-        leave_confirm : 'Az űrlapon mentetlen változások vannak. Biztosan el kívánja hagyni az oldalt?',
+        leave_confirm : 'Az űrlapon mentetlen változások vannak.'+
+                        'Biztosan el kívánja hagyni az oldalt?',
         menu: {
             cancel : 'Mégsem',
             menu   : 'Menü',
