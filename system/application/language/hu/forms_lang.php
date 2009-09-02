@@ -39,7 +39,8 @@ $lang['php'] = array('new'            => 'Új űrlap',
                      'create_name'    => 'Az új űrlap neve',
                      'old_name'       => 'Eredeti név',
                      'new_name'       => 'Új név',
-                     'remove_confirm' => 'Az űrlap törlését nem lehet visszavonni. Biztosan folytatja?',
+                     'remove_confirm' => 'Az űrlap törlését nem lehet visszavonni.'
+                                         'Biztosan folytatja?',
                      'public_title'   => 'Nyilvános űrlapok',
                      'private_title'  => 'Az Ön űrlapjai'
                      );

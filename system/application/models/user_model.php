@@ -126,12 +126,16 @@ class User_model extends Model
      */
     function get_user($throw=true)
     {
-        $where = "`sid` = SHA('".session_id()."') AND NOW() < DATE_ADD(`last_action`, INTERVAL 1 DAY)";
-        $rel = $this->db->select(array('id', 'name', 'email'))->from('users')->where($where)->get();
+        $where = "`sid` = SHA('".session_id()."')" .
+                 "AND NOW() < DATE_ADD(`last_action`, INTERVAL 1 DAY)";
+        $rel = $this->db->select(array('id', 'name', 'email'))
+               ->from('users')->where($where)->get();
 
         if ($rel->num_rows() !== 1)
             if ($throw === true)
-                throw new Exception('You are not logged in. Also, you shouldn\'t get this message - doing something funny?');
+                throw new Exception(
+                      'You are not logged in.' .
+                      'Also, you shouldn\'t get this message - doing something funny?');
             else
                  return false;
 

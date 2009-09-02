@@ -41,7 +41,8 @@
     </script>
 
     <link rel="stylesheet" href="<?php echo base_url(); ?>css/builder.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="<?php echo base_url(); ?>css/smoothness/jquery-ui-1.7.custom.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="<?php echo base_url(); ?>css/smoothness/jquery-ui-1.7.custom.min.css"
+          type="text/css" media="screen" />
   </head>
   <body>
     <h1 id="title"><?php echo $title; ?></h1>

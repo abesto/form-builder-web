@@ -7,7 +7,8 @@
  * @brief  Űrlapok kezelése adatbázisban
  *
  * A _public postfixű függvények a publikus űrlapokon dolgoznak.
- * A többi a bejelentkezett felhasználó saját űrlapjain dolgozik. Ezeknél előfeltétel, hogy legyen bejelentkezett felhasználó.
+ * A többi a bejelentkezett felhasználó saját űrlapjain dolgozik.
+ * Ezeknél előfeltétel, hogy legyen bejelentkezett felhasználó.
  *
  * Copyright 2009 Nagy Zoltán
  *
@@ -75,7 +76,8 @@ class Forms_model extends Model
         $where = array('user_id' => $user->id);
         $select = array('id', 'name', 'public');
 
-        return $this->db->select($select)->from('forms')->where($where)->order_by('id')->get()->result();
+        return $this->db->select($select)->from('forms')->where($where)
+                    ->order_by('id')->get()->result();
     }
 
 

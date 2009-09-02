@@ -260,14 +260,19 @@ class Login extends BaseController {
         $_SESSION['set']['user'] = $user;
 
         return $this->check(
-                            array(
-                                  "'$user' == ''"                              => array('required'),
-                                  "mb_strpos('$user', ' ') !== false"          => array('space'),
-                                  "$length < $min_length"                      => array('short', 3),
-                                  "$length > $max_length"                      => array('long', 100),
-                                  "\$controller->user->not_available('$user')" => array('user_exists')
-                                  )
-                            );
+                  array(
+                        "'$user' == ''"
+                           => array('required'),
+                        "mb_strpos('$user', ' ') !== false"
+                           => array('space'),
+                        "$length < $min_length"
+                           => array('short', 3),
+                        "$length > $max_length"
+                           => array('long', 100),
+                        "\$controller->user->not_available('$user')"
+                           => array('user_exists')
+                        )
+        );
     }
 
     /**
@@ -333,10 +338,14 @@ class Login extends BaseController {
 
         return $this->check(
                             array(
-                                  "'$email' == ''"                              => array('required'),
-                                  "preg_match(\"$regex\", \"$email\") == 0"     => array('email'),
-                                  "$length > $max_length"                       => array('long', 100),
-                                  "\$controller->user->not_available('$email')" => array('email_exists')
+                                  "'$email' == ''"
+                                    => array('required'),
+                                  "preg_match(\"$regex\", \"$email\") == 0"
+                                    => array('email'),
+                                  "$length > $max_length"
+                                    => array('long', 100),
+                                  "\$controller->user->not_available('$email')"
+                                    => array('email_exists')
                                   )
                             );
     }

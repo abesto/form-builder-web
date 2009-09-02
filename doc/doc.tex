@@ -31,7 +31,9 @@
   \fancyhead[RO,LE]{\texttt{\StrSubstitute{#1}{_}{\_}}}
   \phantomsection
   \subsection*{\texttt{\StrSubstitute{#1}{_}{\_}}}
-  \VerbatimInput[baselinestretch=1,fontsize=\footnotesize,numbers=left]{../#1}
+  \texttt{
+  \VerbatimInput[baselinestretch=1,fontsize=\scriptsize,numbers=left]{../#1}
+  }
   \clearpage
   }
 
@@ -1502,6 +1504,29 @@ fényében a projektet sikeresnek tekintem. Az alkalmazás elérhető a
 \clearpage
 \phantomsection
 \section{Forráskód}
+\src{system/application/models/user_model.php}
+\src{system/application/models/forms_model.php}
+\src{system/application/language/hu/login_lang.php}
+\src{system/application/language/hu/forms_lang.php}
+\src{system/application/language/hu/menu_lang.php}
+\src{system/application/language/en/login_lang.php}
+\src{system/application/language/en/forms_lang.php}
+\src{system/application/language/en/menu_lang.php}
+\src{system/application/helpers/doc_helper.php}
+\src{system/application/config/config.php}
+\src{system/application/config/routes.php}
+\src{system/application/config/database.php}
+\src{system/application/controllers/builder.php}
+\src{system/application/controllers/login.php}
+\src{system/application/controllers/public_forms.php}
+\src{system/application/controllers/BaseController.php}
+\src{system/application/controllers/my_forms.php}
+\src{system/application/views/builder.php}
+\src{system/application/views/menu.php}
+\src{system/application/views/login.php}
+\src{system/application/views/skeleton.php}
+\src{system/application/views/form_table.php}
+
 \src{scripts_dev/forms_table.js}
 \src{scripts_dev/login.js}
 \src{scripts_dev/builder/actions.js}

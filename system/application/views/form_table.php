@@ -36,7 +36,8 @@ echo "';\n";
 
 ?>
 </script>
-<link rel="stylesheet" href="<?php echo base_url(); ?>css/smoothness/jquery-ui-1.7.custom.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>css/smoothness/jquery-ui-1.7.custom.css"
+      type="text/css" media="screen" />
 <br />
 <h1><?php echo $public ? $php['public_title'] : $php['private_title']; ?></h1>
 

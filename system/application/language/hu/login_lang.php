@@ -24,7 +24,8 @@ $lang['login'] = array('login'         => 'Bejelentkezés',
                        'user'          => 'Felhasználónév',
                        'pass'          => 'Jelszó',
                        'register'      => 'Regisztráció',
-                       'register_desc' => 'Ha még nem használta szolgáltatásunkat, itt adhatja meg adatait a belépéshez',
+                       'register_desc' => 'Ha még nem használta szolgáltatásunkat,'.
+                                          'itt adhatja meg adatait a belépéshez',
                        'pass_check'    => 'Jelszó&nbsp;mégegyszer',
                        'email'         => 'E-mail&nbsp;cím',
                        'login_failed'  => 'A megadott név vagy jelszó hibás volt'

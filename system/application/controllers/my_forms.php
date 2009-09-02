@@ -132,7 +132,8 @@ class My_forms extends BaseController {
      * @param html A mentendő űrlap tartalma
      *
      * @return 'false' ha hiba történt, egyébként a mentett űrlap azonosítója
-     *         Nem feltétlenül azonos az id paraméterrel (ha a mentés előtt törölték az űrlapot, új azonosítót kap)
+     *         Nem feltétlenül azonos az id paraméterrel (ha a mentés előtt
+     *         törölték az űrlapot, új azonosítót kap)
      */
     function save()
     {
@@ -179,7 +180,8 @@ class My_forms extends BaseController {
         elseif ($_POST['to'] == 'false')
             $to = false;
         else
-            throw new Exception('Argument \'to\' of set_public expected to be \'true\' or \'false\'');
+            throw new Exception('Argument \'to\' of set_public expected'.
+                                'to be \'true\' or \'false\'');
 
         echo $this->forms->set_public($id, $to) ?
             'true' : 'false';

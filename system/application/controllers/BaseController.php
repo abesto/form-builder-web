@@ -52,7 +52,8 @@ class BaseController extends Controller
         $this->lang_names = array('hu' => 'Magyar',
                                   'en' => 'English'
                                   );
-        $this->langs = array_keys($this->lang_names); /**< Az elérhető nyelvek. Az első az alapértelmezett. */
+        // Az elérhető nyelvek. Az első az alapértelmezett.
+        $this->langs = array_keys($this->lang_names);
     }
 
 
@@ -70,14 +71,16 @@ class BaseController extends Controller
         $menu = array('items' => $this->build_menu());
         $this->slots['menu'] = $this->load->view('menu', $menu, true);
 
-        // Ha van az aktuális controllernek saját css fájlja, akkor azt átadjuk a skeletonnak
+        // Ha van az aktuális controllernek saját css fájlja,
+        // akkor azt átadjuk a skeletonnak
         $file = 'css/' . strtolower(get_class($this)) . '.min.css';
         if (file_exists($file))
             $this->slots['css'] = $file;
 
         $this->slots['langs'] = $this->lang_names;
 
-        // Ha van az aktuális controllernek saját js fájlja, akkor azt átadjuk a skeletonnak
+        // Ha van az aktuális controllernek saját js fájlja,
+        // akkor azt átadjuk a skeletonnak
         if (!isset($this->slots['js'])) {
             $file = 'scripts/' . strtolower(get_class($this)) . '.min.js';
             if (file_exists($file))
@@ -109,8 +112,11 @@ class BaseController extends Controller
     /**
      * AJAJ függvény
      *
-     * @return 'OK'             : a felhasználó be van jelentkezve, és az űrlap az övé
-     *         'FORM_NOT_FOUND' : a felhasználó be van jelentkezve, de az űrlap nem található, vagy nem végezheti a kért műveletet
+     * @return 'OK'             : a felhasználó be van jelentkezve,
+     *                            és az űrlap az övé
+     *         'FORM_NOT_FOUND' : a felhasználó be van jelentkezve,
+     *                            de az űrlap nem található,
+     *                            vagy nem végezheti a kért műveletet
      *         'NOT_LOGGED_IN'  : a felhasználó nincs bejelentkezve
      */
     public function remote_check_rights()
@@ -147,7 +153,8 @@ class BaseController extends Controller
      *         Ha a felhasználó be van jelentkezve, akkor ['login'] == false
      *           Ilyenkor ['welcome'] a megjelenítendő szöveg, %s-el a név helyén
      *           ['user'] a felhasználó neve
-     *         Egyébként ['login'] a belépő/regisztráló oldalra mutató linkhez megjelenítendő szöveg
+     *         Egyébként ['login'] a belépő/regisztráló oldalra mutató linkhez
+     *         megjelenítendő szöveg
      */
     protected function build_menu()
     {
@@ -172,7 +179,8 @@ class BaseController extends Controller
      * Betölti a megfelelő nyelvből a kért fájlt.
      *
      * A megfelelő nyelv meghatározása:
-     * Ha kaptunk értéket az URLből, akkor mindenképpen azt használjuk és mentjük session cookie-ba
+     * Ha kaptunk értéket az URLből, akkor mindenképpen azt használjuk
+     * és mentjük session cookie-ba
      * Egyébként a session cookie-ban tárolt értéket használjuk
      * Ha ilyen nincs, akkor a konstruktorban beállított nyelvet használjuk
      *
