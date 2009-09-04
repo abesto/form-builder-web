@@ -268,7 +268,6 @@ $db['default']['username'] = "username";
 $db['default']['password'] = "password";
 $db['default']['database'] = "db_name";
 $db['default']['dbdriver'] = "mysql";
-// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
 \end{lstlisting}
 
 \paragraph{JavaScript}
@@ -458,7 +457,6 @@ function get_form_public($id)
 
   // Visszaadjuk az eredmenyt
   return $row;
-  // TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
 }
 \end{lstlisting}
 \vspace{.8cm}
@@ -585,7 +583,6 @@ $route[$langs]           = 'home/index/$1';
 $route['(:any)/'.$langs] = '$1/index/$2';
 $route['logout']         = 'login/logout';
 $route['builder/(:num)'] = 'builder/open/$1';
-// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
 \end{lstlisting}
 
 A 46. sorban egy reguláris kifejezés segítségével megadjuk azokat a
@@ -725,7 +722,6 @@ $this->lang_names = array('en' => 'English',
                           'hu' => 'Magyar',
                           'es' => 'Espanol'
                          );
-// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
     \end{lstlisting}
     Így az új nyelv be fog kerülni a nyelv kiválasztását lehetővé tevő menübe.
   \item A \texttt{system/application/config/routes.php} fájlban a
@@ -733,7 +729,6 @@ $this->lang_names = array('en' => 'English',
     angol, magyar és spanyol nyelvekkel a változó a következő értéket kapná:
     \begin{lstlisting}[firstnumber=46]
 $langs = '(en|hu|es)';
-// TODO kivenni: $ (hogy LaTeX hilight boldog legyen)
     \end{lstlisting}
     Így a \texttt{``*/es''} alakú oldalak megnyitásakor ``Az oldal nem található''
     hiba helyett spanyol nyelven nyílik meg a kért oldal.

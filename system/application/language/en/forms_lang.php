@@ -40,7 +40,7 @@ $lang['php'] = array('new'            => 'New form',
                      'old_name'       => 'Old name',
                      'new_name'       => 'New name',
                      'remove_confirm' => 'Removing the form cannot be undone.'.
-                                          Are you sure you want to delete this form?',
+                                         'Are you sure you want to delete this form?',
                      'public_title'   => 'Public forms',
                      'private_title'  => 'Your forms'
                      );
