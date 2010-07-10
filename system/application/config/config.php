@@ -11,7 +11,7 @@
 |	http://example.com/
 |
 */
-$config['base_url']	= "http://form/";
+$config['base_url']	= "http://abesto.net/formbuilder";
 //$config['base_url']	= "http://formbuilder.homelinux.com";
 
 /*
@@ -42,7 +42,7 @@ $config['index_page'] = "";
 | 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
 |
 */
-$config['uri_protocol']	= "AUTO";
+$config['uri_protocol']	= "REQUEST_URI";
 
 /*
 |--------------------------------------------------------------------------

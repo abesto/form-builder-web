@@ -38,9 +38,9 @@ $active_group = "default";
 $active_record = TRUE;
 
 $db['default']['hostname'] = "localhost";
-$db['default']['username'] = "form";
-$db['default']['password'] = "form";
-$db['default']['database'] = "form";
+$db['default']['username'] = "abesto_form";
+$db['default']['password'] = "ab3afd8b";
+$db['default']['database'] = "abesto_form";
 $db['default']['dbdriver'] = "mysql";
 $db['default']['dbprefix'] = "";
 $db['default']['pconnect'] = TRUE;

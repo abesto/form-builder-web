@@ -105,7 +105,7 @@ class Login extends BaseController {
     public function logout($lang=null)
     {
         $this->user->logout();
-        redirect('/'.$lang);
+        redirect();
     }
 
 
@@ -121,7 +121,7 @@ class Login extends BaseController {
 
         foreach ($this->fields as $field) {
             $fun = 'check_'.$field;
-            if (sizeof($this->$fun($_POST[$field])) > 0) {
+            if (isset($_POST[$field]) && sizeof($this->$fun($_POST[$field])) > 0) {
                 // Van hiba, betöltjük a session cookie-ba a kapott adatokat
                 $_SESSION['set']['user']  = $_POST['user'];
                 $_SESSION['set']['email'] = $_POST['email'];
