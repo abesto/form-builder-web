@@ -92,7 +92,7 @@ function save()
                         window.opener.select_id(resp);
                         window.location = base_url + 'builder/' + resp;
                     }
-                    status.set('saved');
+                    bstatus.set('saved');
                     dirty = false;
                 },
                 'text'

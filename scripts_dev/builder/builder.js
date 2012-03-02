@@ -52,17 +52,19 @@ function update_actions(type)
 
     // Létrehozzuk a műveletekhez tartozó gombokat
     for (var i = 0; i < current.length; i++) {
-        var name = current[i];
-        if (name == 'br') {
-            bar.append($('<br />'));
-            continue;
-        }
-        bar.append(
-            $('<input>').attr({'type'    : 'button',
-                               'name'    : name,
-                               'value'   : trans.actions[name],
-                               'onclick' : 'call_action("'+name+'")'})
-        );
+        (function(name){
+            if (name == 'br') {
+                bar.append($('<br />'));
+                return;
+            }
+            bar.append(
+                $('<input>').attr({'type'    : 'button',
+                                   'name'    : name,
+                                   'value'   : trans.actions[name],
+                                   'onclick' : function(){return function(){call_action(name);};}
+                               })
+            );
+        })(current[i]);
     }
 }
 
@@ -226,7 +228,7 @@ function set_lang(lang)
                                           buttons: save_as_buttons
                                          });
 
-    status.update_lang();
+    bstatus.update_lang();
 }
 
 /**
@@ -319,7 +321,7 @@ $(document).ready(function (){
 
     // Az alapértelmezett nyelv alkalmazása
     set_lang(default_lang);
-    status.set('loaded');
+    bstatus.set('loaded');
 
     // HTML párbeszédablak inicializálása
     $('#html').dialog(

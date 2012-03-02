@@ -294,11 +294,11 @@ function set_title(title)
 }
 
 // Az állapotsor kezelése
-var status = {
+var bstatus = {
     date: new Date(),
     status: null,
 
-    // Az adott értékkel frissíti az állapotsor szövegét
+    // Az adott értékkel frissíti az    állapotsor szövegét
     set: function(val)
     {
         this.status = val;
